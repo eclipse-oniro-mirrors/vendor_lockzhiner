@@ -1,0 +1,11 @@
+{
+  "parts": {
+    "product_lockzhiner_rk2206_xts": {
+      "module_list": [
+        "//vendor/lockzhiner/lockzhiner_rk2206_xts:lockzhiner_rk2206_xts",
+        "//vendor/lockzhiner/lockzhiner_rk2206_xts:liteos"
+      ]
+    }
+  },
+  "subsystem": "product_lockzhiner_rk2206_xts"
+}
