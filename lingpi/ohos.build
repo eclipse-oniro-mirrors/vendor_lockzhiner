@@ -1,0 +1,11 @@
+{
+  "parts": {
+    "product_lingpi": {
+      "module_list": [
+        "//vendor/lockzhiner/lingpi:lingpi",
+        "//vendor/lockzhiner/lingpi:liteos"
+      ]
+    }
+  },
+  "subsystem": "product_lingpi"
+}
