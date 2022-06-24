@@ -4,12 +4,12 @@
 
 本例程演示如何在小凌派-RK2206开发板上实现智慧路灯的应用案例。
 
-![小凌派-RK2206开发板](/vendor/lockzhiner/rk2206/docs/figures/lockzhiner-rk2206.jpg)
+![小凌派-RK2206开发板](/vendor/lockzhiner/lingpi/docs/figures/lockzhiner-rk2206.jpg)
 
 ## 硬件资源
 
 硬件资源图如下所示：
-![智慧路灯模块硬件资源](/vendor/lockzhiner/rk2206/docs/figures/e53_is01/e53_is01_resource_map.jpg)
+![智慧路灯模块硬件资源](/vendor/lockzhiner/lingpi/docs/figures/e53_is01/e53_is01_resource_map.jpg)
 
 EEPROM 24C02的设备地址为：0x1010001* ；
 
@@ -17,20 +17,20 @@ EEPROM 24C02的设备地址为：0x1010001* ；
 
 引脚名称开发者可在硬件资源图中查看，也可在智慧路灯模块背面查看。
 
-| 引脚名称 | 功能描述 |
-| :--- | :------- | 
-| PWM_LED | LED控制线，高电平有效 |
-| I2C_SCL  |I2C时钟信号线 | 
-| I2C-SDA | I2C数据信号线 | 
-| GND | 电源地引脚 | 
-| 3V3 |3.3V电源输入引脚 | 
-| GND | 电源地引脚 | 
-| 5V | 5V电源输入引脚 |
+| 引脚名称 | 功能描述              |
+| :------- | :-------------------- |
+| PWM_LED  | LED控制线，高电平有效 |
+| I2C_SCL  | I2C时钟信号线         |
+| I2C-SDA  | I2C数据信号线         |
+| GND      | 电源地引脚            |
+| 3V3      | 3.3V电源输入引脚      |
+| GND      | 电源地引脚            |
+| 5V       | 5V电源输入引脚        |
 
 ## 硬件设计
 
 硬件电路如下图所示：
-![智能路灯模块硬件电路图](/vendor/lockzhiner/rk2206/docs/figures/e53_is01/lz_e53_is01_sch.jpg)
+![智能路灯模块硬件电路图](/vendor/lockzhiner/lingpi/docs/figures/e53_is01/lz_e53_is01_sch.jpg)
 模块整体硬件电路如上图所示，电路中包含了E53接口连接器，EEPROM存储器、光线传感器， 大功率LED灯驱动电路，其中EEPROM存储器、光线传感器为数字接口芯片，直接使用I2C总线控制，电路简单，本文不再过多说明。
 
 本文主要介绍大功率LED灯驱动原理，这边采用PT4211E23E芯片作为LED灯的驱动芯片，其是一款连续导通型的电感降压转换器，可以用于驱动单个或者多个串联的LED灯，输出电流高达350mA，输出电流可通过电阻R6进行调整，也可通过DIM引脚调整输出平均电流 从而达到调整LED灯的亮度。
@@ -40,7 +40,7 @@ EEPROM 24C02的设备地址为：0x1010001* ；
 ### 硬件连接
 
 小凌派开发板与模块均带有防呆设计，故很容易区分安装方向，直接将模块插入到开发板的E53母座接口上即可，安装图如下所示：
-![智慧路灯模块硬件连接图](/vendor/lockzhiner/rk2206/docs/figures/e53_is01/e53_is01_connection_diagram.png)
+![智慧路灯模块硬件连接图](/vendor/lockzhiner/lingpi/docs/figures/e53_is01/e53_is01_connection_diagram.png)
 
 ## 程序设计
 
@@ -48,7 +48,7 @@ EEPROM 24C02的设备地址为：0x1010001* ；
 
 **头文件：**
 
-/vendor/lockzhiner/rk2206/samples/e53_intelligent_street_lamp/include/e53_intelligent_street_lamp.h
+/vendor/lockzhiner/lingpi/samples/e53_intelligent_street_lamp/include/e53_intelligent_street_lamp.h
 
 #### e53_isl_init()
 
@@ -98,8 +98,8 @@ void isl_light_set_status(SWITCH_STATUS_ENUM status);
 
 **参数：**
 
-|名字|描述|
-|:--|:------| 
+| 名字   | 描述                      |
+| :----- | :------------------------ |
 | status | 路灯状态，ON：开；OFF：关 |
 
 **返回值：**
@@ -108,7 +108,7 @@ void isl_light_set_status(SWITCH_STATUS_ENUM status);
 
 ### BH1750传感器指令集
 
-![BH1750传感器指令集](/vendor/lockzhiner/rk2206/docs/figures/e53_is01/bh1750_cmd.png)
+![BH1750传感器指令集](/vendor/lockzhiner/lingpi/docs/figures/e53_is01/bh1750_cmd.png)
 
 #### init_bh1750()
 
@@ -183,16 +183,16 @@ void e53_isl_thread()
 
 ### 修改 BUILD.gn 文件
 
-修改 `vendor/lockzhiner/rk2206/sample` 路径下 BUILD.gn 文件，指定 `c3_e53_intelligent_street_lamp` 参与编译。
+修改 `vendor/lockzhiner/lingpi/sample` 路径下 BUILD.gn 文件，指定 `c3_e53_intelligent_street_lamp` 参与编译。
 
 ```r
-"./c3_e53_intelligent_street_lamp:e53_isl_example",
+"c3_e53_intelligent_street_lamp",
 ```
 
-修改 `device/lockzhiner/rk2206/sdk_liteos` 路径下 Makefile 文件，添加 `-le53_isl_example` 参与编译。
+在主目录下输入编译命令。
 
-```r
-hardware_LIBS = -lhal_iothardware -lhardware -le53_isl_example
+```shell
+hb build -f
 ```
 
 ### 运行结果
@@ -205,4 +205,3 @@ light off
 luminance value is 4.17
 light on
 ```
-

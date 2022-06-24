@@ -11,16 +11,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import("//kernel/liteos_m/liteos.gni")
 
-static_library("timer_example") {
+kernel_module("kernel_timer_example") {
     sources = [
         "kernel_timer_example.c",
     ]
 
     include_dirs = [
         "//utils/native/lite/include",
-    ]
-
-    deps = [
     ]
 }

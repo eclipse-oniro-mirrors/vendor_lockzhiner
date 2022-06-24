@@ -39,25 +39,33 @@ int udp_get_wifi_info(WifiLinkedInfo *info)
     int gw, netmask;
     memset(info, 0, sizeof(WifiLinkedInfo));
     unsigned int retry = 15;
+    struct in_addr addr;
+
     while (retry) {
         if (GetLinkedInfo(info) == WIFI_SUCCESS) {
             if (info->connState == WIFI_CONNECTED) {
                 if (info->ipAddress != 0) {
-                    LZ_HARDWARE_LOGD(LOG_TAG, "rknetwork IP (%s)", inet_ntoa(info->ipAddress));
+                    addr.s_addr = (in_addr_t)info->ipAddress;
+                    LZ_HARDWARE_LOGD(LOG_TAG, "rknetwork IP (%s)", inet_ntoa(addr));
+
                     if (WIFI_SUCCESS == GetLocalWifiGw(&gw)) {
-                        LZ_HARDWARE_LOGD(LOG_TAG, "network GW (%s)", inet_ntoa(gw));
+                        addr.s_addr = (in_addr_t)gw;
+                        LZ_HARDWARE_LOGD(LOG_TAG, "network GW (%s)", inet_ntoa(addr));
                     }
                     if (WIFI_SUCCESS == GetLocalWifiNetmask(&netmask)) {
-                        LZ_HARDWARE_LOGD(LOG_TAG, "network NETMASK (%s)", inet_ntoa(netmask));
+                        addr.s_addr = (in_addr_t)netmask;
+                        LZ_HARDWARE_LOGD(LOG_TAG, "network NETMASK (%s)", inet_ntoa(addr));
                     }
                     if (WIFI_SUCCESS == SetLocalWifiGw()) {
                         LZ_HARDWARE_LOGD(LOG_TAG, "set network GW");
                     }
                     if (WIFI_SUCCESS == GetLocalWifiGw(&gw)) {
-                        LZ_HARDWARE_LOGD(LOG_TAG, "network GW (%s)", inet_ntoa(gw));
+                        addr.s_addr = (in_addr_t)gw;
+                        LZ_HARDWARE_LOGD(LOG_TAG, "network GW (%s)", inet_ntoa(addr));
                     }
                     if (WIFI_SUCCESS == GetLocalWifiNetmask(&netmask)) {
-                        LZ_HARDWARE_LOGD(LOG_TAG, "network NETMASK (%s)", inet_ntoa(netmask));
+                        addr.s_addr = (in_addr_t)netmask;
+                        LZ_HARDWARE_LOGD(LOG_TAG, "network NETMASK (%s)", inet_ntoa(addr));
                     }
                     ret = 0;
                     goto connect_done;
@@ -105,6 +113,7 @@ void udp_server_msg_handle(int fd)
 int wifi_udp_server(void* arg)
 {
     int server_fd, ret;
+    struct in_addr addr;
 
     while(1)
     {
@@ -135,7 +144,8 @@ int wifi_udp_server(void* arg)
             lwip_close(server_fd);
             return -1;
         }
-        printf("[udp server] local  addr:%s,port:%u\n", inet_ntoa(wifiinfo.ipAddress), ntohs(serv_addr.sin_port));
+        addr.s_addr = (in_addr_t)wifiinfo.ipAddress;
+        printf("[udp server] local  addr:%s,port:%u\n", inet_ntoa(addr), ntohs(serv_addr.sin_port));
 
         udp_server_msg_handle(server_fd);   //处理接收到的数据
         LOS_Msleep(1000);
@@ -233,6 +243,8 @@ void wifi_udp_process(void *args)
    
     WifiLinkedInfo info;
 
+    /* 开启WiFi连接任务 */
+    ExternalTaskConfigNetwork();
     while(udp_get_wifi_info(&info) != 0) ;
     wifiinfo = info;
     LOS_Msleep(1000);

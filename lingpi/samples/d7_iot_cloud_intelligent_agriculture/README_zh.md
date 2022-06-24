@@ -4,7 +4,7 @@
 
 本例程演示如何在小凌派-RK2206开发板上使用智慧农业模块，开发基于华为云IoT的智慧农业应用。
 
-![小凌派-RK2206开发板](/vendor/lockzhiner/rk2206/docs/figures/lockzhiner-rk2206.jpg)
+![小凌派-RK2206开发板](/vendor/lockzhiner/lingpi/docs/figures/lockzhiner-rk2206.jpg)
 
 ## 程序设计
 
@@ -208,13 +208,13 @@ void iot_cloud_ia_thread()
 
 设备连接华为云前，需要做一些准备工作，请在华为云平台注册个人用户账号，并且需要实名认证后才可以正常使用。华为云IotDM地址：https://www.huaweicloud.com/product/iotdm.html
 
-![登录华为云](/vendor/lockzhiner/rk2206/docs/figures/huaweicloud/huaweicloud_login.png)
+![登录华为云](/vendor/lockzhiner/lingpi/docs/figures/huaweicloud/huaweicloud_login.png)
 
 ### 华为云接入协议
 
 选择侧边栏总览页面，点击平台接入地址。
 
-![华为云协议地址](/vendor/lockzhiner/rk2206/docs/figures/huaweicloud/cloud_mqtt.png)
+![华为云协议地址](/vendor/lockzhiner/lingpi/docs/figures/huaweicloud/cloud_mqtt.png)
 
 这里显示华为云平台接入的协议与域名信息，选择MQTT协议作为设备接入协议。
 
@@ -222,7 +222,7 @@ void iot_cloud_ia_thread()
 
 域名：a161b173a6.iot-mqtts.cn-north-4.myhuaweicloud.com
 
-![华为云协议地址](/vendor/lockzhiner/rk2206/docs/figures/huaweicloud/cloud_address.png)
+![华为云协议地址](/vendor/lockzhiner/lingpi/docs/figures/huaweicloud/cloud_address.png)
 
 WIN + R键打开PC命令行CMD，执行如下命令获取接入域名的IP地址。
 
@@ -232,9 +232,9 @@ ping a161b173a6.iot-mqtts.cn-north-4.myhuaweicloud.com
 
 通过ping命令可以查询到接入域名的IP地址为121.36.42.100
 
-![华为云IP地址](/vendor/lockzhiner/rk2206/docs/figures/huaweicloud/ping.png)
+![华为云IP地址](/vendor/lockzhiner/lingpi/docs/figures/huaweicloud/ping.png)
 
-IP地址对应例程/vendor/lockzhiner/rk2206/samples/d7_iot_cloud_intelligent_agriculture/include/oc_mqtt.h代码中的OC_SERVER_IP，端口号1883对应例程代码中的OC_SERVER_PORT。
+IP地址对应例程/vendor/lockzhiner/lingpi/samples/d7_iot_cloud_intelligent_agriculture/include/oc_mqtt.h代码中的OC_SERVER_IP，端口号1883对应例程代码中的OC_SERVER_PORT。
 
 ```c
 #define OC_SERVER_IP                    "121.36.42.100"
@@ -245,33 +245,33 @@ IP地址对应例程/vendor/lockzhiner/rk2206/samples/d7_iot_cloud_intelligent_a
 
 选择侧边栏产品页面，点击右上角创建产品，添加智慧农业产品
 
-![创建产品](/vendor/lockzhiner/rk2206/docs/figures/huaweicloud/IA/create_product.png)
+![创建产品](/vendor/lockzhiner/lingpi/docs/figures/huaweicloud/IA/create_product.png)
 
 单击产品详情页的自定义模型，在弹出页面中添加服务
 
 服务ID：智慧农业(必须与代码一致)
 
-![添加服务](/vendor/lockzhiner/rk2206/docs/figures/huaweicloud/IA/add_server.png)
+![添加服务](/vendor/lockzhiner/lingpi/docs/figures/huaweicloud/IA/add_server.png)
 
 选择智慧农业服务，点击添加属性，添加温度属性
 
-![添加属性](/vendor/lockzhiner/rk2206/docs/figures/huaweicloud/IA/add_temperature.png)
+![添加属性](/vendor/lockzhiner/lingpi/docs/figures/huaweicloud/IA/add_temperature.png)
 
 选择智慧农业服务，点击添加属性，添加湿度属性
 
-![添加属性](/vendor/lockzhiner/rk2206/docs/figures/huaweicloud/IA/add_humidity.png)
+![添加属性](/vendor/lockzhiner/lingpi/docs/figures/huaweicloud/IA/add_humidity.png)
 
 选择智慧农业服务，点击添加属性，添加亮度属性
 
-![添加属性](/vendor/lockzhiner/rk2206/docs/figures/huaweicloud/IA/add_luminance.png)
+![添加属性](/vendor/lockzhiner/lingpi/docs/figures/huaweicloud/IA/add_luminance.png)
 
 选择智慧农业服务，点击添加属性，添加紫光灯状态属性
 
-![添加属性](/vendor/lockzhiner/rk2206/docs/figures/huaweicloud/IA/add_light_status.png)
+![添加属性](/vendor/lockzhiner/lingpi/docs/figures/huaweicloud/IA/add_light_status.png)
 
 选择智慧农业服务，点击添加属性，添加电机状态属性
 
-![添加属性](/vendor/lockzhiner/rk2206/docs/figures/huaweicloud/IA/add_motor_status.png)
+![添加属性](/vendor/lockzhiner/lingpi/docs/figures/huaweicloud/IA/add_motor_status.png)
 
 选择智慧农业服务，点击添加命令，添加紫光灯控制命令
 
@@ -285,7 +285,7 @@ IP地址对应例程/vendor/lockzhiner/rk2206/samples/d7_iot_cloud_intelligent_a
 
 枚举值：ON,OFF
 
-![添加紫光灯控制命令](/vendor/lockzhiner/rk2206/docs/figures/huaweicloud/IA/add_cmd_light.png)
+![添加紫光灯控制命令](/vendor/lockzhiner/lingpi/docs/figures/huaweicloud/IA/add_cmd_light.png)
 
 选择智慧农业服务，点击添加命令，添加电机控制命令
 
@@ -299,29 +299,29 @@ IP地址对应例程/vendor/lockzhiner/rk2206/samples/d7_iot_cloud_intelligent_a
 
 枚举值：ON,OFF
 
-![添加电机控制命令](/vendor/lockzhiner/rk2206/docs/figures/huaweicloud/IA/add_cmd_motor.png)
+![添加电机控制命令](/vendor/lockzhiner/lingpi/docs/figures/huaweicloud/IA/add_cmd_motor.png)
 
 ### 注册设备
 
 选择侧边栏所有设备页面，点击右上角注册设备，注册智慧农业设备，勾选对应所属资源空间并选中刚刚创建的智慧农业产品，注意设备认证类型选择“密钥”，并按要求填写密钥。
 
-![注册设备](/vendor/lockzhiner/rk2206/docs/figures/huaweicloud/IA/device.png)
+![注册设备](/vendor/lockzhiner/lingpi/docs/figures/huaweicloud/IA/device.png)
 
 注册完成后，选择侧边栏所有设备页面，可以看到注册完成的设备。
 
-![设备信息](/vendor/lockzhiner/rk2206/docs/figures/huaweicloud/all_device.png)
+![设备信息](/vendor/lockzhiner/lingpi/docs/figures/huaweicloud/all_device.png)
 
 在连接华为云前需要获取CLIENT_ID、USERNAME、PASSWORD，访问[华为云iot工具](https://iot-tool.obs-website.cn-north-4.myhuaweicloud.com/)；填写注册设备时生成的设备ID和设备密钥，生成连接信息（ClientId、Username、Password），并修改代码中对应的CLIENT_ID、USERNAME、PASSWORD。
 
 点击进入智慧农业设备，可以查看设备ID。
 
-![设备ID](/vendor/lockzhiner/rk2206/docs/figures/huaweicloud/IA/device_id.png)
+![设备ID](/vendor/lockzhiner/lingpi/docs/figures/huaweicloud/IA/device_id.png)
 
 输入设备ID和设备密匙，点击Generate生成ClientId、Username和Password。
 
-![连接信息](/vendor/lockzhiner/rk2206/docs/figures/huaweicloud/IA/id.png)
+![连接信息](/vendor/lockzhiner/lingpi/docs/figures/huaweicloud/IA/id.png)
 
-修改例程/vendor/lockzhiner/rk2206/samples/d7_iot_cloud_intelligent_agriculture/iot_cloud_ia_example.c代码中的CLIENT_ID、USERNAME和PASSWORD为生成的ClientId、Username和Password。
+修改例程/vendor/lockzhiner/lingpi/samples/d7_iot_cloud_intelligent_agriculture/iot_cloud_ia_example.c代码中的CLIENT_ID、USERNAME和PASSWORD为生成的ClientId、Username和Password。
 
 ```c
 #define CLIENT_ID                       "61c69349078a93029b83ceff_E53_IA_0_0_2021122504"
@@ -331,7 +331,7 @@ IP地址对应例程/vendor/lockzhiner/rk2206/samples/d7_iot_cloud_intelligent_a
 
 ### WIFI连接
 
-修改例程/device/rockchip/rk2206/sdk_liteos/board/src/config_network.c代码中的SSID和PASSWORD为使用WIFI的SSID和密匙，用于连接网络，设备通过WIFI访问华为云。
+修改例程/device/soc/rockchip/rk2206/sdk_liteos/platform/network/config_network.c代码中的SSID和PASSWORD为使用WIFI的SSID和密匙，用于连接网络，设备通过WIFI访问华为云。
 
 ```c
 #define SSID                       "lzdz"
@@ -340,17 +340,13 @@ IP地址对应例程/vendor/lockzhiner/rk2206/samples/d7_iot_cloud_intelligent_a
 
 ### 修改 BUILD.gn 文件
 
-修改 `vendor/lockzhiner/rk2206/sample` 路径下 BUILD.gn 文件，指定 `d7_iot_cloud_intelligent_agriculture` 参与编译。
+修改 `vendor/lockzhiner/lingpi/sample` 路径下 BUILD.gn 文件，指定 `d7_iot_cloud_intelligent_agriculture` 参与编译。
 
 ```r
-"./d7_iot_cloud_intelligent_agriculture:iot_cloud_ia_example",
+"d7_iot_cloud_intelligent_agriculture",
 ```
 
-修改 `device/lockzhiner/rk2206/sdk_liteos` 路径下 Makefile 文件，添加 `-liot_cloud_ia_example` 参与编译。
 
-```r
-hardware_LIBS = -lhal_iothardware -lhardware -liot_cloud_ia_example
-```
 
 ### 运行结果
 
@@ -376,12 +372,13 @@ motor off
 
 登录华为云平台，选择侧边栏所有设备页面，点击进入智慧农业设备查看开发板上报的数据。
 
-![华为云](/vendor/lockzhiner/rk2206/docs/figures/huaweicloud/IA/iot_ia.png)
+![华为云](/vendor/lockzhiner/lingpi/docs/figures/huaweicloud/IA/iot_ia.png)
 
 设备详情页面，点击选择命令界面，选择同步命令下发，选择命令智慧农业：紫光灯控制-ON/OFF，点击确定，控制紫光灯开启/关闭。
 
-![紫光灯控制](/vendor/lockzhiner/rk2206/docs/figures/huaweicloud/IA/cmd_light.png)
+![紫光灯控制](/vendor/lockzhiner/lingpi/docs/figures/huaweicloud/IA/cmd_light.png)
 
 设备详情页面，点击选择命令界面，选择同步命令下发，选择命令智慧农业：电机控制-ON/OFF，点击确定，控制电机开启/关闭。
 
-![电机控制](/vendor/lockzhiner/rk2206/docs/figures/huaweicloud/IA/cmd_motor.png)
+![电机控制](/vendor/lockzhiner/lingpi/docs/figures/huaweicloud/IA/cmd_motor.png)
+

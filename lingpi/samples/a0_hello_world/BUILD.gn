@@ -11,8 +11,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import("//kernel/liteos_m/liteos.gni")
 
-static_library("task_helloworld") {
+kernel_module("hello_world") {
     sources = [
         "hello_world.c",
     ]
@@ -21,3 +22,4 @@ static_library("task_helloworld") {
         "//utils/native/lite/include",
     ]
 }
+

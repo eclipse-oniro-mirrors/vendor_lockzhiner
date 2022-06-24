@@ -4,7 +4,7 @@
 
 本例程演示如何在小凌派-RK2206开发板上使用鸿蒙LiteOS-M内核接口，进行定时器编程开发。
 
-![小凌派-RK2206开发板](/vendor/lockzhiner/rk2206/docs/figures/lockzhiner-rk2206.jpg)
+![小凌派-RK2206开发板](/vendor/lockzhiner/lingpi/docs/figures/lockzhiner-rk2206.jpg)
 
 ## 程序设计
 
@@ -43,10 +43,11 @@ UINT32 LOS_SwtmrCreate(UINT32 interval,
 | arg      | 定时器回调函数参数 |
 
 **返回值：**
-|返回值|描述|
-|:--|:------| 
-| LOS_OK | 成功 |
-| LOS_ERRNO_SWTMR_INTERVAL_NOT_SUITED <br> LOS_ERRNO_SWTMR_MODE_INVALID <br> LOS_ERRNO_SWTMR_PTR_NULL <br> LOS_ERRNO_SWTMR_RET_PTR_NULL <br> LOS_ERRNO_SWTMR_MAXSIZE | 失败 |
+
+| 返回值                                                                                                                                                                            | 描述 |
+| :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--- |
+| LOS_OK                                                                                                                                                                            | 成功 |
+| LOS_ERRNO_SWTMR_INTERVAL_NOT_SUITED`<br>` LOS_ERRNO_SWTMR_MODE_INVALID `<br>` LOS_ERRNO_SWTMR_PTR_NULL `<br>` LOS_ERRNO_SWTMR_RET_PTR_NULL `<br>` LOS_ERRNO_SWTMR_MAXSIZE | 失败 |
 
 #### LOS_SwtmrDelete()
 
@@ -65,10 +66,11 @@ UINT32 LOS_SwtmrDelete(UINT32 swtmrID);
 | swtmrID | 定时器ID |
 
 **返回值：**
-|返回值|描述|
-|:--|:------| 
-| LOS_OK | 成功 |
-| LOS_ERRNO_SWTMR_ID_INVALID <br> LOS_ERRNO_SWTMR_NOT_CREATED <br> LOS_ERRNO_SWTMR_STATUS_INVALID | 失败 |
+
+| 返回值                                                                                                 | 描述 |
+| :----------------------------------------------------------------------------------------------------- | :--- |
+| LOS_OK                                                                                                 | 成功 |
+| LOS_ERRNO_SWTMR_ID_INVALID`<br>` LOS_ERRNO_SWTMR_NOT_CREATED `<br>` LOS_ERRNO_SWTMR_STATUS_INVALID | 失败 |
 
 #### LOS_SwtmrStart()
 
@@ -87,10 +89,11 @@ UINT32 LOS_SwtmrStart(UINT32 swtmrID);
 | swtmrID | 定时器ID |
 
 **返回值：**
-|返回值|描述|
-|:--|:------| 
-| LOS_OK | 成功 |
-| LOS_ERRNO_SWTMR_ID_INVALID <br> LOS_ERRNO_SWTMR_NOT_CREATED <br> LOS_ERRNO_SWTMR_STATUS_INVALID | 失败 |
+
+| 返回值                                                                                                 | 描述 |
+| :----------------------------------------------------------------------------------------------------- | :--- |
+| LOS_OK                                                                                                 | 成功 |
+| LOS_ERRNO_SWTMR_ID_INVALID`<br>` LOS_ERRNO_SWTMR_NOT_CREATED `<br>` LOS_ERRNO_SWTMR_STATUS_INVALID | 失败 |
 
 #### LOS_SwtmrStop()
 
@@ -109,10 +112,11 @@ UINT32 LOS_SwtmrStop(UINT32 swtmrID);
 | swtmrID | 定时器ID |
 
 **返回值：**
-|返回值|描述|
-|:--|:------| 
-| LOS_OK | 成功 |
-| LOS_ERRNO_SWTMR_ID_INVALID <br> LOS_ERRNO_SWTMR_NOT_CREATED <br> LOS_ERRNO_SWTMR_NOT_STARTED <br> LOS_ERRNO_SWTMR_STATUS_INVALID | 失败 |
+
+| 返回值                                                                                                                                      | 描述 |
+| :------------------------------------------------------------------------------------------------------------------------------------------ | :--- |
+| LOS_OK                                                                                                                                      | 成功 |
+| LOS_ERRNO_SWTMR_ID_INVALID`<br>` LOS_ERRNO_SWTMR_NOT_CREATED `<br>` LOS_ERRNO_SWTMR_NOT_STARTED `<br>` LOS_ERRNO_SWTMR_STATUS_INVALID | 失败 |
 
 ### 软件设计
 
@@ -174,16 +178,16 @@ void timer2_timeout(void *arg)
 
 ### 修改 BUILD.gn 文件
 
-修改 `vendor/lockzhiner/rk2206/sample` 路径下 BUILD.gn 文件，指定 `a3_kernel_timer` 参与编译。
+修改 `vendor/lockzhiner/lingpi/sample` 路径下 BUILD.gn 文件，指定 `a3_kernel_timer` 参与编译。
 
 ```r
-"./a3_kernel_timer:timer_example",
+"a3_kernel_timer",
 ```
 
-修改 `device/lockzhiner/rk2206/sdk_liteos` 路径下 Makefile 文件，添加 `-ltimer_example` 参与编译。
+在主目录下输入编译命令。
 
-```r
-hardware_LIBS = -lhal_iothardware -lhardware -ltimer_example
+```shell
+hb build -f
 ```
 
 ### 运行结果
@@ -198,4 +202,3 @@ This is Timer1 Timeout function
 This is Timer1 Timeout function
 This is Timer2 Timeout function
 ```
-

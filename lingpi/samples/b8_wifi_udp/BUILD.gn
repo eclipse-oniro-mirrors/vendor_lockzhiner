@@ -11,27 +11,16 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import("//drivers/adapter/khdf/liteos_m/hdf.gni")
-import("//device/rockchip/rk2206/sdk_liteos/board.gni")
+import("//kernel/liteos_m/liteos.gni")
 
-static_library("wifi_udp_example") {
+kernel_module("wifi_udp_example") {
     sources = [
         "wifi_udp_example.c",
     ]
 
     include_dirs = [
         "//utils/native/lite/include",
-        "//device/rockchip/hardware/project/rk2206/src",
-        "//device/rockchip/hardware/lib/hal/inc/",
-        "//device/rockchip/rk2206/adapter/include",
-        "//device/rockchip/rk2206/adapter/include/lz_hardware/",
-        "//device/rockchip/rk2206/sdk_liteos/board/include",
-        "include",
-        "//third_party/lwip/src/include/lwip"
-    ]
-
-    deps = [
-        "//device/rockchip/hardware:hardware",
-        "//kernel/liteos_m/kal/posix"
+        "//third_party/lwip/src/include/lwip",
+        "//foundation/communication/wifi_lite/interfaces/wifiservice",
     ]
 }

@@ -11,8 +11,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import("//kernel/liteos_m/liteos.gni")
 
-static_library("iot_cloud_isl_example") {
+kernel_module("iot_cloud_isl_example") {
     sources = [
         "iot_cloud_intelligent_street_lamp.c",
         "src/e53_intelligent_street_lamp.c",
@@ -24,12 +25,8 @@ static_library("iot_cloud_isl_example") {
         "//utils/native/lite/include",
         "//third_party/cJSON",
         "//third_party/musl/porting/liteos_m/kernel/include",
-        "//third_party/paho_mqtt/MQTTPacket/src",
-        "//third_party/paho_mqtt/MQTTClient-C/src",
+        "//device/board/lockzhiner/lingpi/third_party/paho_mqtt/MQTTClient-C/src",
+        "//device/board/lockzhiner/lingpi/third_party/paho_mqtt/MQTTPacket/src",
         "include",
-    ]
-
-    deps = [
-        "//device/rockchip/hardware:hardware",
     ]
 }

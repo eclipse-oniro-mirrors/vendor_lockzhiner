@@ -80,8 +80,6 @@ bool nfc_store_text(RecordPosEnu position, uint8_t *text)
 unsigned int nfc_init(void)
 {
     unsigned int ret = 0;
-    uint32_t *pGrf = (uint32_t *)0x41050000U;
-    uint32_t ulValue;
     
     if (m_nfc_is_init == 1)
     {

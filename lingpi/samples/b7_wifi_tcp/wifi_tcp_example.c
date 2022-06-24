@@ -12,6 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+
 #include "ohos_init.h"
 #include "cmsis_os2.h"
 #include "los_task.h"
@@ -26,10 +30,10 @@
 #define LOG_TAG    "tcp"
 int get_wifi_info(WifiLinkedInfo *info);
 
-#define OC_SERVER_IP   "192.168.2.156"
-#define SERVER_PORT 6666
+#define OC_SERVER_IP    "192.168.2.156"
+#define SERVER_PORT     6666
 
-#define BUFF_LEN    256
+#define BUFF_LEN        256
 
 int get_wifi_info(WifiLinkedInfo *info)
 {
@@ -37,25 +41,33 @@ int get_wifi_info(WifiLinkedInfo *info)
     int gw, netmask;
     memset(info, 0, sizeof(WifiLinkedInfo));
     unsigned int retry = 15;
+    struct in_addr addr;
+    
     while (retry) {
         if (GetLinkedInfo(info) == WIFI_SUCCESS) {
             if (info->connState == WIFI_CONNECTED) {
                 if (info->ipAddress != 0) {
-                    LZ_HARDWARE_LOGD(LOG_TAG, "rknetwork IP (%s)", inet_ntoa(info->ipAddress));
+                    addr.s_addr = (in_addr_t)info->ipAddress;
+                    LZ_HARDWARE_LOGD(LOG_TAG, "rknetwork IP (%s)", inet_ntoa(addr));
+                
                     if (WIFI_SUCCESS == GetLocalWifiGw(&gw)) {
-                        LZ_HARDWARE_LOGD(LOG_TAG, "network GW (%s)", inet_ntoa(gw));
+                        addr.s_addr = (in_addr_t)gw;
+                        LZ_HARDWARE_LOGD(LOG_TAG, "network GW (%s)", inet_ntoa(addr));
                     }
                     if (WIFI_SUCCESS == GetLocalWifiNetmask(&netmask)) {
-                        LZ_HARDWARE_LOGD(LOG_TAG, "network NETMASK (%s)", inet_ntoa(netmask));
+                        addr.s_addr = (in_addr_t)netmask;
+                        LZ_HARDWARE_LOGD(LOG_TAG, "network NETMASK (%s)", inet_ntoa(addr));
                     }
                     if (WIFI_SUCCESS == SetLocalWifiGw()) {
                         LZ_HARDWARE_LOGD(LOG_TAG, "set network GW");
                     }
                     if (WIFI_SUCCESS == GetLocalWifiGw(&gw)) {
-                        LZ_HARDWARE_LOGD(LOG_TAG, "network GW (%s)", inet_ntoa(gw));
+                        addr.s_addr = (in_addr_t)gw;
+                        LZ_HARDWARE_LOGD(LOG_TAG, "network GW (%s)", inet_ntoa(addr));
                     }
                     if (WIFI_SUCCESS == GetLocalWifiNetmask(&netmask)) {
-                        LZ_HARDWARE_LOGD(LOG_TAG, "network NETMASK (%s)", inet_ntoa(netmask));
+                        addr.s_addr = (in_addr_t)netmask;
+                        LZ_HARDWARE_LOGD(LOG_TAG, "network NETMASK (%s)", inet_ntoa(addr));
                     }
                     ret = 0;
                     goto connect_done;
@@ -240,6 +252,8 @@ void wifi_process(void *args)
    
     WifiLinkedInfo info;
 
+    /* 开启WiFi连接任务 */
+    ExternalTaskConfigNetwork();
     while(get_wifi_info(&info) != 0) ;
 
     CreateThread(&threadID_client,  wifi_client, NULL, "client@ process");

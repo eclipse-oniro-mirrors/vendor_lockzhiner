@@ -4,7 +4,7 @@
 
 本例程演示如何在小凌派-RK2206开发板上使用智慧井盖模块，开发基于华为云IoT的智慧井盖应用。
 
-![小凌派-RK2206开发板](/vendor/lockzhiner/rk2206/docs/figures/lockzhiner-rk2206.jpg)
+![小凌派-RK2206开发板](/vendor/lockzhiner/lingpi/docs/figures/lockzhiner-rk2206.jpg)
 
 ## 程序设计
 
@@ -236,13 +236,13 @@ int iot_cloud_sc_thread()
 
 设备连接华为云前，需要做一些准备工作，请在华为云平台注册个人用户账号，并且需要实名认证后才可以正常使用。华为云IotDM地址：https://www.huaweicloud.com/product/iotdm.html
 
-![登录华为云](/vendor/lockzhiner/rk2206/docs/figures/huaweicloud/huaweicloud_login.png)
+![登录华为云](/vendor/lockzhiner/lingpi/docs/figures/huaweicloud/huaweicloud_login.png)
 
 ### 华为云接入协议
 
 选择侧边栏总览页面，点击平台接入地址。
 
-![华为云协议地址](/vendor/lockzhiner/rk2206/docs/figures/huaweicloud/cloud_mqtt.png)
+![华为云协议地址](/vendor/lockzhiner/lingpi/docs/figures/huaweicloud/cloud_mqtt.png)
 
 这里显示华为云平台接入的协议与域名信息，选择MQTT协议作为设备接入协议。
 
@@ -250,7 +250,7 @@ int iot_cloud_sc_thread()
 
 域名：a161b173a6.iot-mqtts.cn-north-4.myhuaweicloud.com
 
-![华为云协议地址](/vendor/lockzhiner/rk2206/docs/figures/huaweicloud/cloud_address.png)
+![华为云协议地址](/vendor/lockzhiner/lingpi/docs/figures/huaweicloud/cloud_address.png)
 
 WIN + R键打开PC命令行CMD，执行如下命令获取接入域名的IP地址。
 
@@ -260,9 +260,9 @@ ping a161b173a6.iot-mqtts.cn-north-4.myhuaweicloud.com
 
 通过ping命令可以查询到接入域名的IP地址为121.36.42.100
 
-![华为云IP地址](/vendor/lockzhiner/rk2206/docs/figures/huaweicloud/ping.png)
+![华为云IP地址](/vendor/lockzhiner/lingpi/docs/figures/huaweicloud/ping.png)
 
-IP地址对应例程/vendor/lockzhiner/rk2206/samples/d2_iot_cloud_smart_covers/include/oc_mqtt.h代码中的OC_SERVER_IP，端口号1883对于例程代码中的OC_SERVER_PORT。
+IP地址对应例程/vendor/lockzhiner/lingpi/samples/d2_iot_cloud_smart_covers/include/oc_mqtt.h代码中的OC_SERVER_IP，端口号1883对于例程代码中的OC_SERVER_PORT。
 
 ```c
 #define OC_SERVER_IP                    "121.36.42.100"
@@ -273,51 +273,51 @@ IP地址对应例程/vendor/lockzhiner/rk2206/samples/d2_iot_cloud_smart_covers/
 
 选择侧边栏产品页面，点击右上角创建产品，添加智慧井盖产品
 
-![创建产品](/vendor/lockzhiner/rk2206/docs/figures/huaweicloud/SC/create_product.png)
+![创建产品](/vendor/lockzhiner/lingpi/docs/figures/huaweicloud/SC/create_product.png)
 
 单击产品详情页的自定义模型，在弹出页面中添加服务
 
 服务ID：智慧井盖(必须与代码一致)
 
-![添加服务](/vendor/lockzhiner/rk2206/docs/figures/huaweicloud/SC/add_server.png)
+![添加服务](/vendor/lockzhiner/lingpi/docs/figures/huaweicloud/SC/add_server.png)
 
 选择智慧井盖服务，点击添加属性，添加X属性
 
-![添加属性](/vendor/lockzhiner/rk2206/docs/figures/huaweicloud/SC/add_x.png)
+![添加属性](/vendor/lockzhiner/lingpi/docs/figures/huaweicloud/SC/add_x.png)
 
 选择智慧井盖服务，点击添加属性，添加Y属性
 
-![添加属性](/vendor/lockzhiner/rk2206/docs/figures/huaweicloud/SC/add_y.png)
+![添加属性](/vendor/lockzhiner/lingpi/docs/figures/huaweicloud/SC/add_y.png)
 
 选择智慧井盖服务，点击添加属性，添加Z属性
 
-![添加属性](/vendor/lockzhiner/rk2206/docs/figures/huaweicloud/SC/add_z.png)
+![添加属性](/vendor/lockzhiner/lingpi/docs/figures/huaweicloud/SC/add_z.png)
 
 选择智慧井盖服务，点击添加属性，添加倾斜告警属性
 
-![添加属性](/vendor/lockzhiner/rk2206/docs/figures/huaweicloud/SC/add_tilt.png)
+![添加属性](/vendor/lockzhiner/lingpi/docs/figures/huaweicloud/SC/add_tilt.png)
 
 ### 注册设备
 
 选择侧边栏所有设备页面，点击右上角注册设备，注册智慧井盖设备，勾选对应所属资源空间并选中刚刚创建的智慧井盖产品，注意设备认证类型选择“密钥”，并按要求填写密钥。
 
-![注册设备](/vendor/lockzhiner/rk2206/docs/figures/huaweicloud/SC/device.png)
+![注册设备](/vendor/lockzhiner/lingpi/docs/figures/huaweicloud/SC/device.png)
 
 注册完成后，选择侧边栏所有设备页面，可以看到注册完成的设备。
 
-![设备信息](/vendor/lockzhiner/rk2206/docs/figures/huaweicloud/all_device.png)
+![设备信息](/vendor/lockzhiner/lingpi/docs/figures/huaweicloud/all_device.png)
 
 在连接华为云前需要获取CLIENT_ID、USERNAME、PASSWORD，访问[华为云iot工具](https://iot-tool.obs-website.cn-north-4.myhuaweicloud.com/)；填写注册设备时生成的设备ID和设备密钥，生成连接信息（ClientId、Username、Password），并修改代码中对应的CLIENT_ID、USERNAME、PASSWORD。
 
 点击进入智慧井盖设备，可以查看设备ID。
 
-![设备ID](/vendor/lockzhiner/rk2206/docs/figures/huaweicloud/SC/device_id.png)
+![设备ID](/vendor/lockzhiner/lingpi/docs/figures/huaweicloud/SC/device_id.png)
 
 输入设备ID和设备密匙，点击Generate生成ClientId、Username和Password。
 
-![连接信息](/vendor/lockzhiner/rk2206/docs/figures/huaweicloud/SC/id.png)
+![连接信息](/vendor/lockzhiner/lingpi/docs/figures/huaweicloud/SC/id.png)
 
-修改例程/vendor/lockzhiner/rk2206/samples/d2_iot_cloud_smart_covers/iot_cloud_smart_covers.c代码中的CLIENT_ID、USERNAME和PASSWORD为生成的ClientId、Username和Password。
+修改例程/vendor/lockzhiner/lingpi/samples/d2_iot_cloud_smart_covers/iot_cloud_smart_covers.c代码中的CLIENT_ID、USERNAME和PASSWORD为生成的ClientId、Username和Password。
 
 ```c
 #define CLIENT_ID                       "61c69349078a93029b83ceff_E53_SC_0_0_2021122504"
@@ -327,7 +327,7 @@ IP地址对应例程/vendor/lockzhiner/rk2206/samples/d2_iot_cloud_smart_covers/
 
 ### WIFI连接
 
-修改例程/device/rockchip/rk2206/sdk_liteos/board/src/config_network.c代码中的SSID和PASSWORD为使用WIFI的SSID和密匙，用于连接网络，设备通过WIFI访问华为云。
+修改例程/device/soc/rockchip/rk2206/sdk_liteos/platform/network/config_network.c代码中的SSID和PASSWORD为使用WIFI的SSID和密匙，用于连接网络，设备通过WIFI访问华为云。
 
 ```c
 #define SSID                       "lzdz"
@@ -336,17 +336,13 @@ IP地址对应例程/vendor/lockzhiner/rk2206/samples/d2_iot_cloud_smart_covers/
 
 ### 修改 BUILD.gn 文件
 
-修改 `vendor/lockzhiner/rk2206/sample` 路径下 BUILD.gn 文件，指定 `d2_iot_cloud_smart_city` 参与编译。
+修改 `vendor/lockzhiner/lingpi/sample` 路径下 BUILD.gn 文件，指定 `d2_iot_cloud_smart_city` 参与编译。
 
 ```r
-"./d2_iot_cloud_smart_city:iot_cloud_sc_example",
+"d2_iot_cloud_smart_city",
 ```
 
-修改 `device/lockzhiner/rk2206/sdk_liteos` 路径下 Makefile 文件，添加 `-liot_cloud_sc_example` 参与编译。
 
-```r
-hardware_LIBS = -lhal_iothardware -lhardware -liot_cloud_sc_example
-```
 
 ### 运行结果
 
@@ -370,7 +366,7 @@ LED1 OFF LED2 On
 
 登录华为云平台，选择侧边栏所有设备页面，点击进入智慧井盖设备查看开发板上报的数据。
 
-![华为云](/vendor/lockzhiner/rk2206/docs/figures/huaweicloud/SC/sc_normal.png)
+![华为云](/vendor/lockzhiner/lingpi/docs/figures/huaweicloud/SC/sc_normal.png)
 
-![华为云](/vendor/lockzhiner/rk2206/docs/figures/huaweicloud/SC/sc_warning.png)
+![华为云](/vendor/lockzhiner/lingpi/docs/figures/huaweicloud/SC/sc_warning.png)
 

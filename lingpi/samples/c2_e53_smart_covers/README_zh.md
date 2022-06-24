@@ -4,12 +4,12 @@
 
 本例程演示如何在小凌派-RK2206开发板上实现智慧井盖应用案例。
 
-![小凌派-RK2206开发板](/vendor/lockzhiner/rk2206/docs/figures/lockzhiner-rk2206.jpg)
+![小凌派-RK2206开发板](/vendor/lockzhiner/lingpi/docs/figures/lockzhiner-rk2206.jpg)
 
 ## 硬件资源
 
 硬件资源图如下所示：
-![智慧井盖模块硬件资源](/vendor/lockzhiner/rk2206/docs/figures/e53_sc01/e53_sc01_resource_map.jpg)
+![智慧井盖模块硬件资源](/vendor/lockzhiner/lingpi/docs/figures/e53_sc01/e53_sc01_resource_map.jpg)
 
 EEPROM 24C02的设备地址为：0x1010001* ；
 六轴传感器 MPU6050 的设备地址为：0x1101000*
@@ -32,25 +32,25 @@ EEPROM 24C02的设备地址为：0x1010001* ；
 ## 硬件设计
 
 硬件电路如下图所示：
-![智慧井盖模块硬件电路图](/vendor/lockzhiner/rk2206/docs/figures/e53_sc01/lz_e53_sc01_sch.jpg)
+![智慧井盖模块硬件电路图](/vendor/lockzhiner/lingpi/docs/figures/e53_sc01/lz_e53_sc01_sch.jpg)
 
 模块整体硬件电路如上图所示，电路中包含了E53接口连接器，EEPROM存储器、MPU6050传感器，LED指示灯电路，其中EEPROM存储器、MPU6050传感器为数字接口芯片，直接使用I2C总线控制，电路简单，本文不再过多说明。
 
 ### 硬件连接
 
 小凌派开发板与模块均带有防呆设计，故很容易区分安装方向，直接将模块插入到开发板的E53母座接口上即可，安装图如下所示：
-![智慧井盖模块硬件连接图](/vendor/lockzhiner/rk2206/docs/figures/e53_sc01/e53_sc01_connection_diagram.png)
+![智慧井盖模块硬件连接图](/vendor/lockzhiner/lingpi/docs/figures/e53_sc01/e53_sc01_connection_diagram.png)
 
 ## 程序设计
 
 ### API分析
 
 MPU6050寄存器手册
-/vendor/lockzhiner/rk2206/docs/datasheet/sensor/MPU-6000 and MPU-6050 Register Map and Descriptions.pdf
+/vendor/lockzhiner/lingpi/docs/datasheet/sensor/MPU-6000 and MPU-6050 Register Map and Descriptions.pdf
 
 **头文件：**
 
-/vendor/lockzhiner/rk2206/samples/e53_smart_city/include/e53_smart_city.h
+/vendor/lockzhiner/lingpi/samples/e53_smart_city/include/e53_smart_city.h
 
 #### e53_sc_init()
 
@@ -150,7 +150,7 @@ E53智慧井盖模块读取MPU6050的角速度数据。
 
 MPU6050_ACC_OUT角速度数据寄存器，只读，包括X轴、Y轴和Z轴。
 
-![寄存器](/vendor/lockzhiner/rk2206/docs/figures/e53_sc01/MPU6050_ACC_OUT.png)
+![寄存器](/vendor/lockzhiner/lingpi/docs/figures/e53_sc01/MPU6050_ACC_OUT.png)
 
 **参数：**
 
@@ -174,7 +174,7 @@ E53智慧井盖模块读取MPU6050的ID，读取值为0x68返回成功；否则�
 
 MPU6050_RA_WHO_AM_I寄存器，只读，默认值0x68。
 
-![寄存器](/vendor/lockzhiner/rk2206/docs/figures/e53_sc01/MPU6050_RA_WHO_AM_I.png)
+![寄存器](/vendor/lockzhiner/lingpi/docs/figures/e53_sc01/MPU6050_RA_WHO_AM_I.png)
 
 **参数：**
 
@@ -199,31 +199,31 @@ E53智慧井盖模块初始化MPU6050传感器。
 
 MPU6050_RA_PWR_MGMT_1电源管理寄存器，DEVICE_RESET复位唤醒传感器。
 
-![寄存器](/vendor/lockzhiner/rk2206/docs/figures/e53_sc01/MPU6050_RA_PWR_MGMT_1.png)
+![寄存器](/vendor/lockzhiner/lingpi/docs/figures/e53_sc01/MPU6050_RA_PWR_MGMT_1.png)
 
 MPU6050_RA_INT_ENABLE中断使能寄存器，中断控制。
 
-![寄存器](/vendor/lockzhiner/rk2206/docs/figures/e53_sc01/MPU6050_RA_INT_ENABLE.png)
+![寄存器](/vendor/lockzhiner/lingpi/docs/figures/e53_sc01/MPU6050_RA_INT_ENABLE.png)
 
 MPU6050_RA_USER_CTRL用户控制寄存器，关闭I2C主模式。
 
-![寄存器](/vendor/lockzhiner/rk2206/docs/figures/e53_sc01/MPU6050_RA_USER_CTRL.png)
+![寄存器](/vendor/lockzhiner/lingpi/docs/figures/e53_sc01/MPU6050_RA_USER_CTRL.png)
 
 MPU6050_RA_FIFO_EN FIFO使能寄存器，关闭FIFO。
 
-![寄存器](/vendor/lockzhiner/rk2206/docs/figures/e53_sc01/MPU6050_RA_FIFO_EN.png)
+![寄存器](/vendor/lockzhiner/lingpi/docs/figures/e53_sc01/MPU6050_RA_FIFO_EN.png)
 
 MPU6050_RA_INT_PIN_CFG INT管脚/旁路控制寄存器。
 
-![寄存器](/vendor/lockzhiner/rk2206/docs/figures/e53_sc01/MPU6050_RA_INT_PIN_CFG.png)
+![寄存器](/vendor/lockzhiner/lingpi/docs/figures/e53_sc01/MPU6050_RA_INT_PIN_CFG.png)
 
 MPU6050_RA_CONFIG配置寄存器，配置为外部引脚采样，DLPF数字低通滤波器。
 
-![寄存器](/vendor/lockzhiner/rk2206/docs/figures/e53_sc01/MPU6050_RA_CONFIG.png)
+![寄存器](/vendor/lockzhiner/lingpi/docs/figures/e53_sc01/MPU6050_RA_CONFIG.png)
 
 MPU6050_RA_ACCEL_CONFIG加速配置寄存器，配置加速度传感器量程和高通滤波器。
 
-![寄存器](/vendor/lockzhiner/rk2206/docs/figures/e53_sc01/MPU6050_RA_ACCEL_CONFIG.png)
+![寄存器](/vendor/lockzhiner/lingpi/docs/figures/e53_sc01/MPU6050_RA_ACCEL_CONFIG.png)
 
 **参数：**
 
@@ -350,17 +350,12 @@ void e53_sc_thread()
 
 ### 修改 BUILD.gn 文件
 
-修改 `vendor/lockzhiner/rk2206/sample` 路径下 BUILD.gn 文件，指定 `c2_e53_smart_city` 参与编译。
+修改 `vendor/lockzhiner/lingpi/sample` 路径下 BUILD.gn 文件，指定 `c2_e53_smart_city` 参与编译。
 
 ```r
-"./c2_e53_smart_city:e53_sc_example",
+"c2_e53_smart_city",
 ```
 
-修改 `device/lockzhiner/rk2206/sdk_liteos` 路径下 Makefile 文件，添加 `-le53_sc_example` 参与编译。
-
-```r
-hardware_LIBS = -lhal_iothardware -lhardware -le53_sc_example
-```
 
 ### 运行结果
 

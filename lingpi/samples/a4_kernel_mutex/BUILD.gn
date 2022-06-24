@@ -11,15 +11,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-static_library("mutex_example") {
+import("//kernel/liteos_m/liteos.gni")
+
+kernel_module("kernel_mutex_example") {
     sources = [
         "kernel_mutex_example.c",
     ]
 
     include_dirs = [
         "//utils/native/lite/include",
-    ]
-
-    deps = [
     ]
 }

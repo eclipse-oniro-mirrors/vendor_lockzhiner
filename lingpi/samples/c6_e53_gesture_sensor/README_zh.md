@@ -2,12 +2,12 @@
 
 本示例将演示如何在小凌派-RK2206开发板上实现智能手势的应用案例。
 
-![小凌派-RK2206开发板](/vendor/lockzhiner/rk2206/docs/figures/lockzhiner-rk2206.jpg)
+![小凌派-RK2206开发板](/vendor/lockzhiner/lingpi/docs/figures/lockzhiner-rk2206.jpg)
 
 ## 硬件资源
 
 硬件资源图如下所示：
-![智能手势模块硬件资源](/vendor/lockzhiner/rk2206/docs/figures/e53_sg01/e53_sg01_resource_map.jpg)
+![智能手势模块硬件资源](/vendor/lockzhiner/lingpi/docs/figures/e53_sg01/e53_sg01_resource_map.jpg)
 
 EEPROM 24C02的设备地址为：0x1010001* ；
 手势传感器 PAJ7620U2 的设备地址为：0x0111001*
@@ -36,14 +36,14 @@ EEPROM 24C02的设备地址为：0x1010001* ；
 ## 硬件设计
 
 硬件电路如下图所示：
-![智能手势模块硬件电路图](/vendor/lockzhiner/rk2206/docs/figures/e53_sg01/lz_e53_sg01_sch.jpg)
+![智能手势模块硬件电路图](/vendor/lockzhiner/lingpi/docs/figures/e53_sg01/lz_e53_sg01_sch.jpg)
 
 模块整体硬件电路如上图所示，电路中包含了E53接口连接器，EEPROM存储器、手势识别传感器电路，灯光指示电路。电路比较简单，本文不再过多说明。
 
 ### 硬件连接
 
 小凌派开发板与模块均带有防呆设计，故很容易区分安装方向，直接将模块插入到开发板的E53母座接口上即可，安装图如下所示：
-![智能手势模块硬件连接图](/vendor/lockzhiner/rk2206/docs/figures/e53_sg01/e53_sg01_connection_diagram.png)
+![智能手势模块硬件连接图](/vendor/lockzhiner/lingpi/docs/figures/e53_sg01/e53_sg01_connection_diagram.png)
 
 ## 程序设计
 
@@ -59,7 +59,7 @@ EEPROM 24C02的设备地址为：0x1010001* ；
 
 #### LiteOS任务管理
 
-[LiteOS任务管理接口文档](/vendor/lockzhiner/rk2206/samples/a1_kernel_task/task.md)
+[LiteOS任务管理接口文档](/vendor/lockzhiner/lingpi/samples/a1_kernel_task/task.md)
 
 ### 主要代码分析
 
@@ -329,16 +329,16 @@ unsigned int gesture_sensor_get_gesture_state(unsigned short *flag)
 
 ### 5.1 修改 BUILD.gn 文件
 
-修改 `vendor\lockzhiner\rk2206\sample` 路径下 BUILD.gn 文件，指定 `e53_gs_example` 参与编译。
+修改 `vendor/lockzhiner/lingpi/sample` 路径下 BUILD.gn 文件，指定 `e53_gs_example` 参与编译。
 
 ```r
-"./e53_gesture_sensor:e53_gs_example",
+"e53_gesture_sensor",
 ```
 
-修改 `device/lockzhiner/rk2206/sdk_liteos` 路径下 Makefile 文件，添加 `-le53_gs_example` 参与编译。
+在主目录下输入编译命令。
 
-```r
-hardware_LIBS = -lhal_iothardware -lhardware -le53_gs_example
+```shell
+hb build -f
 ```
 
 ### 5.2 运行结果

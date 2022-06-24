@@ -44,12 +44,15 @@ static unsigned int adc_dev_init()
     uint32_t *pGrfSocCon29 = (uint32_t *)(0x41050000U + 0x274U);
     uint32_t ulValue;
 
+    PinctrlSet(GPIO0_PC5, MUX_FUNC1, PULL_NONE, DRIVE_KEEP);
+
     ret = DevIoInit(m_adcKey);
     if (ret != LZ_HARDWARE_SUCCESS)
     {
         printf("%s, %s, %d: ADC Key IO Init fail\n", __FILE__, __func__, __LINE__);
         return __LINE__;
     }
+
     ret = LzSaradcInit();
     if (ret != LZ_HARDWARE_SUCCESS) {
         printf("%s, %s, %d: ADC Init fail\n", __FILE__, __func__, __LINE__);
@@ -61,7 +64,7 @@ static unsigned int adc_dev_init()
     ulValue &= ~(0x1 << 4);
     ulValue |= ((0x1 << 4) << 16);
     *pGrfSocCon29 = ulValue;
-    
+
     return 0;
 }
 

@@ -4,7 +4,7 @@
 
 本例程演示如何在小凌派-RK2206开发板上使用鸿蒙LiteOS-M内核接口，进行事件编程开发。例程创建一个事件，两个任务；任务1调用读事件接口等待事件通知，任务2调用写事件接口通知任务1事件到达。
 
-![小凌派-RK2206开发板](/vendor/lockzhiner/rk2206/docs/figures/lockzhiner-rk2206.jpg)
+![小凌派-RK2206开发板](/vendor/lockzhiner/lingpi/docs/figures/lockzhiner-rk2206.jpg)
 
 ## 程序设计
 
@@ -26,14 +26,15 @@ UINT32 LOS_EventInit(PEVENT_CB_S eventCB);
 
 **参数：**
 
-|名字|描述|
-|:--|:------| 
+| 名字    | 描述           |
+| :------ | :------------- |
 | eventCB | 事件控制块指针 |
 
 **返回值：**
-|返回值|描述|
-|:--|:------|
-| LOS_OK | 成功 |
+
+| 返回值                   | 描述 |
+| :----------------------- | :--- |
+| LOS_OK                   | 成功 |
 | LOS_ERRNO_EVENT_PTR_NULL | 失败 |
 
 #### LOS_EventRead()
@@ -49,18 +50,19 @@ UINT32 LOS_EventRead(PEVENT_CB_S eventCB, UINT32 eventMask, UINT32 mode, UINT32 
 
 **参数：**
 
-|名字|描述|
-|:--|:------| 
-| eventCB | 事件控制块指针 |
-| eventMask | 事件掩码 |
-| mode | 事件读取的模式 |
-| timeOut | 超时时间 |
+| 名字      | 描述           |
+| :-------- | :------------- |
+| eventCB   | 事件控制块指针 |
+| eventMask | 事件掩码       |
+| mode      | 事件读取的模式 |
+| timeOut   | 超时时间       |
 
 **返回值：**
-|返回值|描述|
-|:--|:------| 
-| LOS_OK | 成功 |
-| LOS_ERRNO_EVENT_SETBIT_INVALID <br> LOS_ERRNO_EVENT_EVENTMASK_INVALID <br> LOS_ERRNO_EVENT_READ_IN_INTERRUPT <br> LOS_ERRNO_EVENT_FLAGS_INVALID <br> LOS_ERRNO_EVENT_READ_IN_LOCK <br> LOS_ERRNO_EVENT_PTR_NULL | 失败 |
+
+| 返回值                                                                                                                                                                                                                             | 描述 |
+| :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--- |
+| LOS_OK                                                                                                                                                                                                                             | 成功 |
+| LOS_ERRNO_EVENT_SETBIT_INVALID`<br>` LOS_ERRNO_EVENT_EVENTMASK_INVALID `<br>` LOS_ERRNO_EVENT_READ_IN_INTERRUPT `<br>` LOS_ERRNO_EVENT_FLAGS_INVALID `<br>` LOS_ERRNO_EVENT_READ_IN_LOCK `<br>` LOS_ERRNO_EVENT_PTR_NULL | 失败 |
 
 #### LOS_EventWrite()
 
@@ -74,16 +76,17 @@ UINT32 LOS_EventWrite(PEVENT_CB_S eventCB, UINT32 events);
 
 **参数：**
 
-|名字|描述|
-|:--|:------| 
-| eventCB | 事件控制块指针 |
-| events | 要写入的事件掩码 |
+| 名字    | 描述             |
+| :------ | :--------------- |
+| eventCB | 事件控制块指针   |
+| events  | 要写入的事件掩码 |
 
 **返回值：**
-|返回值|描述|
-|:--|:------| 
-| LOS_OK | 成功 |
-| LOS_ERRNO_EVENT_SETBIT_INVALID <br> LOS_ERRNO_EVENT_PTR_NULL | 失败 |
+
+| 返回值                                                          | 描述 |
+| :-------------------------------------------------------------- | :--- |
+| LOS_OK                                                          | 成功 |
+| LOS_ERRNO_EVENT_SETBIT_INVALID`<br>` LOS_ERRNO_EVENT_PTR_NULL | 失败 |
 
 #### LOS_EventClear()
 
@@ -97,15 +100,16 @@ UINT32 LOS_EventClear(PEVENT_CB_S eventCB, UINT32 eventMask);
 
 **参数：**
 
-|名字|描述|
-|:--|:------| 
-| eventCB | 事件控制块指针 |
-| eventMask| 要清除的事件掩码 |
+| 名字      | 描述             |
+| :-------- | :--------------- |
+| eventCB   | 事件控制块指针   |
+| eventMask | 要清除的事件掩码 |
 
 **返回值：**
-|返回值|描述|
-|:--|:------| 
-| LOS_OK | 成功 |
+
+| 返回值                   | 描述 |
+| :----------------------- | :--- |
+| LOS_OK                   | 成功 |
 | LOS_ERRNO_EVENT_PTR_NULL | 失败 |
 
 ### 软件设计
@@ -195,16 +199,16 @@ void event_slave_thread()
 
 ### 修改 BUILD.gn 文件
 
-修改 `vendor/lockzhiner/rk2206/sample` 路径下 BUILD.gn 文件，指定 `a6_kernel_event` 参与编译。
+修改 `vendor/lockzhiner/lingpi/sample` 路径下 BUILD.gn 文件，指定 `a6_kernel_event` 参与编译。
 
 ```r
-"./a6_kernel_event:event_example",
+"a6_kernel_event",
 ```
 
-修改 `device/lockzhiner/rk2206/sdk_liteos` 路径下 Makefile 文件，添加 `-levent_example` 参与编译。
+在主目录下输入编译命令。
 
-```r
-hardware_LIBS = -lhal_iothardware -lhardware -levent_example
+```shell
+hb build -f
 ```
 
 ### 运行结果
@@ -219,4 +223,3 @@ event_master_thread write event:0x1
 event_slave_thread read event:0x1
 event_slave_thread read event:0x1
 ```
-

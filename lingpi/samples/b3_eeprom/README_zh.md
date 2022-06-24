@@ -2,7 +2,7 @@
 
 本示例将演示如何在小凌派-RK2206开发板上使用I2C控制EEPROM读写
 
-![小凌派-RK2206](/vendor/lockzhiner/rk2206/docs/figures/lockzhiner-rk2206.jpg)
+![小凌派-RK2206](/vendor/lockzhiner/lingpi/docs/figures/lockzhiner-rk2206.jpg)
 
 ## 程序设计
 
@@ -340,16 +340,16 @@ unsigned int eeprom_writepage(unsigned int addr, unsigned char *data, unsigned i
 
 ### 修改 BUILD.gn 文件
 
-修改 `vendor/lockzhiner/rk2206/sample` 路径下 BUILD.gn 文件，指定 `eeprom_example` 参与编译。
+修改 `vendor/lockzhiner/lingpi/sample` 路径下 BUILD.gn 文件，指定 `b3_eeprom` 参与编译。
 
 ```r
-"./b3_eeprom:eeprom_example",
+"b3_eeprom",
 ```
 
-修改 `device/lockzhiner/rk2206/sdk_liteos` 路径下 Makefile 文件，添加 `-leeprom_example` 参与编译。
+在主目录下输入编译命令。
 
-```r
-hardware_LIBS = -lhal_iothardware -lhardware -leeprom_example,
+```shell
+hb build -f
 ```
 
 ### 运行结果

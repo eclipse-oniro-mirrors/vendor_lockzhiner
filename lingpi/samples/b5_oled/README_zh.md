@@ -2,30 +2,25 @@
 
 本示例将演示如何在小凌派-RK2206开发板上使用I2C控制OLED液晶屏显示
 
-![小凌派-RK2206开发板](/vendor/lockzhiner/rk2206/docs/figures/lockzhiner-rk2206.jpg)
-
-
+![小凌派-RK2206开发板](/vendor/lockzhiner/lingpi/docs/figures/lockzhiner-rk2206.jpg)
 
 ## 硬件接口说明
 
 引脚名称开发者可在硬件资源图中查看，也可在oled模块正面面查看。
 
-| 引脚名称 | 功能描述 |
-| :--- | :------- | 
-| SCL | I2C时钟信号线 |
-| SDA | I2C数据信号线 | 
-| GND | 电源地引脚 | 
-| VCC  | 电源输入引脚 | 
-
+| 引脚名称 | 功能描述      |
+| :------- | :------------ |
+| SCL      | I2C时钟信号线 |
+| SDA      | I2C数据信号线 |
+| GND      | 电源地引脚    |
+| VCC      | 电源输入引脚  |
 
 ### 硬件连接
 
-
 安装图如下所示：
-![0.96寸OLED模块硬件连接图](/vendor/lockzhiner/rk2206/docs/figures/0.96inch_oled/0.96inch_oled_connection_diagram_1.png)
+![0.96寸OLED模块硬件连接图](/vendor/lockzhiner/lingpi/docs/figures/0.96inch_oled/0.96inch_oled_connection_diagram_1.png)
 
-![0.96寸OLED模块硬件连接图](/vendor/lockzhiner/rk2206/docs/figures/0.96inch_oled/0.96inch_oled_connection_diagram_2.jpg)
-
+![0.96寸OLED模块硬件连接图](/vendor/lockzhiner/lingpi/docs/figures/0.96inch_oled/0.96inch_oled_connection_diagram_2.jpg)
 
 ## 程序设计
 
@@ -325,16 +320,16 @@ Oled_WR_Byte(0xAF, OLED_CMD); //--turn on oled panel
 
 ### 修改 BUILD.gn 文件
 
-修改 `vendor\lockzhiner\rk2206\sample` 路径下 BUILD.gn 文件，指定 `oled_example` 参与编译。
+修改 `vendor/lockzhiner/lingpi/sample` 路径下 BUILD.gn 文件，指定 `b5_oled` 参与编译。
 
 ```r
-"./b5_oled:oled_example",
+"b5_oled",
 ```
 
-修改 `device/lockzhiner/rk2206/sdk_liteos` 路径下 Makefile 文件，添加 `-loled_example` 参与编译。
+在主目录下输入编译命令。
 
-```r
-hardware_LIBS = -lhal_iothardware -lhardware -loled_example
+```shell
+hb build -f
 ```
 
 ### 运行结果
@@ -348,4 +343,4 @@ hardware_LIBS = -lhal_iothardware -lhardware -loled_example
 
 OLED显示结果如下所示：
 
-![小凌派-RK2206开发板OLED显示结果](/vendor/lockzhiner/rk2206/docs/figures/OLED_SSD1306/OLED_SSD1306_显示结果.png)
+![小凌派-RK2206开发板OLED显示结果](/vendor/lockzhiner/lingpi/docs/figures/OLED_SSD1306/OLED_SSD1306_显示结果.png)

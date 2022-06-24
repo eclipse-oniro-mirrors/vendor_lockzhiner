@@ -4,12 +4,12 @@
 
 本例程演示如何在小凌派-RK2206开发板上实现人体感应的应用案例。
 
-![小凌派-RK2206开发板](/vendor/lockzhiner/rk2206/docs/figures/lockzhiner-rk2206.jpg)
+![小凌派-RK2206开发板](/vendor/lockzhiner/lingpi/docs/figures/lockzhiner-rk2206.jpg)
 
 ## 硬件资源
 
 硬件资源图如下所示：
-![人体感应模块硬件资源](/vendor/lockzhiner/rk2206/docs/figures/e53_bi01/e53_bi01_resource_map.jpg)
+![人体感应模块硬件资源](/vendor/lockzhiner/lingpi/docs/figures/e53_bi01/e53_bi01_resource_map.jpg)
 
 注：EEPROM 24C02的设备地址为：0x1010001*  ;
 
@@ -17,20 +17,20 @@
 
 引脚名称开发者可在硬件资源图中查看，也可在智慧农业模块背面查看。
 
-| 引脚名称 | 功能描述 |
-| :-- | :------ | 
-| LED_ALARM | 人体感应输出，高电平有效 |
-| BUZZER | 蜂鸣器控制线，推荐3KHz的方波信号 | 
-| I2C_SCL | I2C时钟信号线 | 
-| I2C_SDA| I2C数据信号线 | 
-| GND | 电源地引脚 | 
-| 3V3 | 3.3V电源输入引脚 | 
-| GND | 电源地引脚 |
+| 引脚名称  | 功能描述                         |
+| :-------- | :------------------------------- |
+| LED_ALARM | 人体感应输出，高电平有效         |
+| BUZZER    | 蜂鸣器控制线，推荐3KHz的方波信号 |
+| I2C_SCL   | I2C时钟信号线                    |
+| I2C_SDA   | I2C数据信号线                    |
+| GND       | 电源地引脚                       |
+| 3V3       | 3.3V电源输入引脚                 |
+| GND       | 电源地引脚                       |
 
 ## 硬件设计
 
 硬件电路如下图所示：
-![人体感应模块硬件电路图](/vendor/lockzhiner/rk2206/docs/figures/e53_bi01/lz_e53_bi01_sch.jpg)
+![人体感应模块硬件电路图](/vendor/lockzhiner/lingpi/docs/figures/e53_bi01/lz_e53_bi01_sch.jpg)
 
 模块整体硬件电路如上图所示，电路中包含了E53接口连接器，EEPROM存储器、热释电传感器，LED指示灯电路，蜂鸣器电路。
 
@@ -41,7 +41,7 @@
 BISS0001是一款具有较高性能的传感信号处理集成芯片，其专门用来对热释电红外传感器输出信号进行处理，热释电红外传感器输出的信号比较微软，需要经过相应的滤波放大处理，下面介绍下BISS0001原理。
 
 BISS0001芯片内部电路框图如下所示：
-![BISS0001芯片内部电路图](/vendor/lockzhiner/rk2206/docs/figures/e53_bi01/biss0001_diagram.png)
+![BISS0001芯片内部电路图](/vendor/lockzhiner/lingpi/docs/figures/e53_bi01/biss0001_diagram.png)
 
 OP1为输入信号的第一级放大，然后经过C10耦合给运算放大器OP2进行二级放大，经过由电压比较器COP1和COP2构成的双向鉴幅器处理之后，检出有效触发信号Vs去启动延迟定时器，输出信号Vo经过晶体管Q1驱动LED灯。R8为光敏电阻，用来检测环境照度。当作为照明控制时候，若环境比较明亮，光敏电阻阻值降低，使VC脚的输入保持为低电平，从而封锁出发信号Vs。电路中1脚直接接高电平，芯片则处于可重复触发模式。模块默认不焊接光敏电阻。
 
@@ -52,7 +52,7 @@ OP1为输入信号的第一级放大，然后经过C10耦合给运算放大器OP
 ### 模块连接
 
 小凌派开发板与模块均带有防呆设计，故很容易区分安装方向，直接将模块插入到开发板的E53母座接口上即可，安装图如下所示：
-![人体感应模块硬件连接图](/vendor/lockzhiner/rk2206/docs/figures/e53_bi01/e53_bi01_connection_diagram.png)
+![人体感应模块硬件连接图](/vendor/lockzhiner/lingpi/docs/figures/e53_bi01/e53_bi01_connection_diagram.png)
 
 ## 程序设计
 
@@ -60,7 +60,7 @@ OP1为输入信号的第一级放大，然后经过C10耦合给运算放大器OP
 
 **头文件：**
 
-/vendor/lockzhiner/rk2206/samples/e53_body_induction/include/e53_body_induction.h
+/vendor/lockzhiner/lingpi/samples/e53_body_induction/include/e53_body_induction.h
 
 #### e53_bi_init()
 
@@ -92,8 +92,8 @@ E53人体感应模块控制蜂鸣器开关。
 
 **参数：**
 
-|名字|描述|
-|:--|:------| 
+| 名字   | 描述                        |
+| :----- | :-------------------------- |
 | status | 蜂鸣器状态，ON：开；OFF：关 |
 
 **返回值：**
@@ -140,16 +140,16 @@ void e53_bi_thread()
 
 ### 修改 BUILD.gn 文件
 
-修改 `vendor/lockzhiner/rk2206/sample` 路径下 BUILD.gn 文件，指定 `c5_e53_body_induction` 参与编译。
+修改 `vendor/lockzhiner/lingpi/sample` 路径下 BUILD.gn 文件，指定 `c5_e53_body_induction` 参与编译。
 
 ```r
-"./c5_e53_body_induction:e53_bi_example",
+"c5_e53_body_induction",
 ```
 
-修改 `device/lockzhiner/rk2206/sdk_liteos` 路径下 Makefile 文件，添加 `-le53_bi_example` 参与编译。
+在主目录下输入编译命令。
 
 ```r
-hardware_LIBS = -lhal_iothardware -lhardware -le53_bi_example
+hb build -f
 ```
 
 ### 运行结果
@@ -161,4 +161,3 @@ buzzer on
 
 buzzer off
 ```
-

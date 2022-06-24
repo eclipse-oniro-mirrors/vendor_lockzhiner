@@ -2,41 +2,36 @@
 
 本示例将演示如何在小凌派-RK2206开发板上LCD液晶屏显示
 
-![小凌派-RK2206开发板](/vendor/lockzhiner/rk2206/docs/figures/lockzhiner-rk2206.jpg)
+![小凌派-RK2206开发板](/vendor/lockzhiner/lingpi/docs/figures/lockzhiner-rk2206.jpg)
 
 ## 硬件资源
 
 硬件资源图如下所示：
-![2.4寸液晶模块硬件资源](/vendor/lockzhiner/rk2206/docs/figures/2.4inch_lcd/2.4inch_lcd_resource_map.jpg)
-
-
+![2.4寸液晶模块硬件资源](/vendor/lockzhiner/lingpi/docs/figures/2.4inch_lcd/2.4inch_lcd_resource_map.jpg)
 
 ## 硬件接口说明
 
 引脚名称开发者可在硬件资源图中查看，也可在2.4寸液晶模块背面查看。
 
-| 引脚名称 | 功能描述 |
-| :--- | :------- | 
-| D/C | 指令/数据选择端，L:指令，H:数据 |
-| RESET | 复位信号线，低电平有效 | 
-| SPI_MOSI | SPI数据输入信号线 | 
-| SPI_CLK  | SPI时钟信号线 | 
-| SPI_CS | SPI片选信号线，低电平有效 | 
-| GND |电源地引脚 | 
-| 5V | 5V电源输入引脚 | 
-
+| 引脚名称 | 功能描述                        |
+| :------- | :------------------------------ |
+| D/C      | 指令/数据选择端，L:指令，H:数据 |
+| RESET    | 复位信号线，低电平有效          |
+| SPI_MOSI | SPI数据输入信号线               |
+| SPI_CLK  | SPI时钟信号线                   |
+| SPI_CS   | SPI片选信号线，低电平有效       |
+| GND      | 电源地引脚                      |
+| 5V       | 5V电源输入引脚                  |
 
 ## 硬件设计
+
 硬件电路如下图所示：
-![2.4寸液晶模块硬件电路图](/vendor/lockzhiner/rk2206/docs/figures/2.4inch_lcd/lz_hm_2.4inch_lcd_sch.jpg)
-
-
+![2.4寸液晶模块硬件电路图](/vendor/lockzhiner/lingpi/docs/figures/2.4inch_lcd/lz_hm_2.4inch_lcd_sch.jpg)
 
 ### 硬件连接
 
 安装图如下所示：
-![2.4寸液晶模块硬件连接图](/vendor/lockzhiner/rk2206/docs/figures/2.4inch_lcd/2.4inch_lcd_connection_diagram.jpg)
-
+![2.4寸液晶模块硬件连接图](/vendor/lockzhiner/lingpi/docs/figures/2.4inch_lcd/2.4inch_lcd_connection_diagram.jpg)
 
 ## 程序设计
 
@@ -45,7 +40,7 @@
 **头文件**
 
 ```r
-//vendor/lockzhiner/rk2206/samples/b4_lcd/include/lcd.h
+//vendor/lockzhiner/lingpi/samples/b4_lcd/include/lcd.h
 ```
 
 #### lcd_init()
@@ -382,7 +377,7 @@ LCD型号为ST7789V，采用SPI通信方式，数据传输协议如下：
 
 数据传输时序图如下：
 
-![](/vendor/lockzhiner/rk2206/docs/figures/LCD_ST7789V/ST7789V_数据传输模式.png "LCD数据传输时序图")
+![](/vendor/lockzhiner/lingpi/docs/figures/LCD_ST7789V/ST7789V_数据传输模式.png "LCD数据传输时序图")
 
 LCD使用的是SPI协议，SPI_CS与GPIO0_PC0相连接，SPI_CLK与GPIO0_PC1相连接，SPI_MOSI与GPIO0_PC2相连接，RES与GPIO0_PC3相连接，DC与GPIO0_PC6相连接。
 
@@ -527,16 +522,16 @@ lcd_wr_reg(0x29);
 
 ### 修改 BUILD.gn 文件
 
-修改 `vendor\lockzhiner\rk2206\sample` 路径下 BUILD.gn 文件，指定 `lcd_example` 参与编译。
+修改 `vendor/lockzhiner/lingpi/sample` 路径下 BUILD.gn 文件，指定 `b4_lcd` 参与编译。
 
 ```r
-"./b0_lcd:lcd_example",
+"b4_lcd",
 ```
 
-修改 `device/lockzhiner/rk2206/sdk_liteos` 路径下 Makefile 文件，添加 `-llcd_example` 参与编译。
+在主目录下输入编译命令 。
 
-```r
-hardware_LIBS = -lhal_iothardware -lhardware -llcd_example
+```shell
+hb build -f
 ```
 
 ### 运行结果

@@ -4,7 +4,7 @@
 
 本例程演示如何在小凌派-RK2206开发板上使用鸿蒙LiteOS-M内核接口，进行队列编程开发。例程创建一个队列，两个任务；任务1调用写队列接口发送消息，任务2调用读队列接口接收消息。
 
-![小凌派-RK2206开发板](/vendor/lockzhiner/rk2206/docs/figures/lockzhiner-rk2206.jpg)
+![小凌派-RK2206开发板](/vendor/lockzhiner/lingpi/docs/figures/lockzhiner-rk2206.jpg)
 
 ## 程序设计
 
@@ -32,19 +32,20 @@ UINT32 LOS_QueueCreate(CHAR *queueName,
 
 **参数：**
 
-| 名字       | 描述             |
-| :--------- | :-----------     |
-| queueName  | 需要创建的队列名  |
-| len        | 需要创建队列的长度|
-| queueID    | 创建生成的队列ID  |
-| flags      | 队列模式         |
-| maxMsgSize | 队列节点大小     |
+| 名字       | 描述               |
+| :--------- | :----------------- |
+| queueName  | 需要创建的队列名   |
+| len        | 需要创建队列的长度 |
+| queueID    | 创建生成的队列ID   |
+| flags      | 队列模式           |
+| maxMsgSize | 队列节点大小       |
 
 **返回值：**
-|返回值|描述|
-|:--|:------| 
-| LOS_OK | 成功 |
-| LOS_ERRNO_QUEUE_CB_UNAVAILABLE <br> LOS_ERRNO_QUEUE_CREATE_NO_MEMORY <br> LOS_ERRNO_QUEUE_CREAT_PTR_NULL <br> LOS_ERRNO_QUEUE_PARA_ISZERO <br> LOS_ERRNO_QUEUE_SIZE_TOO_BIG | 失败 |
+
+| 返回值                                                                                                                                                                                     | 描述 |
+| :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--- |
+| LOS_OK                                                                                                                                                                                     | 成功 |
+| LOS_ERRNO_QUEUE_CB_UNAVAILABLE`<br>` LOS_ERRNO_QUEUE_CREATE_NO_MEMORY `<br>` LOS_ERRNO_QUEUE_CREAT_PTR_NULL `<br>` LOS_ERRNO_QUEUE_PARA_ISZERO `<br>` LOS_ERRNO_QUEUE_SIZE_TOO_BIG | 失败 |
 
 #### LOS_QueueDelete()
 
@@ -63,10 +64,11 @@ UINT32 LOS_QueueDelete(UINT32 queueID);
 | queueID | 需要删除的队列ID |
 
 **返回值：**
-|返回值|描述|
-|:--|:------| 
-| LOS_OK | 成功 |
-| LOS_ERRNO_QUEUE_PTR_NULL <br> LOS_ERRNO_QUEUE_INVALID <br> LOS_ERRNO_QUEUE_NOT_CREATE | 失败 |
+
+| 返回值                                                                                       | 描述 |
+| :------------------------------------------------------------------------------------------- | :--- |
+| LOS_OK                                                                                       | 成功 |
+| LOS_ERRNO_QUEUE_PTR_NULL`<br>` LOS_ERRNO_QUEUE_INVALID `<br>` LOS_ERRNO_QUEUE_NOT_CREATE | 失败 |
 
 #### LOS_QueueRead()
 
@@ -83,18 +85,19 @@ UINT32 LOS_QueueRead(UINT32 queueID,
 
 **参数：**
 
-| 名字       | 描述                 |
-| :--------- | :------------------- |
+| 名字       | 描述             |
+| :--------- | :--------------- |
 | queueID    | 需要读取的队列ID |
-| bufferAddr | 缓冲区指针           |
-| bufferSize | 缓冲区大小           |
-| timeout    | 超时时间             |
+| bufferAddr | 缓冲区指针       |
+| bufferSize | 缓冲区大小       |
+| timeout    | 超时时间         |
 
 **返回值：**
-|返回值|描述|
-|:--|:------| 
-| LOS_OK | 成功 |
-| LOS_ERRNO_QUEUE_INVALID <br> LOS_ERRNO_QUEUE_READ_PTR_NULL <br> LOS_ERRNO_QUEUE_READSIZE_ISZERO <br> LOS_ERRNO_QUEUE_READ_IN_INTERRUPT <br> LOS_ERRNO_QUEUE_NOT_CREATE <br> LOS_ERRNO_QUEUE_ISEMPTY <br> LOS_ERRNO_QUEUE_PEND_IN_LOCK <br> LOS_ERRNO_QUEUE_TIMEOUT | 失败 |
+
+| 返回值                                                                                                                                                                                                                                                                                        | 描述 |
+| :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | :--- |
+| LOS_OK                                                                                                                                                                                                                                                                                        | 成功 |
+| LOS_ERRNO_QUEUE_INVALID`<br>` LOS_ERRNO_QUEUE_READ_PTR_NULL `<br>` LOS_ERRNO_QUEUE_READSIZE_ISZERO `<br>` LOS_ERRNO_QUEUE_READ_IN_INTERRUPT `<br>` LOS_ERRNO_QUEUE_NOT_CREATE `<br>` LOS_ERRNO_QUEUE_ISEMPTY `<br>` LOS_ERRNO_QUEUE_PEND_IN_LOCK `<br>` LOS_ERRNO_QUEUE_TIMEOUT | 失败 |
 
 ### 软件设计
 
@@ -199,16 +202,16 @@ void msg_read_thread(void *arg)
 
 ### 修改 BUILD.gn 文件
 
-修改 `vendor/lockzhiner/rk2206/sample` 路径下 BUILD.gn 文件，指定 `a5_kernel_queue` 参与编译。
+修改 `vendor/lockzhiner/lingpi/sample` 路径下 BUILD.gn 文件，指定 `a5_kernel_queue` 参与编译。
 
 ```r
-"./a5_kernel_queue:queue_example",
+"a5_kernel_queue",
 ```
 
-修改 `device/lockzhiner/rk2206/sdk_liteos` 路径下 Makefile 文件，添加 `-lqueue_example` 参与编译。
+在主目录下输入编译命令。
 
-```r
-hardware_LIBS = -lhal_iothardware -lhardware -lqueue_example
+```shell
+hb build -f
 ```
 
 ### 运行结果
@@ -225,4 +228,3 @@ msg_read_thread read Message Queue msg:3
 msg_write_thread write Message Queue msg:4
 msg_read_thread read Message Queue msg:4
 ```
-

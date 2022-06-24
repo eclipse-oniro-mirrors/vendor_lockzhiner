@@ -4,7 +4,7 @@
 
 本例程演示如何在小凌派-RK2206开发板上使用MQTT协议栈，开发物联网功能。
 
-![小凌派-RK2206开发板](/vendor/lockzhiner/rk2206/docs/figures/lockzhiner-rk2206.jpg)
+![小凌派-RK2206开发板](/vendor/lockzhiner/lingpi/docs/figures/lockzhiner-rk2206.jpg)
 
 ## 程序设计
 
@@ -24,7 +24,7 @@ void NetworkInit(Network* n);
 
 **头文件：**
 
-//third_party/paho_mqtt/MQTTClient-C/src/liteOS/MQTTLiteOS.h
+//device/board/lockzhiner/lingpi/third_party/paho_mqtt/MQTTClient-C/src/liteOS/MQTTLiteOS.h
 
 **参数：**
 
@@ -48,7 +48,7 @@ int NetworkConnect(Network* n, char* addr, int port);
 
 **头文件：**
 
-//third_party/paho_mqtt/MQTTClient-C/src/liteOS/MQTTLiteOS.h
+//device/board/lockzhiner/lingpi/third_party/paho_mqtt/MQTTClient-C/src/liteOS/MQTTLiteOS.h
 
 **参数：**
 
@@ -74,7 +74,7 @@ void NetworkDisconnect(Network* n);
 
 **头文件：**
 
-//third_party/paho_mqtt/MQTTClient-C/src/liteOS/MQTTLiteOS.h
+//device/board/lockzhiner/lingpi/third_party/paho_mqtt/MQTTClient-C/src/liteOS/MQTTLiteOS.h
 
 **参数：**
 
@@ -104,7 +104,7 @@ MQTT客户端初始化。
 
 **头文件：**
 
-//third_party/paho_mqtt/MQTTClient-C/src/MQTTClient.h
+//device/board/lockzhiner/lingpi/third_party/paho_mqtt/MQTTClient-C/src/MQTTClient.h
 
 **参数：**
 
@@ -134,7 +134,7 @@ int MQTTConnect(MQTTClient* client, MQTTPacket_connectData* options);
 
 **头文件：**
 
-//third_party/paho_mqtt/MQTTClient-C/src/MQTTClient.h
+//device/board/lockzhiner/lingpi/third_party/paho_mqtt/MQTTClient-C/src/MQTTClient.h
 
 **参数：**
 
@@ -159,7 +159,7 @@ int MQTTDisconnect(MQTTClient* c);
 
 **头文件：**
 
-//third_party/paho_mqtt/MQTTClient-C/src/MQTTClient.h
+//device/board/lockzhiner/lingpi/third_party/paho_mqtt/MQTTClient-C/src/MQTTClient.h
 
 **参数：**
 
@@ -186,7 +186,7 @@ int MQTTSubscribe(MQTTClient* c,
 
 **头文件：**
 
-//third_party/paho_mqtt/MQTTClient-C/src/MQTTClient.h
+//device/board/lockzhiner/lingpi/third_party/paho_mqtt/MQTTClient-C/src/MQTTClient.h
 
 **参数：**
 
@@ -213,7 +213,7 @@ int MQTTPublish(MQTTClient* c, const char* topicName, MQTTMessage* message);
 
 **头文件：**
 
-//third_party/paho_mqtt/MQTTClient-C/src/MQTTClient.h
+//device/board/lockzhiner/lingpi/third_party/paho_mqtt/MQTTClient-C/src/MQTTClient.h
 
 **参数：**
 
@@ -334,9 +334,9 @@ ipconfig
 
 如下图所示，PC端的IP地址为：192.168.1.164。
 
-![ip](/vendor/lockzhiner/rk2206/docs/figures/mqtt/ipconfig.png)
+![ip](/vendor/lockzhiner/lingpi/docs/figures/mqtt/ipconfig.png)
 
-对应修改例程/vendor/lockzhiner/rk2206/samples/d1_iot_mqtt/iot_mqtt.c代码中的MQTT_SERVER_IP为查询到PC端IP地址192.168.1.164，MQTT_SERVER_PORT修改为MQTT服务器端口号1883。
+对应修改例程/vendor/lockzhiner/lingpi/samples/d1_iot_mqtt/iot_mqtt.c代码中的MQTT_SERVER_IP为查询到PC端IP地址192.168.1.164，MQTT_SERVER_PORT修改为MQTT服务器端口号1883。
 
 ```c
 #define MQTT_SERVER_IP                          "192.168.1.164"
@@ -350,16 +350,16 @@ ipconfig
 32位系统下载地址：
 https://mosquitto.org/files/binary/win32/
 
-![mosquitto](/vendor/lockzhiner/rk2206/docs/figures/mqtt/mosquitto_download.png)
+![mosquitto](/vendor/lockzhiner/lingpi/docs/figures/mqtt/mosquitto_download.png)
 
 64位系统下载地址：
 https://mosquitto.org/files/binary/win64/
 
-![mosquitto](/vendor/lockzhiner/rk2206/docs/figures/mqtt/mosquitto_download_x64.png)
+![mosquitto](/vendor/lockzhiner/lingpi/docs/figures/mqtt/mosquitto_download_x64.png)
 
 下载mosquitto安装包后，点击安装mosquitto工具；安装完毕后，需要配置mosquitto，修改mosquitto安装路径下的mosquitto.conf文件，如下图所示。
 
-![mosquitto](/vendor/lockzhiner/rk2206/docs/figures/mqtt/mosquitto_config.png)
+![mosquitto](/vendor/lockzhiner/lingpi/docs/figures/mqtt/mosquitto_config.png)
 
 在mosquitto.conf文件末尾增加如下配置，其中，192.168.1.164为PC端IP地址，1883为MQTT服务器端口号，allow_anonymous为允许匿名登录。
 
@@ -372,11 +372,11 @@ allow_anonymous true
 
 mosquitto安装配置完成后，需要开启mosquitto服务，右击打开我的电脑-管理-服务和应用程序-服务，找到Mosquitto Broker服务。
 
-![mosquitto](/vendor/lockzhiner/rk2206/docs/figures/mqtt/mosquitto_server.png)
+![mosquitto](/vendor/lockzhiner/lingpi/docs/figures/mqtt/mosquitto_server.png)
 
 双击打开Mosquitto Broker服务，点击启动，开启Mosquitto服务。
 
-![mosquitto](/vendor/lockzhiner/rk2206/docs/figures/mqtt/mosquitto_start.png)
+![mosquitto](/vendor/lockzhiner/lingpi/docs/figures/mqtt/mosquitto_start.png)
 
 ### 下载Eclipse Paho MQTT 工具
 
@@ -384,15 +384,15 @@ mosquitto安装配置完成后，需要开启mosquitto服务，右击打开我�
 
 下载Paho软件包：org.eclipse.paho.ui.app-1.1.1-win32.win32.x86_64.zip。
 
-![paho](/vendor/lockzhiner/rk2206/docs/figures/mqtt/paho.png)
+![paho](/vendor/lockzhiner/lingpi/docs/figures/mqtt/paho.png)
 
 下载Paho软件包后，解压软件包，双击打开Paho.exe；进入Paho软件界面，点击右上角加号按键，添加一个MQTT服务器连接，如下图所示。
 
-![paho](/vendor/lockzhiner/rk2206/docs/figures/mqtt/paho_ui.png)
+![paho](/vendor/lockzhiner/lingpi/docs/figures/mqtt/paho_ui.png)
 
 ### WIFI连接
 
-修改例程/device/rockchip/rk2206/sdk_liteos/board/src/config_network.c代码中的SSID和PASSWORD为使用WIFI的SSID和密匙，用于连接网络，设备通过WIFI访问PC端MQTT服务器。
+修改例程/device/soc/rockchip/rk2206/sdk_liteos/platform/network/config_network.c代码中的SSID和PASSWORD为使用WIFI的SSID和密匙，用于连接网络，设备通过WIFI访问PC端MQTT服务器。
 
 ```c
 #define SSID                                    "lzdz"
@@ -401,17 +401,13 @@ mosquitto安装配置完成后，需要开启mosquitto服务，右击打开我�
 
 ### 修改 BUILD.gn 文件
 
-修改 `vendor/lockzhiner/rk2206/sample` 路径下 BUILD.gn 文件，指定 `d1_iot_mqtt` 参与编译。
+修改 `vendor/lockzhiner/lingpi/sample` 路径下 BUILD.gn 文件，指定 `d1_iot_mqtt` 参与编译。
 
 ```r
-"./d1_iot_mqtt:iot_mqtt_example",
+"d1_iot_mqtt",
 ```
 
-修改 `device/lockzhiner/rk2206/sdk_liteos` 路径下 Makefile 文件，添加 `-liot_mqtt_example` 参与编译。
 
-```r
-hardware_LIBS = -lhal_iothardware -lhardware -liot_mqtt_example
-```
 
 ### 运行结果
 
@@ -432,13 +428,13 @@ MQTTSubscribe...
 
 点击订阅添加按键，新增主题IOT_MQTT（主题名称需要与例程代码MQTTPublish函数传参的主题名称一致），点击订阅按键，此时，历史记录页面就开始显示接收的开发板上报信息，如下图所示。
 
-![paho](/vendor/lockzhiner/rk2206/docs/figures/mqtt/paho_mqtt.png)
+![paho](/vendor/lockzhiner/lingpi/docs/figures/mqtt/paho_mqtt.png)
 
 #### 发布
 
 在发布主题栏，输入主题名称substopic（主题名称需要与例程代码MQTTSubscribe函数传参的主题名称一致），在消息栏输入消息hello world，点击发布，此时，历史记录页面显示已发布出的消息，如下图所示。
 
-![paho](/vendor/lockzhiner/rk2206/docs/figures/mqtt/paho_mqtt_publish.png)
+![paho](/vendor/lockzhiner/lingpi/docs/figures/mqtt/paho_mqtt_publish.png)
 
 同时，开发板串口会同步显示接收到的消息日志，如下所示。
 
@@ -446,3 +442,4 @@ MQTTSubscribe...
 message arrived on topic substopic: hello world
 message arrived on topic substopic: hello world
 ```
+

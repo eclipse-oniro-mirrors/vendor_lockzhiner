@@ -11,8 +11,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import("//kernel/liteos_m/liteos.gni")
 
-static_library("iot_mqtt_example") {
+kernel_module("iot_mqtt_example") {
     sources = [
         "iot_mqtt.c",
         "src/oc_mqtt.c",
@@ -21,14 +22,9 @@ static_library("iot_mqtt_example") {
 
     include_dirs = [
         "//utils/native/lite/include",
-        "//third_party/cJSON",
-        "//third_party/musl/porting/liteos_m/kernel/include",
-        "//third_party/paho_mqtt/MQTTPacket/src",
-        "//third_party/paho_mqtt/MQTTClient-C/src",
         "include",
-    ]
-
-    deps = [
-        "//device/rockchip/hardware:hardware",
+        "//third_party/cJSON",
+        "//device/board/lockzhiner/lingpi/third_party/paho_mqtt/MQTTClient-C/src",
+        "//device/board/lockzhiner/lingpi/third_party/paho_mqtt/MQTTPacket/src",
     ]
 }

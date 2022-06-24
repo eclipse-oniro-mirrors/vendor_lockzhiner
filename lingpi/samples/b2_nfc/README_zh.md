@@ -2,14 +2,14 @@
 
 本示例将演示如何在小凌派-RK2206开发板控制NFC
 
-![小凌派-RK2206](/vendor/lockzhiner/rk2206/docs/figures/lockzhiner-rk2206.jpg)
+![小凌派-RK2206](/vendor/lockzhiner/lingpi/docs/figures/lockzhiner-rk2206.jpg)
 
 ## 程序设计
 
 ### 头文件
 
 ```
-/vendor/lockzhiner/rk2206/samples/b0_nfc/include/nfc.h
+/vendor/lockzhiner/lingpi/samples/b0_nfc/include/nfc.h
 ```
 
 ### API分析
@@ -115,16 +115,16 @@ if (LzI2cInit(NFC_I2C_PORT, m_i2c2_freq) != LZ_HARDWARE_SUCCESS)
 
 ### 修改 BUILD.gn 文件
 
-修改 `vendor\lockzhiner\rk2206\sample` 路径下 BUILD.gn 文件，指定 `nfc` 参与编译。
+修改 `vendor/lockzhiner/lingpi/sample` 路径下 BUILD.gn 文件，指定 `nfc` 参与编译。
 
 ```r
-"./b0_nfc:nfc_example",
+"b2_nfc",
 ```
 
-修改 `device/lockzhiner/rk2206/sdk_liteos` 路径下 Makefile 文件，添加 `-lnfc_example` 参与编译。
+在主目录下输入编译命令。
 
-```r
-hardware_LIBS = -lhal_iothardware -lhardware -lnfc_example
+```shell
+hb build -f
 ```
 
 ### 运行结果

@@ -11,8 +11,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import("//kernel/liteos_m/liteos.gni")
 
-static_library("e53_isl_example") {
+kernel_module("e53_sl_example") {
     sources = [
         "e53_intelligent_street_lamp_example.c",
         "src/e53_intelligent_street_lamp.c",
@@ -21,9 +22,5 @@ static_library("e53_isl_example") {
     include_dirs = [
         "//utils/native/lite/include",
         "include",
-    ]
-
-    deps = [
-        "//device/rockchip/hardware:hardware",
     ]
 }

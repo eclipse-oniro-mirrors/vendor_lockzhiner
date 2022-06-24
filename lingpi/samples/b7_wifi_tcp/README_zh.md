@@ -2,55 +2,53 @@
 
 本示例将演示如何在小凌派-RK2206开发板上使用wifi进行tcp通信
 
-![小凌派-RK2206开发板](/vendor/lockzhiner/rk2206/docs/figures/lockzhiner-rk2206.jpg)
-
-
+![小凌派-RK2206开发板](/vendor/lockzhiner/lingpi/docs/figures/lockzhiner-rk2206.jpg)
 
 ## WiFi ssid 和密码设置
 
-修改文件```device/rockchip/rk2206/sdk_liteos/board/src/config_network.c``` 中的SSID WiFi名称，PASSWORD WiFi密码 连接到与pc同一网络
+修改文件 ``device/soc/rockchip/rk2206/sdk_liteos/platform/network/config_network.c`` 中的SSID WiFi名称，PASSWORD WiFi密码 连接到与pc同一网络
+
 ```c
 #define SSID                    "凌智电子"
 #define PASSWORD                "88888888"
 ```
 
-确认main文件```device/rockchip/rk2206/sdk_liteos/board/main.c``` wifi功能已开启
+确认main文件 ``device/soc/rockchip/rk2206/sdk_liteos/platform/main/main.c`` wifi功能已开启
 
 ```c
 ExternalTaskConfigNetwork();
 ```
 
-
 ### 查看小凌派获取到的IP地址和网关
 
 图如下所示：
-![wifi ip地址](/vendor/lockzhiner/rk2206/docs/figures/wifi_tcp/2022-05-09_14-17-53wifi_ip.png)
+![wifi ip地址](/vendor/lockzhiner/lingpi/docs/figures/wifi_tcp/2022-05-09_14-17-53wifi_ip.png)
 
 ### 确认pc与小凌派在同一局域网，查看PC的IP地址和网关
-在控制台输入 ```ipconfig```
-图如下所示：
-![pc ip地址](/vendor/lockzhiner/rk2206/docs/figures/wifi_tcp/2022-05-09_14-25-56pc_ip.png)
-网关都是```192.168.2.1```表示在同一局域网
 
+在控制台输入 ``ipconfig``
+图如下所示：
+![pc ip地址](/vendor/lockzhiner/lingpi/docs/figures/wifi_tcp/2022-05-09_14-25-56pc_ip.png)
+网关都是 ``192.168.2.1``表示在同一局域网
 
 修改wifi_tcp例程中 服务地址及端口号后重新编译烧录程序
+
 ```c
 #define  OC_SERVER_IP   "192.168.2.49"   //pc IP地址 此地址为上一步查询到的地址每个人的地址可能不一样需要根据自己的修改
 #define  SERVER_PORT     6666            //端口号
 ```
+
 pc上打开两个网络调试工具一个客户端一个服务端，并设置IP地址和端口号
-![pc 网络调试工具](/vendor/lockzhiner/rk2206/docs/figures/wifi_tcp/2022-05-09_14-41-34网络调试工具.png)
+![pc 网络调试工具](/vendor/lockzhiner/lingpi/docs/figures/wifi_tcp/2022-05-09_14-41-34网络调试工具.png)
 
 查看log 等待小凌派的tcp客户端和服务端任务启动
-![tcp start](/vendor/lockzhiner/rk2206/docs/figures/wifi_tcp/2022-05-09_14-45-59tcp_start.png)
-
+![tcp start](/vendor/lockzhiner/lingpi/docs/figures/wifi_tcp/2022-05-09_14-45-59tcp_start.png)
 
 当小凌派tcp客户端和服务端启动后， 再用网络调试助手点击启动客户端和服务端
-![网络调试工具 start](/vendor/lockzhiner/rk2206/docs/figures/wifi_tcp/2022-05-09_14-55-05pc_tool_start.png)
+![网络调试工具 start](/vendor/lockzhiner/lingpi/docs/figures/wifi_tcp/2022-05-09_14-55-05pc_tool_start.png)
 
 然后就可以通过网络工具与小凌派通信了
-![网络调试工具 tcp_msg](/vendor/lockzhiner/rk2206/docs/figures/wifi_tcp/2022-05-09_15-00-15tcp_msg.png)
-
+![网络调试工具 tcp_msg](/vendor/lockzhiner/lingpi/docs/figures/wifi_tcp/2022-05-09_15-00-15tcp_msg.png)
 
 ## 程序设计
 
@@ -79,16 +77,15 @@ int socket(int domain, int type, int protocol)；
 创建套接字
 **参数：**
 
-| 名字          | 描述           |
-| :------------ | :------------- |
-| domai         |协议类型，一般为AF_INET      |
-| type          | socket类型 |
-| protocol      | 用来指定socket所使用的传输协议编号，通常设为0即可 |
+| 名字     | 描述                                              |
+| :------- | :------------------------------------------------ |
+| domai    | 协议类型，一般为AF_INET                           |
+| type     | socket类型                                        |
+| protocol | 用来指定socket所使用的传输协议编号，通常设为0即可 |
 
 **返回值：**
 
 返回大于0为成功，反之为失败
-
 
 #### bind()
 
@@ -102,16 +99,15 @@ int bind(int sockfd, struct sockaddr *my_addr, int addrlen)；
 
 **参数：**
 
-| 名字          | 描述           |
-| :------------ | :------------- |
-| sockfd        | socket描述符         |
-| my_addr       | 是一个指向包含有本机ip地址和端口号等信息的sockaddr类型的指针 |
-| addrlen       | 常被设为sizeof(struct sockaddr)  |
+| 名字    | 描述                                                         |
+| :------ | :----------------------------------------------------------- |
+| sockfd  | socket描述符                                                 |
+| my_addr | 是一个指向包含有本机ip地址和端口号等信息的sockaddr类型的指针 |
+| addrlen | 常被设为sizeof(struct sockaddr)                              |
 
 **返回值：**
 
 返回大于0为成功，反之为失败
-
 
 #### connect()
 
@@ -125,11 +121,11 @@ int connect(int sockfd, struct sockaddr *serv_addr, int addrlen)；
 
 **参数：**
 
-| 名字           | 描述                      |
-| :------------ | :------------------------ |
-| sockfd        | 目的服务器的socket描述符       |
-| serv_addr     | 包含目的机器ip地址和端口号的指针 |
-| addrlen       | sizeof(struct sockaddr)     |
+| 名字      | 描述                             |
+| :-------- | :------------------------------- |
+| sockfd    | 目的服务器的socket描述符         |
+| serv_addr | 包含目的机器ip地址和端口号的指针 |
+| addrlen   | sizeof(struct sockaddr)          |
 
 **返回值：**
 
@@ -147,15 +143,14 @@ int listen(int sockfd, int backlog)；
 
 **参数：**
 
-| 名字          | 描述                      |
-| :------------ | :------------------------ |
-| sockfd        | socket()系统调用返回的socket描述符 |
-| backlog       | 指定在请求队列中的最大请求数，进入的连接请求将在队列中等待accept|
+| 名字    | 描述                                                             |
+| :------ | :--------------------------------------------------------------- |
+| sockfd  | socket()系统调用返回的socket描述符                               |
+| backlog | 指定在请求队列中的最大请求数，进入的连接请求将在队列中等待accept |
 
 **返回值：**
 
 返回等于0为成功，反之为失败
-
 
 #### accept()
 
@@ -169,16 +164,15 @@ int accept(int sockfd, void *addr, int addrlen);
 
 **参数：**
 
-| 名字           | 描述                      |
-| :------------ | :------------------------ |
-| sockfd        | 是被监听的socket描述符 |
-| addr          | 通常是一个指向sockaddr_in变量的指针，该变量用来存放提出连接请求服务的主机的信息|
-| addrlen       | sizeof(struct sockaddr_in) |
+| 名字    | 描述                                                                            |
+| :------ | :------------------------------------------------------------------------------ |
+| sockfd  | 是被监听的socket描述符                                                          |
+| addr    | 通常是一个指向sockaddr_in变量的指针，该变量用来存放提出连接请求服务的主机的信息 |
+| addrlen | sizeof(struct sockaddr_in)                                                      |
 
 **返回值：**
 
 如果没有错误产生，则accept()返回一个描述所接受包的SOCKET类型的值
-
 
 #### send()
 
@@ -192,17 +186,16 @@ int send(int sockfd, const void *msg, int len, int flags);
 
 **参数：**
 
-| 名字          | 描述                      |
-| :------------ | :------------------------ |
-| sockfd        | 用来传输数据的socket描述符 |
-| msg           | 要发送数据的指针  |
-| len           | 要发送的数据长度（字节）|
-| flags         | 0|
+| 名字   | 描述                       |
+| :----- | :------------------------- |
+| sockfd | 用来传输数据的socket描述符 |
+| msg    | 要发送数据的指针           |
+| len    | 要发送的数据长度（字节）   |
+| flags  | 0                          |
 
 **返回值：**
 
 发送成功返回发送字节数，失败返回值小于0
-
 
 #### recv()
 
@@ -216,17 +209,16 @@ int recv(int sockfd, void *buf, int len, unsigned int flags)；
 
 **参数：**
 
-| 名字          | 描述                      |
-| :------------ | :------------------------ |
-| sockfd        | 接收数据的socket描述符 |
-| buf           | 存放数据的缓冲区  |
-| len           | 缓冲的长度（字节）|
-| flags         | 0|
+| 名字   | 描述                   |
+| :----- | :--------------------- |
+| sockfd | 接收数据的socket描述符 |
+| buf    | 存放数据的缓冲区       |
+| len    | 缓冲的长度（字节）     |
+| flags  | 0                      |
 
 **返回值：**
 
 接收成功返回大于0，失败返回值小于0
-
 
 #### lwip_close()
 
@@ -240,25 +232,24 @@ int lwip_close(int sockfd)；
 
 **参数：**
 
-| 名字          | 描述                      |
-| :------------ | :------------------------ |
-| sockfd        | 要关闭的套接字 |
+| 名字   | 描述           |
+| :----- | :------------- |
+| sockfd | 要关闭的套接字 |
 
 **返回值：**
 
 发送成功返回发送字节数，失败返回值小于0
 
-
-
 ### 主要代码分析
 
 创建客户端任务 socket-->connect-->send-->recv-->lwip_close
+
 ```c
 int wifi_client(void* arg)
 {
     int client_fd, ret;
     struct sockaddr_in serv_addr;
-    
+  
     while(1)
     {
         client_fd = socket(AF_INET, SOCK_STREAM, 0);//AF_INET:IPV4;SOCK_STREAM:TCP
@@ -274,23 +265,23 @@ int wifi_client(void* arg)
         if (ret != 0) {
             printf("[CommInitTcpServer]setsockopt fail, ret[%d]!\n", ret);
         }
-        
+      
         memset(&serv_addr, 0, sizeof(serv_addr));
         serv_addr.sin_family = AF_INET;
         serv_addr.sin_addr.s_addr = inet_addr(OC_SERVER_IP);
         serv_addr.sin_port = htons(SERVER_PORT);
         printf("[tcp client] connect:%d<%s:%d>\n",client_fd, inet_ntoa(serv_addr.sin_addr), ntohs(serv_addr.sin_port));
-        
-        
+      
+      
         tcp_client_msg_handle(client_fd, (struct sockaddr*)&serv_addr);
-        
+      
         LOS_Msleep(1000);
     }
 }
 ```
 
-
 连接服务端，并发送消息和接收消息
+
 ```c
 void tcp_client_msg_handle(int fd, struct sockaddr* dst)
 {
@@ -327,8 +318,8 @@ void tcp_client_msg_handle(int fd, struct sockaddr* dst)
 }
 ```
 
-
 创建服务端任务 socket-->bind-->listen-->accept-->recv-->send-->close
+
 ```c
 int wifi_server(void* arg)
 {
@@ -350,7 +341,7 @@ int wifi_server(void* arg)
         if (ret != 0) {
             printf("[CommInitTcpServer]setsockopt fail, ret[%d]!\n", ret);
         }
-        
+      
         struct sockaddr_in serv_addr = {0};
         serv_addr.sin_family = AF_INET;
         serv_addr.sin_addr.s_addr = htonl(INADDR_ANY); //IP地址，需要进行网络序转换，INADDR_ANY：本地地址
@@ -382,6 +373,7 @@ int wifi_server(void* arg)
 ```
 
 连接客户端，并发送消息和接收消息
+
 ```c
 void tcp_server_msg_handle(int fd)
 {
@@ -390,7 +382,7 @@ void tcp_server_msg_handle(int fd)
     int cnt = 0, count;
     int client_fd;
     struct sockaddr_in client_addr = {0};
-    
+  
     printf("waitting for client connect...\n");
     /* 监听socket 此处会阻塞 */
     client_fd = accept(fd, (struct sockaddr*)&client_addr, &client_addr_len);
@@ -425,22 +417,21 @@ void tcp_server_msg_handle(int fd)
 
 ### 修改 BUILD.gn 文件
 
-修改 `vendor\lockzhiner\rk2206\sample` 路径下 BUILD.gn 文件，指定 `wifi_tcp_example` 参与编译。
+修改 `vendor/lockzhiner/lingpi/sample` 路径下 BUILD.gn 文件，指定 `b7_wifi_tcp` 参与编译。
 
 ```r
-"./b7_wifi_tcp:wifi_tcp_example",
+"b7_wifi_tcp",
 ```
 
-修改 `device/lockzhiner/rk2206/sdk_liteos` 路径下 Makefile 文件，添加 `-lwifi_tcp_example` 参与编译。
+在主目录下输入编译命令。
 
-```r
-hardware_LIBS = -lhal_iothardware -lhardware -lwifi_tcp_example
+```shell
+hb build -f
 ```
 
 ### 运行结果
 
 示例代码编译烧录代码后，按下开发板的RESET按键，通过串口助手查看日志，串口0显示如下：
-
 
 ```c
 [wifi_api:D]netif setup ...
@@ -512,11 +503,13 @@ connect server failed...2
 [tcp server] waitting client msg
 ```
 
-
 当log中出现以下信息表示小凌派的tcp客户端和服务端任务已启动
+
 ```c
 [tcp client] connect:50<192.168.2.49:6666>
 [tcp server] listen:51<0.0.0.0:6666>
 ```
+
 此时用网络调试助手查看并收发消息。
-![网络调试工具 tcp_msg](/vendor/lockzhiner/rk2206/docs/figures/wifi_tcp/2022-05-09_15-00-15tcp_msg.png)
+![网络调试工具 tcp_msg](/vendor/lockzhiner/lingpi/docs/figures/wifi_tcp/2022-05-09_15-00-15tcp_msg.png)
+

@@ -11,18 +11,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-static_library("uart_example") {
+import("//kernel/liteos_m/liteos.gni")
+
+kernel_module("uart_example") {
     sources = [
         "uart_example.c",
     ]
 
     include_dirs = [
         "//utils/native/lite/include",
-        "//device/lockzhiner/rk2206/adapter/include",
-        "include",
-    ]
-
-    deps = [
-        "//device/rockchip/hardware:hardware",
     ]
 }

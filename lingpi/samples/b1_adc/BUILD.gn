@@ -11,19 +11,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import("//kernel/liteos_m/liteos.gni")
 
-static_library("adc_example") {
+kernel_module("adc_example") {
     sources = [
         "adc_example.c",
     ]
 
     include_dirs = [
         "//utils/native/lite/include",
-        "//device/lockzhiner/rk2206/adapter/include",
-        "include",
-    ]
-
-    deps = [
-        "//device/rockchip/hardware:hardware",
     ]
 }

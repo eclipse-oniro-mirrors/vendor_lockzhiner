@@ -11,7 +11,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-static_library("nfc_example") {
+import("//kernel/liteos_m/liteos.gni")
+
+kernel_module("nfc_example") {
     sources = [
         "nfc_example.c",
         "src/ndef.c",
@@ -24,12 +26,7 @@ static_library("nfc_example") {
 
     include_dirs = [
         "//utils/native/lite/include",
-        "//device/lockzhiner/rk2206/adapter/include",
         "include",
-        "src"
-    ]
-
-    deps = [
-        "//device/rockchip/hardware:hardware",
+        "src",
     ]
 }

@@ -4,7 +4,7 @@
 
 本例程演示如何在小凌派-RK2206开发板上使用鸿蒙LiteOS-M内核接口，进行互斥锁编程开发。
 
-![小凌派-RK2206开发板](/vendor/lockzhiner/rk2206/docs/figures/lockzhiner-rk2206.jpg)
+![小凌派-RK2206开发板](/vendor/lockzhiner/lingpi/docs/figures/lockzhiner-rk2206.jpg)
 
 ## 程序设计
 
@@ -29,14 +29,15 @@ UINT32 LOS_MuxCreate(UINT32 *muxHandle);
 **参数：**
 
 | 名字      | 描述             |
-| :---------- | :----------------- |
+| :-------- | :--------------- |
 | muxHandle | 创建的互斥锁指针 |
 
 **返回值：**
-|返回值|描述|
-|:--|:------| 
-| LOS_OK | 成功 |
-| LOS_ERRNO_MUX_PTR_NULL <br> LOS_ERRNO_MUX_ALL_BUSY | 失败 |
+
+| 返回值                                                | 描述 |
+| :---------------------------------------------------- | :--- |
+| LOS_OK                                                | 成功 |
+| LOS_ERRNO_MUX_PTR_NULL`<br>` LOS_ERRNO_MUX_ALL_BUSY | 失败 |
 
 #### LOS_MuxDelete()
 
@@ -51,14 +52,15 @@ UINT32 LOS_MuxDelete(UINT32 muxHandle);
 **参数：**
 
 | 名字      | 描述             |
-| :---------- | :----------------- |
+| :-------- | :--------------- |
 | muxHandle | 需要删除的互斥锁 |
 
 **返回值：**
-|返回值|描述|
-|:--|:------|
-| LOS_OK | 成功 |
-| LOS_ERRNO_MUX_INVALID <br> LOS_ERRNO_MUX_PENDED | 失败 |
+
+| 返回值                                             | 描述 |
+| :------------------------------------------------- | :--- |
+| LOS_OK                                             | 成功 |
+| LOS_ERRNO_MUX_INVALID`<br>` LOS_ERRNO_MUX_PENDED | 失败 |
 
 #### LOS_MuxPend()
 
@@ -73,15 +75,16 @@ UINT32 LOS_MuxPend(UINT32 muxHandle, UINT32 timeout);
 **参数：**
 
 | 名字      | 描述             |
-| :---------- | :----------------- |
+| :-------- | :--------------- |
 | muxHandle | 需要申请的互斥锁 |
 | timeout   | 超时时间         |
 
 **返回值：**
-|返回值|描述|
-|:--|:------| 
-| LOS_OK | 成功 |
-| LOS_ERRNO_MUX_INVALID <br> LOS_ERRNO_MUX_UNAVAILABLE <br> LOS_ERRNO_MUX_PEND_INTERR <br> LOS_ERRNO_MUX_PEND_IN_LOCK <br> LOS_ERRNO_MUX_TIMEOUT | 失败 |
+
+| 返回值                                                                                                                                                        | 描述 |
+| :------------------------------------------------------------------------------------------------------------------------------------------------------------ | :--- |
+| LOS_OK                                                                                                                                                        | 成功 |
+| LOS_ERRNO_MUX_INVALID`<br>` LOS_ERRNO_MUX_UNAVAILABLE `<br>` LOS_ERRNO_MUX_PEND_INTERR `<br>` LOS_ERRNO_MUX_PEND_IN_LOCK `<br>` LOS_ERRNO_MUX_TIMEOUT | 失败 |
 
 #### LOS_MuxPost()
 
@@ -96,14 +99,15 @@ UINT32 LOS_MuxPost(UINT32 muxHandle);
 **参数：**
 
 | 名字      | 描述             |
-| :---------- | :----------------- |
+| :-------- | :--------------- |
 | muxHandle | 需要释放的互斥锁 |
 
 **返回值：**
-|返回值|描述|
-|:--|:------| 
-| LOS_OK | 成功 |
-| LOS_ERRNO_MUX_INVALID <br> LOS_ERRNO_MUX_PEND_INTERR | 失败 |
+
+| 返回值                                                  | 描述 |
+| :------------------------------------------------------ | :--- |
+| LOS_OK                                                  | 成功 |
+| LOS_ERRNO_MUX_INVALID`<br>` LOS_ERRNO_MUX_PEND_INTERR | 失败 |
 
 ### 软件设计
 
@@ -177,16 +181,16 @@ void read_thread()
 
 ### 修改 BUILD.gn 文件
 
-修改 `vendor/lockzhiner/rk2206/sample` 路径下 BUILD.gn 文件，指定 `a4_kernel_mutex` 参与编译。
+修改 `vendor/lockzhiner/lingpi/sample` 路径下 BUILD.gn 文件，指定 `a4_kernel_mutex` 参与编译。
 
 ```r
-"./a4_kernel_mutex:mutex_example",
+"a4_kernel_mutex",
 ```
 
-修改 `device/lockzhiner/rk2206/sdk_liteos` 路径下 Makefile 文件，添加 `-lmutex_example` 参与编译。
+在主目录下输入编译命令。
 
-```r
-hardware_LIBS = -lhal_iothardware -lhardware -lmutex_example
+```shell
+hb build -f
 ```
 
 ### 运行结果
@@ -201,4 +205,3 @@ read_thread read data:2
 write_thread write data:3
 read_thread read data:3
 ```
-

@@ -11,8 +11,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import("//kernel/liteos_m/liteos.gni")
 
-static_library("lcd_example") {
+kernel_module("lcd_example") {
     sources = [
         "lcd_example.c",
         "src/lcd.c",
@@ -21,11 +22,6 @@ static_library("lcd_example") {
 
     include_dirs = [
         "//utils/native/lite/include",
-        "//device/lockzhiner/rk2206/adapter/include",
         "include",
-    ]
-
-    deps = [
-        "//device/rockchip/hardware:hardware",
     ]
 }

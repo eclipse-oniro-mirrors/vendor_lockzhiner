@@ -2,59 +2,57 @@
 
 本示例将演示如何在小凌派-RK2206开发板上使用wifi进行udp通信
 
-![小凌派-RK2206开发板](/vendor/lockzhiner/rk2206/docs/figures/lockzhiner-rk2206.jpg)
-
-
+![小凌派-RK2206开发板](/vendor/lockzhiner/lingpi/docs/figures/lockzhiner-rk2206.jpg)
 
 ## WiFi ssid 和密码设置
 
-修改文件```device/rockchip/rk2206/sdk_liteos/board/src/config_network.c``` 中的SSID WiFi名称，PASSWORD WiFi密码 连接到与pc同一网络
+修改文件 ``device/soc/rockchip/rk2206/sdk_liteos/platform/network/config_network.c`` 中的SSID WiFi名称，PASSWORD WiFi密码 连接到与pc同一网络
+
 ```c
 #define SSID                    "凌智电子"
 #define PASSWORD                "88888888"
 ```
 
-确认main文件```device/rockchip/rk2206/sdk_liteos/board/main.c``` wifi功能已开启
+确认main文件 ``device/soc/rockchip/rk2206/sdk_liteos/platform/main/main.c`` wifi功能已开启
 
 ```c
 ExternalTaskConfigNetwork();
 ```
 
-
 ### 查看小凌派获取到的IP地址和网关
 
 图如下所示：
-![wifi ip地址](/vendor/lockzhiner/rk2206/docs/figures/wifi_udp/udp1.png)
+![wifi ip地址](/vendor/lockzhiner/lingpi/docs/figures/wifi_udp/udp1.png)
 
 ### 确认pc与小凌派在同一局域网，查看PC的IP地址和网关
-在控制台输入 ```ipconfig```
-图如下所示：
-![pc ip地址](/vendor/lockzhiner/rk2206/docs/figures/wifi_udp/udp2.png)
-网关都是```192.168.2.1```表示在同一局域网
 
+在控制台输入 ``ipconfig``
+图如下所示：
+![pc ip地址](/vendor/lockzhiner/lingpi/docs/figures/wifi_udp/udp2.png)
+网关都是 ``192.168.2.1``表示在同一局域网
 
 修改wifi_udp例程中 服务地址及端口号后重新编译烧录程序
+
 ```c
 #define  OC_SERVER_IP      "192.168.2.49"   //pc IP地址 此地址为上一步查询到的地址每个人的地址可能不一样需要根据自己的修改
 #define  SERVER_PORT        6666            //端口号
 #define  CLIENT_LOCAL_PORT  8888
 ```
+
 pc上打开两个网络调试工具一个客户端一个服务端，并设置IP地址和端口号
-![pc 网络调试工具](/vendor/lockzhiner/rk2206/docs/figures/wifi_udp/udp3.png)
+![pc 网络调试工具](/vendor/lockzhiner/lingpi/docs/figures/wifi_udp/udp3.png)
 
 用网络调试助手点击启动客户端和服务端
-![网络调试工具 start](/vendor/lockzhiner/rk2206/docs/figures/wifi_udp/udp4.png)
+![网络调试工具 start](/vendor/lockzhiner/lingpi/docs/figures/wifi_udp/udp4.png)
 
 查看log 等待小凌派的udp客户端和服务端任务启动
-![udp start](/vendor/lockzhiner/rk2206/docs/figures/wifi_udp/udp5.png)
-
+![udp start](/vendor/lockzhiner/lingpi/docs/figures/wifi_udp/udp5.png)
 
 修改网络调试工具字符集编码
-![网络调试工具字符集修改](/vendor/lockzhiner/rk2206/docs/figures/wifi_udp/udp6.png)
+![网络调试工具字符集修改](/vendor/lockzhiner/lingpi/docs/figures/wifi_udp/udp6.png)
 
 然后就可以通过网络调试工具与小凌派通信了
-![网络调试工具 udp_msg](/vendor/lockzhiner/rk2206/docs/figures/wifi_udp/udp7.png)
-
+![网络调试工具 udp_msg](/vendor/lockzhiner/lingpi/docs/figures/wifi_udp/udp7.png)
 
 ## 程序设计
 
@@ -83,16 +81,15 @@ int socket(int domain, int type, int protocol)；
 创建套接字
 **参数：**
 
-| 名字          | 描述           |
-| :------------ | :------------- |
-| domai         |协议类型，一般为AF_INET      |
-| type          | socket类型 |
-| protocol      | 用来指定socket所使用的传输协议编号，通常设为0即可 |
+| 名字     | 描述                                              |
+| :------- | :------------------------------------------------ |
+| domai    | 协议类型，一般为AF_INET                           |
+| type     | socket类型                                        |
+| protocol | 用来指定socket所使用的传输协议编号，通常设为0即可 |
 
 **返回值：**
 
 返回大于0为成功，反之为失败
-
 
 #### bind()
 
@@ -106,16 +103,15 @@ int bind(int sockfd, struct sockaddr *my_addr, int addrlen)；
 
 **参数：**
 
-| 名字          | 描述           |
-| :------------ | :------------- |
-| sockfd        | socket描述符         |
-| my_addr       | 是一个指向包含有本机ip地址和端口号等信息的sockaddr类型的指针 |
-| addrlen       | 常被设为sizeof(struct sockaddr)  |
+| 名字    | 描述                                                         |
+| :------ | :----------------------------------------------------------- |
+| sockfd  | socket描述符                                                 |
+| my_addr | 是一个指向包含有本机ip地址和端口号等信息的sockaddr类型的指针 |
+| addrlen | 常被设为sizeof(struct sockaddr)                              |
 
 **返回值：**
 
 返回大于0为成功，反之为失败
-
 
 #### connect()
 
@@ -129,16 +125,15 @@ int connect(int sockfd, struct sockaddr *serv_addr, int addrlen)；
 
 **参数：**
 
-| 名字           | 描述                      |
-| :------------ | :------------------------ |
-| sockfd        | 目的服务器的socket描述符       |
-| serv_addr     | 包含目的机器ip地址和端口号的指针 |
-| addrlen       | sizeof(struct sockaddr)     |
+| 名字      | 描述                             |
+| :-------- | :------------------------------- |
+| sockfd    | 目的服务器的socket描述符         |
+| serv_addr | 包含目的机器ip地址和端口号的指针 |
+| addrlen   | sizeof(struct sockaddr)          |
 
 **返回值：**
 
 返回大于0为成功，反之为失败
-
 
 #### sendto()
 
@@ -152,19 +147,18 @@ int sendto(int sockfd, const void *msg, int len, int flags, struct sockaddr * to
 
 **参数：**
 
-| 名字          | 描述                      |
-| :------------ | :------------------------ |
-| sockfd        | 用来传输数据的socket描述符 |
-| msg           | 要发送数据的指针  |
-| len           | 要发送的数据长度（字节）|
-| flags         | 0|
-| to            | 目的socket描述符|
-| tolen         | 目的socket描述符长度|
+| 名字   | 描述                       |
+| :----- | :------------------------- |
+| sockfd | 用来传输数据的socket描述符 |
+| msg    | 要发送数据的指针           |
+| len    | 要发送的数据长度（字节）   |
+| flags  | 0                          |
+| to     | 目的socket描述符           |
+| tolen  | 目的socket描述符长度       |
 
 **返回值：**
 
 发送成功返回发送字节数，失败返回值小于0
-
 
 #### recvfrom()
 
@@ -178,19 +172,18 @@ int recvfrom(int sockfd, void *buf, int len, unsigned int flags, struct sockaddr
 
 **参数：**
 
-| 名字          | 描述                      |
-| :------------ | :------------------------ |
-| sockfd        | 接收数据的socket描述符 |
-| buf           | 存放数据的缓冲区  |
-| len           | 缓冲的长度（字节）|
-| flags         | 0|
-| from          | 来自socket描述符|
-| fromlen       | 来自socket描述符长度|
+| 名字    | 描述                   |
+| :------ | :--------------------- |
+| sockfd  | 接收数据的socket描述符 |
+| buf     | 存放数据的缓冲区       |
+| len     | 缓冲的长度（字节）     |
+| flags   | 0                      |
+| from    | 来自socket描述符       |
+| fromlen | 来自socket描述符长度   |
 
 **返回值：**
 
 接收成功返回大于0，失败返回值小于0
-
 
 #### lwip_close()
 
@@ -204,25 +197,24 @@ int lwip_close(int sockfd)；
 
 **参数：**
 
-| 名字          | 描述                      |
-| :------------ | :------------------------ |
-| sockfd        | 要关闭的套接字 |
+| 名字   | 描述           |
+| :----- | :------------- |
+| sockfd | 要关闭的套接字 |
 
 **返回值：**
 
 发送成功返回发送字节数，失败返回值小于0
 
-
-
 ### 主要代码分析
 
 创建客户端任务 socket-->connect-->send-->recv-->lwip_close
+
 ```c
 int wifi_udp_client(void* arg)
 {
     int client_fd, ret;
     struct sockaddr_in serv_addr, local_addr;
-    
+  
     while(1)
     {
         client_fd = socket(AF_INET, SOCK_DGRAM, 0);//AF_INET:IPV4;SOCK_DGRAM:UDP
@@ -245,7 +237,7 @@ int wifi_udp_client(void* arg)
         local_addr.sin_port = htons(CLIENT_LOCAL_PORT);
         //绑定本地ip端口号
         ret = bind(client_fd, (struct sockaddr*)&local_addr, sizeof(local_addr));
-              
+            
         memset(&serv_addr, 0, sizeof(serv_addr));
         serv_addr.sin_family = AF_INET;
         serv_addr.sin_addr.s_addr = htonl(INADDR_ANY); //IP地址，需要进行网络序转换，INADDR_ANY：本地地址
@@ -253,19 +245,17 @@ int wifi_udp_client(void* arg)
         serv_addr.sin_port = htons(SERVER_PORT);
 
         udp_client_msg_handle(client_fd, (struct sockaddr*)&serv_addr);
-        
+      
         LOS_Msleep(1000);
     }
 
     return 0;
 }
-
 ```
 
-
 连接服务端，并发送消息和接收消息
-```c
 
+```c
 void udp_client_msg_handle(int fd, struct sockaddr* dst)
 {
     socklen_t len = sizeof(*dst);
@@ -306,8 +296,8 @@ void udp_client_msg_handle(int fd, struct sockaddr* dst)
 }
 ```
 
-
 创建服务端任务 socket-->bind-->listen-->accept-->recv-->send-->close
+
 ```c
 int wifi_udp_server(void* arg)
 {
@@ -328,7 +318,7 @@ int wifi_udp_server(void* arg)
         if (ret != 0) {
             printf("[CommInitUdpServer]setsockopt fail, ret[%d]!\n", ret);
         }
-        
+      
         struct sockaddr_in serv_addr = {0};
         serv_addr.sin_family = AF_INET;
         serv_addr.sin_addr.s_addr = htonl(INADDR_ANY); //IP地址，需要进行网络序转换，INADDR_ANY：本地地址
@@ -351,6 +341,7 @@ int wifi_udp_server(void* arg)
 ```
 
 连接客户端，并发送消息和接收消息
+
 ```c
 void udp_server_msg_handle(int fd)
 {
@@ -380,29 +371,27 @@ void udp_server_msg_handle(int fd)
     }
     lwip_close(fd);
 }
-
 ```
 
 ## 编译调试
 
 ### 修改 BUILD.gn 文件
 
-修改 `vendor\lockzhiner\rk2206\sample` 路径下 BUILD.gn 文件，指定 `wifi_udp_example` 参与编译。
+修改 `vendor/lockzhiner/lingpi/sample` 路径下 BUILD.gn 文件，指定 `b8_wifi_udp` 参与编译。
 
 ```r
-"./b8_wifi_udp:wifi_udp_example",
+"b8_wifi_udp",
 ```
 
-修改 `device/lockzhiner/rk2206/sdk_liteos` 路径下 Makefile 文件，添加 `-lwifi_udp_example` 参与编译。
+在主目录下输入编译命令。
 
-```r
-hardware_LIBS = -lhal_iothardware -lhardware -lwifi_udp_example
+```shell
+hb build -f
 ```
 
 ### 运行结果
 
 示例代码编译烧录代码后，按下开发板的RESET按键，通过串口助手查看日志，串口显示如下：
-
 
 ```c
 [MAIN:D]Main: enter ...
@@ -484,5 +473,7 @@ wifi_udp_example start ....
 [tcp client] connect:50<192.168.2.49:6666>
 [tcp server] listen:51<0.0.0.0:6666>
 ```
+
 此时用网络调试助手查看并收发消息。
-![网络调试工具 tcp_msg](/vendor/lockzhiner/rk2206/docs/figures/wifi_tcp/2022-05-09_15-00-15tcp_msg.png)
+![网络调试工具 tcp_msg](/vendor/lockzhiner/lingpi/docs/figures/wifi_tcp/2022-05-09_15-00-15tcp_msg.png)
+

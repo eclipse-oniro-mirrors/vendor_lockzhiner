@@ -2,25 +2,22 @@
 
 本示例将演示如何在小凌派-RK2206开发板上使用额外串口打印
 
-![小凌派-RK2206开发板](/vendor/lockzhiner/rk2206/docs/figures/lockzhiner-rk2206.jpg)
-
-
+![小凌派-RK2206开发板](/vendor/lockzhiner/lingpi/docs/figures/lockzhiner-rk2206.jpg)
 
 ## 硬件接口说明
 
 引脚名称开发者可在硬件资源图中查看。
 
-| 引脚名称 | 功能描述 |
-| :--- | :------- | 
+| 引脚名称  | 功能描述           |
+| :-------- | :----------------- |
 | GPIO0_PB6 | UART0_RX_M0 串口RX |
-| GPIO0_PB7 | UART0_TX_M0 串口TX | 
-| GND | 电源地引脚 | 
-
+| GPIO0_PB7 | UART0_TX_M0 串口TX |
+| GND       | 电源地引脚         |
 
 ### 硬件连接
 
 安装图如下所示：
-![串口模块硬件连接图](/vendor/lockzhiner/rk2206/docs/figures/uart/20220505104232-串口连接.jpg)
+![串口模块硬件连接图](/vendor/lockzhiner/lingpi/docs/figures/uart/20220505104232-串口连接.jpg)
 
 注意：
 （1）串口GND引脚一定要连接到开发板的GND引脚上。
@@ -35,7 +32,7 @@
 #include "lz_hardware.h"
 ```
 
-注意：实际头文件可参考[uart.h](/device/rockchip/rk2206/adapter/include/lz_hardware/uart.h)
+注意：实际头文件可参考[uart.h](/device/soc/rockchip/rk2206/hardware/include/lz_hardware/uart.h)
 
 #### LzUartInit()
 
@@ -49,10 +46,10 @@ unsigned int LzUartInit(unsigned int id, const UartAttribute *param);
 
 **参数：**
 
-| 名字          | 描述           |
-| :------------ | :------------- |
-| id            | 串口ID         |
-| param         | 串口配置参数，详情可参考[uart.h](/device/rockchip/rk2206/adapter/include/lz_hardware/uart.h) |
+| 名字  | 描述                                                                                      |
+| :---- | :---------------------------------------------------------------------------------------- |
+| id    | 串口ID                                                                                    |
+| param | 串口配置参数，详情可参考[uart.h](/device/soc/rockchip/rk2206/hardware/include/lz_hardware/uart.h) |
 
 **返回值：**
 
@@ -70,9 +67,9 @@ unsigned int LzUartDeinit(unsigned int id);
 
 **参数：**
 
-| 名字          | 描述           |
-| :------------ | :------------- |
-| id            | 串口ID         |
+| 名字 | 描述   |
+| :--- | :----- |
+| id   | 串口ID |
 
 **返回值：**
 
@@ -90,11 +87,11 @@ unsigned int LzUartRead(unsigned int id, unsigned char *data, unsigned int dataL
 
 **参数：**
 
-| 名字          | 描述                      |
-| :------------ | :------------------------ |
-| id            | 串口ID                    |
-| data          | 串口读取数据后存放的地址    |
-| dataLen       | 串口读取数据的个数         |
+| 名字    | 描述                     |
+| :------ | :----------------------- |
+| id      | 串口ID                   |
+| data    | 串口读取数据后存放的地址 |
+| dataLen | 串口读取数据的个数       |
 
 **返回值：**
 
@@ -112,20 +109,19 @@ unsigned int LzUartWrite(unsigned int id, const unsigned char *data, unsigned in
 
 **参数：**
 
-| 名字          | 描述                      |
-| :------------ | :------------------------ |
-| id            | 串口ID                    |
-| data          | 串口写入数据的地址         |
-| dataLen       | 串口写入数据的个数         |
+| 名字    | 描述               |
+| :------ | :----------------- |
+| id      | 串口ID             |
+| data    | 串口写入数据的地址 |
+| dataLen | 串口写入数据的个数 |
 
 **返回值：**
 
 成功返回发送数据长度
 
-
 ### 主要代码分析
 
-这部分代码为uart初始化的代码。首先用 `LzUartDeinit()` 函数将串口释放掉；其次用`PinctrlSet()`将GPIO0_PB6复用为UART0_RX_M0，GPIO0_PB7复用为UART0_TX_M0。最后调用 `LzUartInit()`函数初始化uart。
+这部分代码为uart初始化的代码。首先用 `LzUartDeinit()` 函数将串口释放掉；其次用 `PinctrlSet()`将GPIO0_PB6复用为UART0_RX_M0，GPIO0_PB7复用为UART0_TX_M0。最后调用 `LzUartInit()`函数初始化uart。
 
 ```c
 LzUartDeinit(UART_ID);
@@ -164,16 +160,16 @@ if (ret != LZ_HARDWARE_SUCCESS)
 
 ### 修改 BUILD.gn 文件
 
-修改 `vendor\lockzhiner\rk2206\sample` 路径下 BUILD.gn 文件，指定 `uart_example` 参与编译。
+修改 `vendor/lockzhiner/lingpi/sample` 路径下 BUILD.gn 文件，指定 `b6_uart` 参与编译。
 
 ```r
-"./b6_uart:uart_example",
+"b6_uart",
 ```
 
-修改 `device/lockzhiner/rk2206/sdk_liteos` 路径下 Makefile 文件，添加 `-luart_example` 参与编译。
+在主目录下输入编译命令。
 
-```r
-hardware_LIBS = -lhal_iothardware -lhardware -luart_example
+```shell
+hb build -f
 ```
 
 ### 运行结果
@@ -189,10 +185,11 @@ HelloWorld!
 ```
 
 注意：如果你使用MobaXterm，并且发现串口0能打印，但是换行有问题，则：
-（1）在MobaXterm界面中按住右边的Ctrl按键 + 右击鼠标，弹出菜单，选择`Change terminal settings...`，如下图所示：
+（1）在MobaXterm界面中按住右边的Ctrl按键 + 右击鼠标，弹出菜单，选择 `Change terminal settings...`，如下图所示：
 
-![右击菜单图](/vendor/lockzhiner/rk2206/docs/figures/uart/MobaXterm_右击菜单.png)
+![右击菜单图](/vendor/lockzhiner/lingpi/docs/figures/uart/MobaXterm_右击菜单.png)
 
 （2）将2个选项勾选上即可。如下图所示：
 
-![勾选图](/vendor/lockzhiner/rk2206/docs/figures/uart/MobaXterm_勾选.png)
+![勾选图](/vendor/lockzhiner/lingpi/docs/figures/uart/MobaXterm_勾选.png)
+

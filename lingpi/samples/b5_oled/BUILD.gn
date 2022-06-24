@@ -11,7 +11,9 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-static_library("oled_example") {
+import("//kernel/liteos_m/liteos.gni")
+
+kernel_module("oled_example") {
     sources = [
         "oled_example.c",
         "src/oled.c",
@@ -19,11 +21,6 @@ static_library("oled_example") {
 
     include_dirs = [
         "//utils/native/lite/include",
-        "//device/lockzhiner/rk2206/adapter/include",
         "include",
-    ]
-
-    deps = [
-        "//device/rockchip/hardware:hardware",
     ]
 }

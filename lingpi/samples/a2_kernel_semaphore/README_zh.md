@@ -4,7 +4,7 @@
 
 本例程演示如何在小凌派-RK2206开发板上使用鸿蒙LiteOS-M内核接口，通过信号量控制不同的线程，实现任务之间的同步。
 
-![小凌派-RK2206开发板](/vendor/lockzhiner/rk2206/docs/figures/lockzhiner-rk2206.jpg)
+![小凌派-RK2206开发板](/vendor/lockzhiner/lingpi/docs/figures/lockzhiner-rk2206.jpg)
 
 ## 程序设计
 
@@ -43,10 +43,11 @@ UINT32 LOS_SemCreate(UINT16 count, UINT32 *semHandle);
 | semHandle | 申请的信号量指针 |
 
 **返回值：**
-|返回值|描述|
-|:--|:------| 
-| LOS_OK | 成功 |
-| LOS_ERRNO_SEM_PTR_NULL <br> LOS_ERRNO_SEM_OVERFLOW  <br> LOS_ERRNO_SEM_ALL_BUSY | 失败 |
+
+| 返回值                                                                                 | 描述 |
+| :------------------------------------------------------------------------------------- | :--- |
+| LOS_OK                                                                                 | 成功 |
+| LOS_ERRNO_SEM_PTR_NULL`<br>` LOS_ERRNO_SEM_OVERFLOW  `<br>` LOS_ERRNO_SEM_ALL_BUSY | 失败 |
 
 #### LOS_SemDelete()
 
@@ -65,10 +66,11 @@ UINT32 LOS_SemDelete(UINT32 semHandle);
 | semHandle | 需要删除的信号量 |
 
 **返回值：**
-|返回值|描述|
-|:--|:------| 
-| LOS_OK | 成功 |
-| LOS_ERRNO_SEM_INVALID <br> LOS_ERRNO_SEM_UNAVAILABLE <br> LOS_ERRNO_SEM_PEND_INTERR <br> LOS_ERRNO_SEM_PEND_IN_LOCK <br> LOS_ERRNO_SEM_TIMEOUT | 失败 |
+
+| 返回值                                                                                                                                                        | 描述 |
+| :------------------------------------------------------------------------------------------------------------------------------------------------------------ | :--- |
+| LOS_OK                                                                                                                                                        | 成功 |
+| LOS_ERRNO_SEM_INVALID`<br>` LOS_ERRNO_SEM_UNAVAILABLE `<br>` LOS_ERRNO_SEM_PEND_INTERR `<br>` LOS_ERRNO_SEM_PEND_IN_LOCK `<br>` LOS_ERRNO_SEM_TIMEOUT | 失败 |
 
 #### LOS_SemPend()
 
@@ -87,10 +89,11 @@ UINT32 LOS_SemPend(UINT32 semHandle, UINT32 timeout);
 | timeout   | 超时时间         |
 
 **返回值：**
-|返回值|描述|
-|:--|:------| 
-| LOS_OK | 成功 |
-| LOS_ERRNO_SEM_INVALID <br> LOS_ERRNO_SEM_UNAVAILABLE <br> LOS_ERRNO_SEM_PEND_INTERR <br> LOS_ERRNO_SEM_PEND_IN_LOCK <br> LOS_ERRNO_SEM_TIMEOUT | 失败 |
+
+| 返回值                                                                                                                                                        | 描述 |
+| :------------------------------------------------------------------------------------------------------------------------------------------------------------ | :--- |
+| LOS_OK                                                                                                                                                        | 成功 |
+| LOS_ERRNO_SEM_INVALID`<br>` LOS_ERRNO_SEM_UNAVAILABLE `<br>` LOS_ERRNO_SEM_PEND_INTERR `<br>` LOS_ERRNO_SEM_PEND_IN_LOCK `<br>` LOS_ERRNO_SEM_TIMEOUT | 失败 |
 
 #### LOS_SemPost()
 
@@ -108,10 +111,11 @@ UINT32 LOS_SemPost(UINT32 semHandle);
 | semHandle | 需要释放的信号量 |
 
 **返回值：**
-|返回值|描述|
-|:--|:------| 
-| LOS_OK | 成功 |
-| LOS_ERRNO_SEM_INVALID <br> LOS_ERRNO_SEM_OVERFLOW | 失败 |
+
+| 返回值                                               | 描述 |
+| :--------------------------------------------------- | :--- |
+| LOS_OK                                               | 成功 |
+| LOS_ERRNO_SEM_INVALID`<br>` LOS_ERRNO_SEM_OVERFLOW | 失败 |
 
 ### 软件设计
 
@@ -194,7 +198,7 @@ void control_thread()
             LOS_SemPost(m_sem);
             printf("control_thread Release twice Semaphore\n");
         }
-      
+    
         LOS_Msleep(1000);
     }
 }
@@ -228,16 +232,16 @@ void sem_two_thread()
 
 ### 修改 BUILD.gn 文件
 
-修改 `vendor/lockzhiner/rk2206/sample` 路径下 BUILD.gn 文件，指定 `a2_kernel_semaphore` 参与编译。
+修改 `vendor/lockzhiner/lingpi/sample` 路径下 BUILD.gn 文件，指定 `a2_kernel_semaphore` 参与编译。
 
 ```r
-"./a2_kernel_semaphore:semaphore_example",
+"a2_kernel_semaphore",
 ```
 
-修改 `device/lockzhiner/rk2206/sdk_liteos` 路径下 Makefile 文件，添加 `-lsemaphore_example` 参与编译。
+在主目录下输入编译命令。
 
-```r
-hardware_LIBS = -lhal_iothardware -lhardware -lsemaphore_example
+```shell
+hb build -f
 ```
 
 ### 运行结果
@@ -253,4 +257,3 @@ control_thread Release twice Semaphore
 sem_two_thread get Semaphore
 sem_one_thread get Semaphore
 ```
-

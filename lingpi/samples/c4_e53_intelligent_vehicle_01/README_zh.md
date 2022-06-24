@@ -2,12 +2,12 @@
 
 本示例将演示如何在小凌派-RK2206开发板上实现智慧车载的应用案例。
 
-![小凌派-RK2206开发板](/vendor/lockzhiner/rk2206/docs/figures/lockzhiner-rk2206.jpg)
+![小凌派-RK2206开发板](/vendor/lockzhiner/lingpi/docs/figures/lockzhiner-rk2206.jpg)
 
 ## 硬件资源
 
 硬件资源图如下所示：
-![智慧车载模块硬件资源](/vendor/lockzhiner/rk2206/docs/figures/e53_iv01/e53_iv01_resource_map.jpg)
+![智慧车载模块硬件资源](/vendor/lockzhiner/lingpi/docs/figures/e53_iv01/e53_iv01_resource_map.jpg)
 
 EEPROM 24C02的设备地址为：0x1010001* ；
 
@@ -15,22 +15,22 @@ EEPROM 24C02的设备地址为：0x1010001* ；
 
 引脚名称开发者可在硬件资源图中查看，也可在智慧车载模块背面查看。
 
-| 引脚名称 | 功能描述 |
-| :-- | :------ | 
-| ECHO | 测距脉宽输出，高电平的宽度代表超声波往返时间 |
-| TRIG | 测距触发，输入10us的高电平脉冲，开始测距 | 
-| BUZZER | 蜂鸣器控制线，推荐3KHz的方波信号 | 
-| LED_Warning | LED控制线，低电平有效 | 
-| I2C_SCL | I2C时钟信号线 | 
-| I2C-SDA | I2C数据信号线 | 
-| GND | 电源地引脚 | 
-| 3V3 | 3.3V电源输入引脚 | 
-| GND | 电源地引脚 |
+| 引脚名称    | 功能描述                                     |
+| :---------- | :------------------------------------------- |
+| ECHO        | 测距脉宽输出，高电平的宽度代表超声波往返时间 |
+| TRIG        | 测距触发，输入10us的高电平脉冲，开始测距     |
+| BUZZER      | 蜂鸣器控制线，推荐3KHz的方波信号             |
+| LED_Warning | LED控制线，低电平有效                        |
+| I2C_SCL     | I2C时钟信号线                                |
+| I2C-SDA     | I2C数据信号线                                |
+| GND         | 电源地引脚                                   |
+| 3V3         | 3.3V电源输入引脚                             |
+| GND         | 电源地引脚                                   |
 
 ## 硬件设计
 
 硬件电路如下图所示：
-![智慧车载模块硬件电路图](/vendor/lockzhiner/rk2206/docs/figures/e53_iv01/lz_e53_iv01_sch.jpg)
+![智慧车载模块硬件电路图](/vendor/lockzhiner/lingpi/docs/figures/e53_iv01/lz_e53_iv01_sch.jpg)
 
 模块整体硬件电路如上图所示，电路中包含了E53接口连接器，EEPROM存储器、超声波处理电路，声光报警电路。
 
@@ -43,7 +43,7 @@ CS100A配合使用40KHz的开放式超声波探头，在超声波发射端并联
 ### 硬件连接
 
 小凌派开发板与模块均带有防呆设计，故很容易区分安装方向，直接将模块插入到开发板的E53母座接口上即可，安装图如下所示：
-![智慧车载模块硬件连接图](/vendor/lockzhiner/rk2206/docs/figures/e53_iv01/e53_iv01_connection_diagram.png)
+![智慧车载模块硬件连接图](/vendor/lockzhiner/lingpi/docs/figures/e53_iv01/e53_iv01_connection_diagram.png)
 
 ## 程序设计
 
@@ -59,7 +59,7 @@ CS100A配合使用40KHz的开放式超声波探头，在超声波发射端并联
 
 ### LiteOS信号量
 
-[LiteOS信号量接口文档](/vendor/lockzhiner/rk2206/samples/a2_kernel_semaphore/README_zh.md)
+[LiteOS信号量接口文档](/vendor/lockzhiner/lingpi/samples/a2_kernel_semaphore/README_zh.md)
 
 ## 主要代码分析
 
@@ -67,7 +67,7 @@ CS100A配合使用40KHz的开放式超声波探头，在超声波发射端并联
 
 **初始化GPIO**
 
-初始化GPIO0_PC4和GPIO0_PA5为GPIO。首先通过`LzGpioInit()`初始化GPIO引脚，其次通过`LzGpioSetDir()`设置GPIO为输出模式，最后通过`LzGpioSetVal()`设置输出高电平/低电平。
+初始化GPIO0_PC4和GPIO0_PA5为GPIO。首先通过 `LzGpioInit()`初始化GPIO引脚，其次通过 `LzGpioSetDir()`设置GPIO为输出模式，最后通过 `LzGpioSetVal()`设置输出高电平/低电平。
 
 ```c
 /***************************************************************
@@ -83,7 +83,7 @@ static void e53_iv01_init_gpio()
     LzGpioInit(E53_IV01_TRIG_GPIO);
     LzGpioSetDir(E53_IV01_TRIG_GPIO, LZGPIO_DIR_OUT);
     E53_IV01_TRIG_Clr();
-    
+  
     /* LED_WARNING灯引脚设置为GPIO输出模式 */
     PinctrlSet(E53_IV01_LED_WARNING_GPIO, MUX_FUNC0, PULL_KEEP, DRIVE_KEEP);
     LzGpioInit(E53_IV01_LED_WARNING_GPIO);
@@ -94,7 +94,7 @@ static void e53_iv01_init_gpio()
 
 **初始化GPIO中断**
 
-初始化GPIO0_PA2为GPIO。首先通过`LzGpioInit()`初始化GPIO引脚，其次通过`LzGpioSetDir()`设置GPIO为输入模式，最后通过`LzGpioRegisterIsrFunc()`设置该引脚为中断模式，触发模式为边沿触发（即上升沿+下降沿都可触发）。
+初始化GPIO0_PA2为GPIO。首先通过 `LzGpioInit()`初始化GPIO引脚，其次通过 `LzGpioSetDir()`设置GPIO为输入模式，最后通过 `LzGpioRegisterIsrFunc()`设置该引脚为中断模式，触发模式为边沿触发（即上升沿+下降沿都可触发）。
 
 ```c
 /***************************************************************
@@ -106,10 +106,10 @@ static void e53_iv01_init_gpio()
 static void e53_iv01_init_interrupt()
 {
     LzI2cInit(0, 400000);
-    
+  
     /* 创建信号量 */
     LOS_SemCreate(0, &m_task_sem);
-    
+  
     /* Echo引脚设置为GPIO输出模式 */
     PinctrlSet(E53_IV01_ECHO0_GPIO, MUX_FUNC0, PULL_KEEP, DRIVE_KEEP);
     LzGpioInit(E53_IV01_ECHO0_GPIO);
@@ -120,7 +120,7 @@ static void e53_iv01_init_interrupt()
 
 **初始化PWM**
 
-初始化GPIO0_PC7为GPIO。首先通过`PwmIoInit()`初始化PWM配置，最后通过`LzPwmInit()`初始化PWM配置id。
+初始化GPIO0_PC7为GPIO。首先通过 `PwmIoInit()`初始化PWM配置，最后通过 `LzPwmInit()`初始化PWM配置id。
 
 ```c
 /***************************************************************
@@ -143,7 +143,7 @@ static unsigned int e53_iv01_init_pwm()
         printf("%s, %d: LzPwmInit failed\n", __func__, __LINE__);
         return __LINE__;
     }
-    
+  
     return 0;
 }
 ```
@@ -250,7 +250,7 @@ static inline void e53_iv01_calc_cm(uint32_t time, uint32_t freq, float *cmeter)
 {
     float f_time = (float)time;
     float f_freq = (float)freq;
-    
+  
     /* 距离 = 时间差 * 340米/秒 / 2(超时波来回2次) * 100厘米/米 */
     *cmeter = f_time / f_freq * 170.0 * 100.0;
 }
@@ -260,16 +260,16 @@ static inline void e53_iv01_calc_cm(uint32_t time, uint32_t freq, float *cmeter)
 
 ### 修改 BUILD.gn 文件
 
-修改 `vendor/lockzhiner/rk2206/sample` 路径下 BUILD.gn 文件，指定 `e53_iv01_example` 参与编译。
+修改 `vendor/lockzhiner/lingpi/sample` 路径下 BUILD.gn 文件，指定 `e53_iv01_example` 参与编译。
 
 ```r
-"./e53_intelligent_vehicle_01:e53_iv01_example",
+"e53_intelligent_vehicle_01",
 ```
 
-修改 `device/lockzhiner/rk2206/sdk_liteos` 路径下 Makefile 文件，添加 `-le53_iv01_example` 参与编译。
+在主目录下输入编译命令。
 
-```r
-hardware_LIBS = -lhal_iothardware -lhardware -le53_iv01_example,
+```shell
+hb build -f
 ```
 
 ### 运行结果
@@ -284,4 +284,3 @@ distance cm: 23.89
 ========== E53 IV Example ==========
 distance cm: 23.90
 ```
-
