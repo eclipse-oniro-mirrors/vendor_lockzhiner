@@ -1,6 +1,3 @@
-/*
- * Copyright (c) 2022 FuZhou Lockzhiner Electronic Co., Ltd. All rights reserved.
- */
 #ifndef _OLED_FONT_H_
 #define _OLED_FONT_H_
 //常用ASCII表
