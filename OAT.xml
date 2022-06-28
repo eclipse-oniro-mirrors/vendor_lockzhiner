@@ -69,12 +69,13 @@ Note:If the text contains special characters, please escape them according to th
 			<filefilter name="defaultFilter" desc="Files not to check">
 			</filefilter>
 			<filefilter name="defaultPolicyFilter" desc="Filters for compatibility，license header policies">
+                <filteritem type="filepath" name="lingpi/samples/b5_oled/include/oled_font.h" desc=""/>
 			</filefilter>
 			<filefilter name="copyrightPolicyFilter" desc="Filters for copyright header policies" >
             <filteritem type="filepath" name="lingpi/samples/d2_iot_cloud_smart_covers/src/oc_mqtt.c" desc=""/>
                 <filteritem type="filepath" name="lingpi/samples/d2_iot_cloud_smart_covers/src/oc_mqtt_profile_package.c" desc=""/>
                 <filteritem type="filepath" name="lingpi/samples/d5_iot_cloud_body_induction/src/oc_mqtt.c" desc=""/>
-				<filteritem type="filepath" name=" lingpi/samples/b5_oled/include/oled_font.h" desc=""/>
+				<filteritem type="filepath" name="lingpi/samples/b5_oled/include/oled_font.h" desc=""/>
                 <filteritem type="filepath" name="lingpi/samples/d1_iot_mqtt/include/oc_mqtt.h" desc=""/>
                 <filteritem type="filepath" name="lingpi/samples/d4_iot_cloud_intelligent_vehicle/include/oc_mqtt.h" desc=""/>
                 <filteritem type="filepath" name="lingpi/samples/d5_iot_cloud_body_induction/src/oc_mqtt_profile_package.c" desc=""/>
