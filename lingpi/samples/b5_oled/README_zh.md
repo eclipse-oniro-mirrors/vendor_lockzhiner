@@ -2,7 +2,7 @@
 
 本示例将演示如何在小凌派-RK2206开发板上使用I2C控制OLED液晶屏显示
 
-![小凌派-RK2206开发板](/vendor/lockzhiner/lingpi/docs/figures/lockzhiner-rk2206.jpg)
+![小凌派-RK2206开发板](../../docs/figures/lockzhiner-rk2206.jpg)
 
 ## 硬件接口说明
 

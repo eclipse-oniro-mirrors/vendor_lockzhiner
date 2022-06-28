@@ -2,7 +2,7 @@
 
 本示例将演示如何在小凌派-RK2206开发板上使用wifi进行udp通信
 
-![小凌派-RK2206开发板](/vendor/lockzhiner/lingpi/docs/figures/lockzhiner-rk2206.jpg)
+![小凌派-RK2206开发板](../../docs/figures/lockzhiner-rk2206.jpg)
 
 ## WiFi ssid 和密码设置
 

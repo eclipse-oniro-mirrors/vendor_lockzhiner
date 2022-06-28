@@ -4,7 +4,7 @@
 
 本例程演示如何在小凌派-RK2206开发板上使用鸿蒙LiteOS-M内核接口，进行定时器编程开发。
 
-![小凌派-RK2206开发板](/vendor/lockzhiner/lingpi/docs/figures/lockzhiner-rk2206.jpg)
+![小凌派-RK2206开发板](../../docs/figures/lockzhiner-rk2206.jpg)
 
 ## 程序设计
 

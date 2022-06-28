@@ -4,7 +4,7 @@
 
 本例程演示如何在小凌派-RK2206开发板上使用鸿蒙LiteOS-M内核接口，进行编程开发。例程创建两个任务，任务1每隔1s执行一次，打印Hello World；任务2每隔2s执行一次，打印Hello OpenHarmony。
 
-![小凌派-RK2206开发板](/vendor/lockzhiner/lingpi/docs/figures/lockzhiner-rk2206.jpg)
+![小凌派-RK2206开发板](../../docs/figures/lockzhiner-rk2206.jpg)
 
 ## 程序设计
 
@@ -174,6 +174,7 @@ LITE_OS_SEC_TEXT_INIT int Main(void)
 ## 编译步骤
 
 在主目录下输入：
+
 ```shell
 hb build -f
 ```
@@ -204,3 +205,4 @@ Hello World
 Hello World
 ......
 ```
+

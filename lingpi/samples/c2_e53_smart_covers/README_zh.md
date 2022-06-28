@@ -4,7 +4,7 @@
 
 本例程演示如何在小凌派-RK2206开发板上实现智慧井盖应用案例。
 
-![小凌派-RK2206开发板](/vendor/lockzhiner/lingpi/docs/figures/lockzhiner-rk2206.jpg)
+![小凌派-RK2206开发板](../../docs/figures/lockzhiner-rk2206.jpg)
 
 ## 硬件资源
 
