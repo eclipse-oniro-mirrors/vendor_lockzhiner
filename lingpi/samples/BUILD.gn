@@ -45,15 +45,6 @@ module_group(module_name) {
         #"c8_e53_temperature_measurement",
         #"c9_e53_heart_rate_detection",
         #"c10_e53_wisdom_gardens",
-
-        # Iot云应用
-        #"d1_iot_mqtt",
-        #"d2_iot_cloud_smart_covers",
-        #"d3_iot_cloud_intelligent_street_lamp",
-        #"d4_iot_cloud_intelligent_vehicle",
-        #"d5_iot_cloud_body_induction",
-        #"d6_iot_cloud_gesture_sensor",
-        #"d7_iot_cloud_intelligent_agriculture",
     ]
 }
 
