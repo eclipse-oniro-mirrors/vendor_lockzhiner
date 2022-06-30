@@ -31,10 +31,4 @@
 | C4   | E53传感器 | e53_iv01_example        | [智慧车载](/vendor/lockzhiner/lingpi/samples/c4_e53_intelligent_vehicle_01/README_zh.md)                         |
 | C5   | E53传感器 | e53_bi_example          | [人体感应](/vendor/lockzhiner/lingpi/samples/c5_e53_body_induction/README_zh.md)                                 |
 | C6   | E53传感器 | e53_gs_example          | [智能手势](/vendor/lockzhiner/lingpi/samples/c6_e53_gesture_sensor/README_zh.md)                                 |
-| D2   | 物联网    | iot_cloud_sc_example    | [基于华为IoT平台的智慧井盖](/vendor/lockzhiner/lingpi/samples/d2_iot_cloud_smart_covers/README_zh.md)              |
-| D3   | 物联网    | iot_cloud_isl_example   | [基于华为IoT平台的智慧路灯](/vendor/lockzhiner/lingpi/samples/d3_iot_cloud_intelligent_street_lamp/README_zh.md) |
-| D4   | 物联网    | iot_cloud_iv_example    | [基于华为IoT平台的智慧车载](/vendor/lockzhiner/lingpi/samples/d4_iot_cloud_intelligent_vehicle/README_zh.md)     |
-| D5   | 物联网    | iot_cloud_bi_example    | [基于华为IoT平台的人体感应](/vendor/lockzhiner/lingpi/samples/d5_iot_cloud_body_induction/README_zh.md)          |
-| D6   | 物联网    | iot_cloud_gs_example    | [基于华为IoT平台的智能手势](/vendor/lockzhiner/lingpi/samples/d6_iot_cloud_gesture_sensor/README_zh.md)          |
-| D7   | 物联网    | iot_cloud_ia_example    | [基于华为IoT平台的智慧农业](/vendor/lockzhiner/lingpi/samples/d7_iot_cloud_intelligent_agriculture/README_zh.md) |
 

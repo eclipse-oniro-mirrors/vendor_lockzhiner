@@ -17,7 +17,7 @@ import("//build/lite/config/subsystem/lite_subsystem.gni")
 executable("liteos.elf") {
     deps = [
         "//build/lite/config/component/cJSON:cjson_static",
-        # xts2a®∫?
+        # xts≤‚ ‘
         "//device/soc/rockchip/rk2206/adapter/hals/update:hal_update_static",
         "//base/update/ota_lite/frameworks/source:hota",
         "//build/lite:ohos",
