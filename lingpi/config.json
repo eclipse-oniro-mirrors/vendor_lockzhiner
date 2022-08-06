@@ -8,21 +8,15 @@
     "kernel_version": "3.0.0",
     "subsystems": [
         {
-          "subsystem": "applications",
-          "components": [
-            { "component": "wifi_iot_sample_app", "features": [] }
-          ]
-        },
-        {
-          "subsystem": "iot_hardware",
-          "components": [
-            { "component": "iot_controller", "features": [] }
-          ]
-        },
-        {
           "subsystem": "kernel",
           "components": [
             { "component": "liteos_m" }
+          ]
+        },
+        {
+          "subsystem": "iothardware",
+          "components": [
+            { "component": "peripheral", "features":[] }
           ]
         },
         {
@@ -41,21 +35,6 @@
           ]
         },
         {
-          "subsystem": "security",
-          "components": [
-            { "component": "hichainsdk", "features":[] },
-            { "component": "huks", "features":
-              [
-                "disable_huks_binary = false",
-                "disable_authenticate = false",
-                "huks_use_lite_storage = true",
-                "huks_use_hardware_root_key = true",
-                "huks_config_file = \"hks_config_lite.h\""
-              ] 
-            }
-          ]
-        },
-        {
           "subsystem": "startup",
           "components": [
             { "component": "bootstrap_lite", "features":[] },
@@ -67,20 +46,6 @@
           "components": [
             { "component": "wifi_lite", "features":[] },
             { "component": "wifi_aware", "features":[] }
-          ]
-        },
-        {
-          "subsystem": "iot",
-          "components": [
-            { "component": "iot_link", "features":[] }
-          ]
-        },
-        {
-          "subsystem": "utils",
-          "components": [
-            { "component": "file", "features":[] },
-            { "component": "kv_store", "features":[] },
-            { "component": "os_dump", "features":[] }
           ]
         },
         {
