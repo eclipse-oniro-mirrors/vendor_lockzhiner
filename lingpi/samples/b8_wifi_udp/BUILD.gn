@@ -14,13 +14,11 @@
 import("//kernel/liteos_m/liteos.gni")
 
 kernel_module("wifi_udp_example") {
-    sources = [
-        "wifi_udp_example.c",
-    ]
+  sources = [ "wifi_udp_example.c" ]
 
-    include_dirs = [
-        "//utils/native/lite/include",
-        "//third_party/lwip/src/include/lwip",
-        "//foundation/communication/wifi_lite/interfaces/wifiservice",
-    ]
+  include_dirs = [
+    "//utils/native/lite/include",
+    "//third_party/lwip/src/include/lwip",
+    "//foundation/communication/wifi_lite/interfaces/wifiservice",
+  ]
 }

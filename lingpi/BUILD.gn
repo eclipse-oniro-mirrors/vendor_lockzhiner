@@ -15,26 +15,24 @@ import("//build/lite/config/component/lite_component.gni")
 import("//build/lite/config/subsystem/lite_subsystem.gni")
 
 executable("liteos.elf") {
-    deps = [
-        "//build/lite/config/component/cJSON:cjson_static",
-        # xts
-        "//device/soc/rockchip/rk2206/adapter/hals/update:hal_update_static",
-        "//base/update/ota_lite/frameworks/source:hota",
-        "//build/lite:ohos",
-    ]
+  deps = [
+    "//base/update/ota_lite/frameworks/source:hota",
+    "//build/lite:ohos",
+    "//build/lite/config/component/cJSON:cjson_static",
 
-    ldflags = [
-    ]
+    # xts
+    "//device/soc/rockchip/rk2206/adapter/hals/update:hal_update_static",
+  ]
+
+  ldflags = []
 }
 
 build_ext_component("liteos") {
-    exec_path = rebase_path("//device/soc/rockchip/rk2206/sdk_liteos/image")
-    outdir = rebase_path(root_out_dir)
-    command = "sh $exec_path/build.sh $outdir/unstripped/bin/liteos.elf $outdir"
-    
-    deps = [
-        ":liteos.elf",
-    ]
+  exec_path = rebase_path("//device/soc/rockchip/rk2206/sdk_liteos/image")
+  outdir = rebase_path(root_out_dir)
+  command = "sh $exec_path/build.sh $outdir/unstripped/bin/liteos.elf $outdir"
+
+  deps = [ ":liteos.elf" ]
 }
 
 group("lingpi") {

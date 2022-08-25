@@ -14,11 +14,7 @@
 import("//kernel/liteos_m/liteos.gni")
 
 kernel_module("kernel_queue_example") {
-    sources = [
-        "kernel_queue_example.c",
-    ]
+  sources = [ "kernel_queue_example.c" ]
 
-    include_dirs = [
-        "//utils/native/lite/include",
-    ]
+  include_dirs = [ "//utils/native/lite/include" ]
 }

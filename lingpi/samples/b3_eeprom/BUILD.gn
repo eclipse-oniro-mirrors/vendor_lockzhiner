@@ -14,13 +14,13 @@
 import("//kernel/liteos_m/liteos.gni")
 
 kernel_module("eeprom_example") {
-    sources = [
-        "eeprom_example.c",
-        "src/eeprom.c",
-    ]
+  sources = [
+    "eeprom_example.c",
+    "src/eeprom.c",
+  ]
 
-    include_dirs = [
-        "//utils/native/lite/include",
-        "include",
-    ]
+  include_dirs = [
+    "//utils/native/lite/include",
+    "include",
+  ]
 }

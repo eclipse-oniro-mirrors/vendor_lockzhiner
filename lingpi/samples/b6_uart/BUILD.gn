@@ -14,11 +14,7 @@
 import("//kernel/liteos_m/liteos.gni")
 
 kernel_module("uart_example") {
-    sources = [
-        "uart_example.c",
-    ]
+  sources = [ "uart_example.c" ]
 
-    include_dirs = [
-        "//utils/native/lite/include",
-    ]
+  include_dirs = [ "//utils/native/lite/include" ]
 }

@@ -14,11 +14,7 @@
 import("//kernel/liteos_m/liteos.gni")
 
 kernel_module("adc_example") {
-    sources = [
-        "adc_example.c",
-    ]
+  sources = [ "adc_example.c" ]
 
-    include_dirs = [
-        "//utils/native/lite/include",
-    ]
+  include_dirs = [ "//utils/native/lite/include" ]
 }

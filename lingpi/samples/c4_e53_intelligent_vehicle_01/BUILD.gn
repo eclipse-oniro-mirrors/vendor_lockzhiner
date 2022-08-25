@@ -14,13 +14,13 @@
 import("//kernel/liteos_m/liteos.gni")
 
 kernel_module("e53_iv01_example") {
-    sources = [
-        "e53_intelligent_vehicle_01_example.c",
-        "src/e53_intelligent_vehicle_01.c",
-    ]
+  sources = [
+    "e53_intelligent_vehicle_01_example.c",
+    "src/e53_intelligent_vehicle_01.c",
+  ]
 
-    include_dirs = [
-        "//utils/native/lite/include",
-        "include",
-    ]
+  include_dirs = [
+    "//utils/native/lite/include",
+    "include",
+  ]
 }
