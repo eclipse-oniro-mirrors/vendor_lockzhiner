@@ -14,14 +14,14 @@
 import("//kernel/liteos_m/liteos.gni")
 
 kernel_module("lcd_example") {
-    sources = [
-        "lcd_example.c",
-        "src/lcd.c",
-        "src/picture.c"
-    ]
+  sources = [
+    "lcd_example.c",
+    "src/lcd.c",
+    "src/picture.c",
+  ]
 
-    include_dirs = [
-        "//utils/native/lite/include",
-        "include",
-    ]
+  include_dirs = [
+    "//utils/native/lite/include",
+    "include",
+  ]
 }

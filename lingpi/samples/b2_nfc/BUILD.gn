@@ -14,19 +14,19 @@
 import("//kernel/liteos_m/liteos.gni")
 
 kernel_module("nfc_example") {
-    sources = [
-        "nfc_example.c",
-        "src/ndef.c",
-        "src/nfc.c",
-        "src/nfcForum.c",
-        "src/NT3H.c",
-        "src/rtdText.c",
-        "src/rtdUri.c",
-    ]
+  sources = [
+    "nfc_example.c",
+    "src/NT3H.c",
+    "src/ndef.c",
+    "src/nfc.c",
+    "src/nfcForum.c",
+    "src/rtdText.c",
+    "src/rtdUri.c",
+  ]
 
-    include_dirs = [
-        "//utils/native/lite/include",
-        "include",
-        "src",
-    ]
+  include_dirs = [
+    "//utils/native/lite/include",
+    "include",
+    "src",
+  ]
 }

@@ -14,13 +14,13 @@
 import("//kernel/liteos_m/liteos.gni")
 
 kernel_module("oled_example") {
-    sources = [
-        "oled_example.c",
-        "src/oled.c",
-    ]
+  sources = [
+    "oled_example.c",
+    "src/oled.c",
+  ]
 
-    include_dirs = [
-        "//utils/native/lite/include",
-        "include",
-    ]
+  include_dirs = [
+    "//utils/native/lite/include",
+    "include",
+  ]
 }

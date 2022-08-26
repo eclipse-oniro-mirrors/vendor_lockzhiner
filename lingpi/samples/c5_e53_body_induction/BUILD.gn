@@ -14,13 +14,13 @@
 import("//kernel/liteos_m/liteos.gni")
 
 kernel_module("e53_bi_example") {
-    sources = [
-        "e53_body_induction_example.c",
-        "src/e53_body_induction.c",
-    ]
+  sources = [
+    "e53_body_induction_example.c",
+    "src/e53_body_induction.c",
+  ]
 
-    include_dirs = [
-        "//utils/native/lite/include",
-        "include",
-    ]
+  include_dirs = [
+    "//utils/native/lite/include",
+    "include",
+  ]
 }

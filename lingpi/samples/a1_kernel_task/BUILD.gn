@@ -14,11 +14,7 @@
 import("//kernel/liteos_m/liteos.gni")
 
 kernel_module("kernel_task_example") {
-    sources = [
-        "kernel_task_example.c",
-    ]
+  sources = [ "kernel_task_example.c" ]
 
-    include_dirs = [
-        "//utils/native/lite/include",
-    ]
+  include_dirs = [ "//utils/native/lite/include" ]
 }
