@@ -17,9 +17,87 @@
 #include "picture.h"
 #include "lcd.h"
 
+/* 任务的堆栈大小 */
+#define TASK_STACK_SIZE     20480
+/* 任务的优先级 */
+#define TASK_PRIO           24
+
+/* 循环等待时间 */
+#define WAIT_MSEC           1000
+
+/* 图片数据 */
 extern const unsigned char gImage_lingzhi[IMAGE_MAXSIZE_LINGZHI];
 
+/* 字体大小 */
+#define SIZEY_12                12
+#define SIZEY_16                16
+#define SIZEY_24                24
+#define SIZEY_32                32
 
+/* LCD的位置 */
+#define LCD_FILL_X              0
+#define LCD_FILL_Y              0
+/* 图片的位置，长度和宽度 */
+#define LCD_PICTURE_X           15
+#define LCD_PICTURE_Y           0
+#define LCD_PICTURE_LENGTH      210
+#define LCD_PICTURE_WIDTH       62
+/* 字符串1的位置，长度和宽度 */
+#define LCD_STRING1_X           0
+#define LCD_STRING1_Y           130
+#define LCD_STRING1_SIZE        16
+#define LCD_STRING1_TEXT        "Welcome to XiaoLingPai!"
+#define LCD_STRING1_MODE        0
+/* 字符串2的位置，长度和宽度 */
+#define LCD_STRING2_X           0
+#define LCD_STRING2_Y           130
+#define LCD_STRING2_SIZE        16
+#define LCD_STRING2_TEXT        "URL: http://www.fzlzda.com"
+#define LCD_STRING2_MODE        0
+/* 字符串3的位置，长度和宽度 */
+#define LCD_STRING3_X           0
+#define LCD_STRING3_Y           160
+#define LCD_STRING3_SIZE        16
+#define LCD_STRING3_TEXT        "LCD_W:"
+#define LCD_STRING3_MODE        0
+/* 数字1int的位置，长度和宽度 */
+#define LCD_INT1_X              128
+#define LCD_INT1_Y              160
+#define LCD_INT1_SIZE           16
+#define LCD_INT1_VALUE          3
+/* 字符串4的位置，长度和宽度 */
+#define LCD_STRING4_X           80
+#define LCD_STRING4_Y           160
+#define LCD_STRING4_SIZE        16
+#define LCD_STRING4_TEXT        "LCD_H:"
+#define LCD_STRING4_MODE        0
+/* 数字2int的位置，长度和宽度 */
+#define LCD_INT2_X              128
+#define LCD_INT2_Y              160
+#define LCD_INT2_SIZE           16
+#define LCD_INT2_VALUE          3
+/* 字符串5的位置，长度和宽度 */
+#define LCD_STRING5_X           80
+#define LCD_STRING5_Y           160
+#define LCD_STRING5_SIZE        16
+#define LCD_STRING5_TEXT        "LCD_H:"
+#define LCD_STRING5_MODE        0
+/* 字符串6的位置，长度和宽度 */
+#define LCD_STRING6_X           0
+#define LCD_STRING6_Y           190
+#define LCD_STRING6_SIZE        16
+#define LCD_STRING6_TEXT        "Increaseing Num:"
+#define LCD_STRING6_MODE        0
+/* 数字float的位置，长度和宽度 */
+#define LCD_FLOAT1_X            128
+#define LCD_FLOAT1_Y            190
+#define LCD_FLOAT1_SIZE         16
+#define LCD_FLOAT1_NUM          4
+#define LCD_FLOAT1_INCREASE     (0.11)
+/* 中文数字的位置，长度和宽度 */
+#define LCD_CHINESE_X           0
+#define LCD_CHINESE_Y           220
+#define LCD_CHINESE_MODE        0
 /***************************************************************
 * 函数名称: lcd_process
 * 说    明: lcd例程
@@ -31,45 +109,44 @@ void lcd_process(void *arg)
     uint32_t ret = 0;
     float t = 0;
     uint8_t chinese_string[] = "小凌派";
-    uint8_t cur_sizey = 12;
-    
+    uint8_t cur_sizey = SIZEY_12;
+
     ret = lcd_init();
-    if (ret != 0)
-    {
+    if (ret != 0) {
         printf("lcd_init failed(%d)\n", ret);
         return;
     }
-    
-    lcd_fill(0, 0, LCD_W, LCD_H, LCD_WHITE);
-    
-    while (1)
-    {
-        printf("************Lcd Example***********\n");
-        lcd_show_picture(15, 0, 210, 62, &gImage_lingzhi[0]);
-        lcd_show_string(0, 100, "Welcome to XiaoLingPai!", LCD_RED, LCD_WHITE, 16, 0);
-        lcd_show_string(0, 130, "URL: http://www.fzlzda.com", LCD_RED, LCD_WHITE, 16, 0);
-        lcd_show_string(0, 160, "LCD_W:", LCD_BLUE, LCD_WHITE, 16, 0);
-        lcd_show_int_num(48, 160, LCD_W, 3, LCD_BLUE, LCD_WHITE, 16);
-        lcd_show_string(80, 160, "LCD_H:", LCD_BLUE, LCD_WHITE, 16, 0);
-        lcd_show_int_num(128, 160, LCD_H, 3, LCD_BLUE, LCD_WHITE, 16);
-        lcd_show_string(80, 160, "LCD_H:", LCD_BLUE, LCD_WHITE, 16, 0);
-        lcd_show_string(0, 190, "Increaseing Num:", LCD_BLACK, LCD_WHITE, 16, 0);
-        lcd_show_float_num1(128, 190, t, 4, LCD_BLACK, LCD_WHITE, 16);
-        t += 0.11;
 
-        lcd_fill(0, 220, LCD_W, LCD_H, LCD_WHITE);
-        lcd_show_chinese(0, 220, chinese_string, LCD_RED, LCD_WHITE, cur_sizey, 0);
-        if (cur_sizey == 12)
-            cur_sizey = 16;
-        else if(cur_sizey == 16)
-            cur_sizey = 24;
-        else if(cur_sizey == 24)
-            cur_sizey = 32;
-        else
-            cur_sizey = 12;
+    lcd_fill(LCD_FILL_X, LCD_FILL_Y, LCD_W, LCD_H, LCD_WHITE);
+
+    while (1) {
+        printf("************Lcd Example***********\n");
+        lcd_show_picture(LCD_PICTURE_X, LCD_PICTURE_Y, LCD_PICTURE_LENGTH, LCD_PICTURE_WIDTH, &gImage_lingzhi[0]);
+        lcd_show_string(LCD_STRING1_X, LCD_STRING1_Y, LCD_STRING1_TEXT, LCD_RED, LCD_WHITE, LCD_STRING1_SIZE, LCD_STRING1_MODE);
+        lcd_show_string(LCD_STRING2_X, LCD_STRING2_Y, LCD_STRING2_TEXT, LCD_RED, LCD_WHITE, LCD_STRING2_SIZE, LCD_STRING2_MODE);
+        lcd_show_string(LCD_STRING3_X, LCD_STRING3_Y, LCD_STRING3_TEXT, LCD_BLUE, LCD_WHITE, LCD_STRING3_SIZE, LCD_STRING3_MODE);
+        lcd_show_int_num(LCD_INT1_X, LCD_INT1_Y, LCD_W, LCD_INT1_VALUE, LCD_BLUE, LCD_WHITE, LCD_INT1_SIZE);
+        lcd_show_string(LCD_STRING4_X, LCD_STRING4_Y, LCD_STRING4_TEXT, LCD_BLUE, LCD_WHITE, LCD_STRING4_SIZE, LCD_STRING4_MODE);
+        lcd_show_int_num(LCD_INT2_X, LCD_INT2_Y, LCD_H, LCD_INT2_VALUE, LCD_BLUE, LCD_WHITE, LCD_INT2_SIZE);
+        lcd_show_string(LCD_STRING5_X, LCD_STRING5_Y, LCD_STRING5_TEXT, LCD_BLUE, LCD_WHITE, LCD_STRING5_SIZE, LCD_STRING5_MODE);
+        lcd_show_string(LCD_STRING6_X, LCD_STRING6_Y, LCD_STRING6_TEXT, LCD_BLACK, LCD_WHITE, LCD_STRING6_SIZE, LCD_STRING6_MODE);
+        lcd_show_float_num1(LCD_FLOAT1_X, LCD_FLOAT1_Y, t, LCD_FLOAT1_NUM, LCD_BLACK, LCD_WHITE, LCD_FLOAT1_SIZE);
+        t += LCD_FLOAT1_INCREASE;
+
+        lcd_fill(LCD_CHINESE_X, LCD_CHINESE_Y, LCD_W, LCD_H, LCD_WHITE);
+        lcd_show_chinese(LCD_CHINESE_X, LCD_CHINESE_Y, chinese_string, LCD_RED, LCD_WHITE, cur_sizey, LCD_CHINESE_MODE);
+        if (cur_sizey == SIZEY_12) {
+            cur_sizey = SIZEY_16;
+        } else if (cur_sizey == SIZEY_16) {
+            cur_sizey = SIZEY_24;
+        } else if (cur_sizey == SIZEY_24) {
+            cur_sizey = SIZEY_32;
+        } else {
+            cur_sizey = SIZEY_12;
+        }
 
         printf("\n");
-        LOS_Msleep(1000);
+        LOS_Msleep(WAIT_MSEC);
     }
 }
 
@@ -87,12 +164,11 @@ void lcd_example()
     unsigned int ret = LOS_OK;
 
     task.pfnTaskEntry = (TSK_ENTRY_FUNC)lcd_process;
-    task.uwStackSize = 20480;
+    task.uwStackSize = TASK_STACK_SIZE;
     task.pcName = "lcd process";
-    task.usTaskPrio = 24;
+    task.usTaskPrio = TASK_PRIO;
     ret = LOS_TaskCreate(&thread_id, &task);
-    if (ret != LOS_OK)
-    {
+    if (ret != LOS_OK) {
         printf("Falied to create task ret:0x%x\n", ret);
         return;
     }

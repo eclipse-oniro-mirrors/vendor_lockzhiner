@@ -15,8 +15,13 @@
 
 #include "e53_intelligent_street_lamp.h"
 
-#define ISL_I2C0                                    0
-#define BH1750_ADDR                                 0x23
+/* i2c编号 */
+#define ISL_I2C0                0
+/* i2c通信速度 */
+#define I2C_RATE                400000
+
+/* 从设备地址 */
+#define BH1750_ADDR             0x23
 
 static I2cBusIo m_isl_i2c0m2 = {
     .scl =  {.gpio = GPIO0_PA1, .func = MUX_FUNC3, .type = PULL_NONE, .drv = DRIVE_KEEP, .dir = LZGPIO_DIR_KEEP, .val = LZGPIO_LEVEL_KEEP},
@@ -24,6 +29,7 @@ static I2cBusIo m_isl_i2c0m2 = {
     .id = FUNC_ID_I2C0,
     .mode = FUNC_MODE_M2,
 };
+
 
 /***************************************************************
 * 函数名称: e53_isl_io_init
@@ -36,12 +42,10 @@ void e53_isl_io_init(void)
     LzGpioInit(GPIO0_PA5);
     LzGpioSetDir(GPIO0_PA5, LZGPIO_DIR_OUT);
 
-    if (I2cIoInit(m_isl_i2c0m2) != LZ_HARDWARE_SUCCESS)
-    {
+    if (I2cIoInit(m_isl_i2c0m2) != LZ_HARDWARE_SUCCESS) {
         printf("init I2C I2C0 io failed\n");
     }
-    if (LzI2cInit(ISL_I2C0, 400000) != LZ_HARDWARE_SUCCESS)
-    {
+    if (LzI2cInit(ISL_I2C0, I2C_RATE) != LZ_HARDWARE_SUCCESS) {
         printf("init I2C I2C0 failed\n");
     }
 }
@@ -57,7 +61,7 @@ void init_bh1750()
     uint8_t send_data[1] = {0x01};
     uint32_t send_len = 1;
 
-    LzI2cWrite(ISL_I2C0, BH1750_ADDR, send_data, send_len); 
+    LzI2cWrite(ISL_I2C0, BH1750_ADDR, send_data, send_len);
 }
 
 /***************************************************************
@@ -94,17 +98,18 @@ void e53_isl_init(void)
 ***************************************************************/
 float e53_isl_read_data()
 {
+    /* 等待从设备准备完毕 */
+#define WAIT_SLAVE_DEVICE_START_MSEC        180
+    /* 读取光强度寄存器数值，计算出实际光强度数值 */
+#define CALC_LIGHT(recv_data)               ((float)((((recv_data[0]) << 8) + (recv_data[1])) / 1.2))
     float lum = 0;
+    uint8_t recv_data[2] = {0};
 
     start_bh1750();
-    LOS_Msleep(180);
+    LOS_Msleep(WAIT_SLAVE_DEVICE_START_MSEC);
 
-    uint8_t recv_data[2] = {0};
-    uint32_t receive_len = 2;
-    LzI2cRead(ISL_I2C0, BH1750_ADDR, recv_data, receive_len);
-    lum = (float)(((recv_data[0]<<8) + recv_data[1])/1.2);
-
-    //printf("data %x %x\n", recv_data[0], recv_data[1]);
+    LzI2cRead(ISL_I2C0, BH1750_ADDR, recv_data, sizeof(recv_data));
+    lum = CALC_LIGHT(recv_data);
 
     return lum;
 }
@@ -112,20 +117,18 @@ float e53_isl_read_data()
 /***************************************************************
 * 函数名称: isl_light_set_status
 * 说    明: 紫光灯控制
-* 参    数: 
+* 参    数:
 *          OFF,关
 *          ON,开
 * 返 回 值: 无
 ***************************************************************/
 void isl_light_set_status(SWITCH_STATUS_ENUM status)
 {
-    if(status == ON)
-    {
+    if (status == ON) {
         /*设置GPIO0_PA5输出高电平点亮灯*/
         LzGpioSetVal(GPIO0_PA5, LZGPIO_LEVEL_HIGH);
     }
-    if(status == OFF)
-    {
+    if (status == OFF) {
         /*设置GPIO0_PA5输出低电平关闭灯*/
         LzGpioSetVal(GPIO0_PA5, LZGPIO_LEVEL_LOW);
     }

@@ -30,6 +30,6 @@ typedef union {
 typedef struct {
     uint8_t typeCode;
     RTDTypeUnion typePayload;
-}RTDTypeStr;
+} RTDTypeStr;
 
 #endif /* RTDTYPES_H_ */

@@ -16,7 +16,17 @@
 #include "los_sem.h"
 #include "ohos_init.h"
 
-#define MAX_COUNT                   4
+/* 信号量资源总数 */
+#define SEM_MAX_COUNT               4
+
+/* 任务的堆栈大小 */
+#define TASK_STACK_SIZE             2048
+/* 任务的优先级 */
+#define TASK_PRIO                   24
+
+/* 等待时间 */
+#define SEM_POST_WAIT_MSEC          1000
+#define SEM_PEND_WAIT_MSEC          100
 
 static unsigned int m_sem;
 
@@ -30,23 +40,19 @@ void control_thread()
 {
     unsigned int count = 0;
 
-    while (1)
-    {
+    while (1) {
         /*释放两次信号量，sem_one_thread和sem_two_thread同步执行;
         释放一次信号量，sem_one_thread和sem_two_thread交替执行*/
-        if (count++%3)
-        {
+        if ((count++) % 3) {
             LOS_SemPost(m_sem);
             printf("control_thread Release once Semaphore\n");
-        }
-        else
-        {
+        } else {
             LOS_SemPost(m_sem);
             LOS_SemPost(m_sem);
             printf("control_thread Release twice Semaphore\n");
         }
-        
-        LOS_Msleep(1000);
+
+        LOS_Msleep(SEM_POST_WAIT_MSEC);
     }
 }
 
@@ -58,13 +64,12 @@ void control_thread()
 ***************************************************************/
 void sem_one_thread()
 {
-    while (1)
-    {
+    while (1) {
         /*申请信号量*/
         LOS_SemPend(m_sem, LOS_WAIT_FOREVER);
 
         printf("sem_one_thread get Semaphore\n");
-        LOS_Msleep(100);
+        LOS_Msleep(SEM_PEND_WAIT_MSEC);
     }
 }
 
@@ -76,13 +81,12 @@ void sem_one_thread()
 ***************************************************************/
 void sem_two_thread()
 {
-    while (1)
-    {
+    while (1) {
         /*申请信号量*/
         LOS_SemPend(m_sem, LOS_WAIT_FOREVER);
 
         printf("sem_two_thread get Semaphore\n");
-        LOS_Msleep(100);
+        LOS_Msleep(SEM_PEND_WAIT_MSEC);
     }
 }
 
@@ -102,46 +106,41 @@ void semaphore_example()
     TSK_INIT_PARAM_S task3 = {0};
     unsigned int ret = LOS_OK;
 
-    ret = LOS_SemCreate(MAX_COUNT, &m_sem);
-    if (ret != LOS_OK)
-    {
+    ret = LOS_SemCreate(SEM_MAX_COUNT, &m_sem);
+    if (ret != LOS_OK) {
         printf("Falied to create Semaphore\n");
         return;
     }
 
     task1.pfnTaskEntry = (TSK_ENTRY_FUNC)control_thread;
-    task1.uwStackSize = 2048;
+    task1.uwStackSize = TASK_STACK_SIZE;
     task1.pcName = "control_thread";
-    task1.usTaskPrio = 24;
+    task1.usTaskPrio = TASK_PRIO;
     ret = LOS_TaskCreate(&thread_crtl, &task1);
-    if (ret != LOS_OK)
-    {
+    if (ret != LOS_OK) {
         printf("Falied to create control_thread ret:0x%x\n", ret);
         return;
     }
 
     task2.pfnTaskEntry = (TSK_ENTRY_FUNC)sem_one_thread;
-    task2.uwStackSize = 2048;
+    task2.uwStackSize = TASK_STACK_SIZE;
     task2.pcName = "sem_one_thread";
-    task2.usTaskPrio = 24;
+    task2.usTaskPrio = TASK_PRIO;
     ret = LOS_TaskCreate(&thread_id1, &task2);
-    if (ret != LOS_OK)
-    {
+    if (ret != LOS_OK) {
         printf("Falied to create sem_one_thread ret:0x%x\n", ret);
         return;
     }
 
     task3.pfnTaskEntry = (TSK_ENTRY_FUNC)sem_two_thread;
-    task3.uwStackSize = 2048;
+    task3.uwStackSize = TASK_STACK_SIZE;
     task3.pcName = "sem_two_thread";
-    task3.usTaskPrio = 24;
+    task3.usTaskPrio = TASK_PRIO;
     ret = LOS_TaskCreate(&thread_id2, &task3);
-    if (ret != LOS_OK)
-    {
+    if (ret != LOS_OK) {
         printf("Falied to create sem_two_thread ret:0x%x\n", ret);
         return;
     }
 }
 
 APP_FEATURE_INIT(semaphore_example);
-

@@ -18,14 +18,19 @@
 
 #include "lz_hardware.h"
 
-typedef struct
-{
-    short   accel[3];
+enum enum_accel {
+    EACCEL_X = 0,
+    EACCEL_Y,
+    EACCEL_Z,
+    EACCEL_MAX
+};
+
+typedef struct {
+    short   accel[EACCEL_MAX];
     unsigned int tilt_status;
 } e53_sc_data_t;
 
-typedef enum
-{
+typedef enum {
     OFF = 0,
     ON
 } SWITCH_STATUS_ENUM;
@@ -51,6 +56,8 @@ typedef enum
 #define MPU6050_RA_USER_CTRL        0x6A
 #define MPU6050_RA_PWR_MGMT_1       0x6B
 #define MPU6050_RA_WHO_AM_I         0x75
+
+
 
 void e53_sc_init();
 void e53_sc_read_data(e53_sc_data_t *p_data);

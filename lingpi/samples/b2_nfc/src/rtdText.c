@@ -22,7 +22,7 @@ uint8_t addRtdText(RtdTextTypeStr *typeStr)
     typeStr->status = 0x2;
     typeStr->language[0] = 'e';
     typeStr->language[1] = 'n';
-    
+
     return 3;
 }
 

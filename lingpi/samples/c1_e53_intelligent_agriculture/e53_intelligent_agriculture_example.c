@@ -17,6 +17,21 @@
 #include "los_task.h"
 #include "e53_intelligent_agriculture.h"
 
+/* 任务的堆栈大小 */
+#define TASK_STACK_SIZE     20480
+/* 任务的优先级 */
+#define TASK_PRIO           24
+
+/* 循环等待时间 */
+#define WAIT_MSEC           2000
+
+/* 亮度报警数值 */
+#define LUMINANCE_ALARM     20
+/* 湿度报警数值 */
+#define HUMIDITY_ALARM      60
+/* 温度报警数值 */
+#define TEMPERATURE_ALARM   30
+
 /***************************************************************
 * 函数名称: e53_ia_thread
 * 说    明: 智慧农业线程
@@ -29,36 +44,30 @@ void e53_ia_thread()
 
     e53_ia_init();
 
-    while (1)
-    {
+    while (1) {
         e53_ia_read_data(&data);
 
         printf("\nLuminance is %.2f\n", data.luminance);
         printf("\nHumidity is %.2f\n", data.humidity);
         printf("\nTemperature is %.2f\n", data.temperature);
 
-        if (data.luminance < 20)
-        {
+        if (data.luminance < LUMINANCE_ALARM) {
             light_set(ON);
             printf("light on\n");
-        }
-        else
-        {
+        } else {
             light_set(OFF);
             printf("light off\n");
         }
 
-        if ((data.humidity > 60) || (data.temperature > 30))
-        {
+        if ((data.humidity > HUMIDITY_ALARM) || (data.temperature > TEMPERATURE_ALARM)) {
             motor_set_status(ON);
             printf("motor on\n");
-        }
-        else
-        {
+        } else {
             motor_set_status(OFF);
             printf("motor off\n");
         }
-        LOS_Msleep(2000);
+
+        LOS_Msleep(WAIT_MSEC);
     }
 }
 
@@ -75,12 +84,11 @@ void e53_ia_example()
     TSK_INIT_PARAM_S task = {0};
 
     task.pfnTaskEntry = (TSK_ENTRY_FUNC)e53_ia_thread;
-    task.uwStackSize = 10240;
+    task.uwStackSize = TASK_STACK_SIZE;
     task.pcName = "e53_ia_thread";
-    task.usTaskPrio = 24;
+    task.usTaskPrio = TASK_PRIO;
     ret = LOS_TaskCreate(&thread_id, &task);
-    if (ret != LOS_OK)
-    {
+    if (ret != LOS_OK) {
         printf("Falied to create e53_ia_thread ret:0x%x\n", ret);
         return;
     }

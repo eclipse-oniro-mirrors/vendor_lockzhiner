@@ -29,7 +29,7 @@
 typedef struct {
     uint8_t startByte;
     uint8_t payloadLength;
-}NDEFHeaderStr;
+} NDEFHeaderStr;
 
 #define BIT_MB (1<<7)
 #define BIT_ME (1<<6)
@@ -45,11 +45,11 @@ typedef struct {
 #define MASK_TNF 0x07
 
 typedef struct {
-	uint8_t     header;
-	uint8_t		typeLength;
-	uint8_t		payloadLength;
-	RTDTypeStr type;
-}NDEFRecordStr;
+    uint8_t     header;
+    uint8_t     typeLength;
+    uint8_t     payloadLength;
+    RTDTypeStr type;
+} NDEFRecordStr;
 
 uint8_t composeRtdText(const NDEFDataStr *ndef,  NDEFRecordStr *ndefRecord, uint8_t *I2CMsg);
 uint8_t composeRtdUri(const NDEFDataStr *ndef,  NDEFRecordStr *ndefRecord, uint8_t *I2CMsg);

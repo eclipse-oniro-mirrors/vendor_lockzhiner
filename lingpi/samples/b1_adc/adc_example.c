@@ -21,8 +21,16 @@
 #include "ohos_init.h"
 #include "lz_hardware.h"
 
+/* 任务的堆栈大小 */
+#define TASK_STACK_SIZE                 2048
+/* 任务的优先级 */
+#define TASK_PRIO                       24
+
+/* 循环等待时间 */
+#define WAIT_MSEC                       1000
+
 /* 定义ADC的通道号 */
-#define ADC_CHANNEL         5
+#define ADC_CHANNEL                     5
 /* 定义ADC初始化的结构体 */
 static DevIo m_adcKey = {
     .isr =   {.gpio = INVALID_GPIO},
@@ -31,6 +39,15 @@ static DevIo m_adcKey = {
     .ctrl2 = {.gpio = INVALID_GPIO},
 };
 
+/* 寄存器地址 */
+#define GRF_SOC_CON29_REG_ADDRESS       (0x41050000U + 0x274U)
+/* 设置saradc的电压信号为AVDD，即参考外部电压为0V */
+#define BITS_SELECT_AVDD(value)         ((value) & (~(0x1 << 4)))
+#define BITS_ENABLE_AVDD(value)         ((value) | ((0x1 << 4) << 16))
+
+/* ADC最大电压量程 */
+#define
+/* ADC最大档位 */
 
 /***************************************************************
 * 函数名称: adc_dev_init
@@ -41,14 +58,13 @@ static DevIo m_adcKey = {
 static unsigned int adc_dev_init()
 {
     unsigned int ret = 0;
-    uint32_t *pGrfSocCon29 = (uint32_t *)(0x41050000U + 0x274U);
+    uint32_t *pGrfSocCon29 = (uint32_t *)(GRF_SOC_CON29_REG_ADDRESS);
     uint32_t ulValue;
 
     PinctrlSet(GPIO0_PC5, MUX_FUNC1, PULL_NONE, DRIVE_KEEP);
 
     ret = DevIoInit(m_adcKey);
-    if (ret != LZ_HARDWARE_SUCCESS)
-    {
+    if (ret != LZ_HARDWARE_SUCCESS) {
         printf("%s, %s, %d: ADC Key IO Init fail\n", __FILE__, __func__, __LINE__);
         return __LINE__;
     }
@@ -61,8 +77,8 @@ static unsigned int adc_dev_init()
 
     /* 设置saradc的电压信号，选择AVDD */
     ulValue = *pGrfSocCon29;
-    ulValue &= ~(0x1 << 4);
-    ulValue |= ((0x1 << 4) << 16);
+    ulValue = BITS_SELECT_AVDD(ulValue);
+    ulValue = BITS_ENABLE_AVDD(ulValue);
     *pGrfSocCon29 = ulValue;
 
     return 0;
@@ -80,8 +96,7 @@ static float adc_get_voltage()
     unsigned int data = 0;
 
     ret = LzSaradcReadValue(ADC_CHANNEL, &data);
-    if (ret != LZ_HARDWARE_SUCCESS)
-    {
+    if (ret != LZ_HARDWARE_SUCCESS) {
         printf("%s, %s, %d: ADC Read Fail\n", __FILE__, __func__, __LINE__);
         return 0.0;
     }
@@ -101,16 +116,15 @@ void adc_process()
 
     /* 初始化adc设备 */
     adc_dev_init();
-    
-    while (1)
-    {
+
+    while (1) {
         printf("***************Adc Example*************\r\n");
         /*获取电压值*/
         voltage = adc_get_voltage();
         printf("vlt:%.3fV\n", voltage);
 
         /* 睡眠1秒 */
-        usleep(1000000);
+        LOS_Msleep(WAIT_MSEC);
     }
 }
 
@@ -128,12 +142,11 @@ void adc_example()
     unsigned int ret = LOS_OK;
 
     task.pfnTaskEntry = (TSK_ENTRY_FUNC)adc_process;
-    task.uwStackSize = 2048;
+    task.uwStackSize = TASK_STACK_SIZE;
     task.pcName = "adc process";
-    task.usTaskPrio = 24;
+    task.usTaskPrio = TASK_PRIO;
     ret = LOS_TaskCreate(&thread_id, &task);
-    if (ret != LOS_OK)
-    {
+    if (ret != LOS_OK) {
         printf("Falied to create task ret:0x%x\n", ret);
         return;
     }

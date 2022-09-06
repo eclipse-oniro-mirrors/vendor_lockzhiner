@@ -18,7 +18,11 @@
 
 #include "NT3H.h"
 
-bool NT3HwriteRecord(const NDEFDataStr *data);
+/* 定义报文类型 */
+#define TYPE_FUNCT_TEXT         0
+#define TYPE_FUNCT_URI          1
+#define TYPE_FUNCT_INVALID      -1
 
+bool NT3HwriteRecord(const NDEFDataStr *data);
 
 #endif /* NDEF_H_ */

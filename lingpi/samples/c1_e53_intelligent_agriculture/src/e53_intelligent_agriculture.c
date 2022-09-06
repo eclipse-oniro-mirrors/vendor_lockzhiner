@@ -38,7 +38,7 @@ void init_sht30()
     uint8_t send_data[2] = {0x22, 0x36};
     uint32_t send_len = 2;
 
-    LzI2cWrite(IA_I2C0, SHT30_ADDR, send_data, send_len); 
+    LzI2cWrite(IA_I2C0, SHT30_ADDR, send_data, send_len);
 }
 
 /***************************************************************
@@ -52,7 +52,7 @@ void init_bh1750()
     uint8_t send_data[1] = {0x01};
     uint32_t send_len = 1;
 
-    LzI2cWrite(IA_I2C0, BH1750_ADDR, send_data, send_len); 
+    LzI2cWrite(IA_I2C0, BH1750_ADDR, send_data, send_len);
 }
 
 /***************************************************************
@@ -123,20 +123,22 @@ uint8_t sht30_check_crc(uint8_t *data, uint8_t nbrOfBytes, uint8_t checksum)
     const int16_t POLYNOMIAL = 0x131;
 
     /*calculates 8-Bit checksum with given polynomial*/
-    for(byteCtr = 0; byteCtr < nbrOfBytes; ++byteCtr)
-    {
+    for (byteCtr = 0; byteCtr < nbrOfBytes; ++byteCtr) {
         crc ^= (data[byteCtr]);
-        for ( bit = 8; bit > 0; --bit)
-        {
-            if (crc & 0x80) crc = (crc << 1) ^ POLYNOMIAL;
-            else crc = (crc << 1);
+        for ( bit = 8; bit > 0; --bit) {
+            if (crc & 0x80) {
+                crc = (crc << 1) ^ POLYNOMIAL;
+            } else {
+                crc = (crc << 1);
+            }
         }
     }
 
-    if(crc != checksum)
+    if (crc != checksum) {
         return 1;
-    else
+    } else {
         return 0;
+    }
 }
 
 /***************************************************************
@@ -156,26 +158,22 @@ void e53_ia_io_init()
 
     /*设置GPIO0_PA2为输出模式*/
     ret = LzGpioSetDir(GPIO0_PA2, LZGPIO_DIR_OUT);
-    if (ret != LZ_HARDWARE_SUCCESS)
-    {
+    if (ret != LZ_HARDWARE_SUCCESS) {
         printf("set GPIO0_PA2 Direction fail\n");
     }
 
     /*设置GPIO1_PD0为输出模式*/
     ret = LzGpioSetDir(GPIO1_PD0, LZGPIO_DIR_OUT);
-    if (ret != LZ_HARDWARE_SUCCESS)
-    {
+    if (ret != LZ_HARDWARE_SUCCESS) {
         printf("set GPIO0_PD0 Direction fail\n");
     }
 
     /*初始化I2C*/
-    if (I2cIoInit(m_ia_i2c0m2) != LZ_HARDWARE_SUCCESS)
-    {
+    if (I2cIoInit(m_ia_i2c0m2) != LZ_HARDWARE_SUCCESS) {
         printf("init I2C I2C0 io fail\n");
     }
     /*I2C时钟频率100K*/
-    if (LzI2cInit(IA_I2C0, 100000) != LZ_HARDWARE_SUCCESS)
-    {
+    if (LzI2cInit(IA_I2C0, 100000) != LZ_HARDWARE_SUCCESS) {
         printf("init I2C I2C0 fail\n");
     }
 }
@@ -209,7 +207,7 @@ void e53_ia_read_data(e53_ia_data_t *pData)
     LOS_Msleep(180);
 
     LzI2cRead(IA_I2C0, BH1750_ADDR, recv_data, receive_len);
-    pData->luminance = (float)(((recv_data[0]<<8) + recv_data[1])/1.2);
+    pData->luminance = (float)(((recv_data[0] << 8) + recv_data[1]) / 1.2);
     //printf("BH1750 data:0x%x%x", recv_data[0], recv_data[1]);
 
     /*checksum verification*/
@@ -230,19 +228,17 @@ void e53_ia_read_data(e53_ia_data_t *pData)
     data[1] = SHT30_Data_Buffer[1];
     data[2] = SHT30_Data_Buffer[2];
     rc = sht30_check_crc(data, 2, data[2]);
-    if(!rc)
-    {
+    if (!rc) {
         tmp = ((uint16_t)data[0] << 8) | data[1];
         pData->temperature = sht30_calc_temperature(tmp);
     }
-    
+
     /*check humidity*/
     data[0] = SHT30_Data_Buffer[3];
     data[1] = SHT30_Data_Buffer[4];
     data[2] = SHT30_Data_Buffer[5];
     rc = sht30_check_crc(data, 2, data[2]);
-    if(!rc)
-    {
+    if (!rc) {
         tmp = ((uint16_t)data[0] << 8) | data[1];
         pData->humidity = sht30_calc_RH(tmp);
     }
@@ -251,20 +247,18 @@ void e53_ia_read_data(e53_ia_data_t *pData)
 /***************************************************************
 * 函数名称: light_set
 * 说    明: 紫光灯控制
-* 参    数: 
+* 参    数:
 *          OFF,关
 *          ON,开
 * 返 回 值: 无
 ***************************************************************/
 void light_set(SWITCH_STATUS_ENUM status)
 {
-    if(status == ON)
-    {
+    if (status == ON) {
         /*设置GPIO0_PA2输出高电平点亮灯*/
         LzGpioSetVal(GPIO0_PA2, LZGPIO_LEVEL_HIGH);
     }
-    if(status == OFF)
-    {
+    if (status == OFF) {
         /*设置GPIO0_PA2输出低电平关闭灯*/
         LzGpioSetVal(GPIO0_PA2, LZGPIO_LEVEL_LOW);
     }
@@ -273,20 +267,18 @@ void light_set(SWITCH_STATUS_ENUM status)
 /***************************************************************
 * 函数名称: motor_set_status
 * 说    明: 电机控制
-* 参    数: 
+* 参    数:
 *          OFF,关
 *          ON,开
 * 返 回 值: 无
 ***************************************************************/
 void motor_set_status(SWITCH_STATUS_ENUM status)
 {
-    if(status == ON)
-    {
+    if (status == ON) {
         /*设置GPIO0_PD0输出高电平打开电机*/
         LzGpioSetVal(GPIO1_PD0, LZGPIO_LEVEL_HIGH);
     }
-    if(status == OFF)
-    {   
+    if (status == OFF) {
         /*设置GPIO0_PD0输出低电平关闭电机*/
         LzGpioSetVal(GPIO1_PD0, LZGPIO_LEVEL_LOW);
     }

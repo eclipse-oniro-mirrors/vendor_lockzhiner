@@ -37,8 +37,7 @@
 
 #define NFC_PAGE_SIZE           16
 
-typedef enum
-{
+typedef enum {
     NT3HERROR_NO_ERROR,
     NT3HERROR_READ_HEADER,
     NT3HERROR_WRITE_HEADER,
@@ -58,15 +57,13 @@ extern NT3HerrNo    errNo;
  * This strucure is used in the ADD record functionality
  * to store the last nfc page information, in order to continue from that point.
  */
-typedef struct
-{
+typedef struct {
     uint8_t page;
     uint8_t usedBytes;
 } UncompletePageStr;
 
 
-typedef struct
-{
+typedef struct {
     RecordPosEnu ndefPosition;
     uint8_t rtdType;
     uint8_t *rtdPayload;

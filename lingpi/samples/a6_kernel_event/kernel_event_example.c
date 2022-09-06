@@ -17,7 +17,19 @@
 #include "los_task.h"
 #include "ohos_init.h"
 
-#define EVENT_WAIT                                0x00000001
+#define EVENT_WAIT                              0x00000001
+
+/* 任务的堆栈大小 */
+#define TASK_STACK_SIZE                         2048
+/* 任务的优先级 */
+#define TAKS_PRIO                               5
+
+/* 主程序进入循环前的等待时间 */
+#define MASTER_WAIT_DELAY_MSEC                  1000
+/* 主程序event等待时间 */
+#define MASTER_EVENT_DELAY_MSEC                 2000
+/* 从程序event等待时间 */
+#define SLAVE_EVENT_DELAY_MSEC                  1000
 
 static EVENT_CB_S m_event;
 
@@ -31,10 +43,9 @@ void event_master_thread()
 {
     unsigned int ret = LOS_OK;
 
-    LOS_Msleep(1000);
+    LOS_Msleep(MASTER_WAIT_DELAY_MSEC);
 
-    while (1)
-    {
+    while (1) {
         printf("%s write event:0x%x\n", __func__, EVENT_WAIT);
         ret = LOS_EventWrite(&m_event, EVENT_WAIT);
         if (ret != LOS_OK) {
@@ -42,7 +53,7 @@ void event_master_thread()
         }
 
         /*delay 1s*/
-        LOS_Msleep(2000);
+        LOS_Msleep(EVENT_DELAY_MSEC);
         LOS_EventClear(&m_event, ~m_event.uwEventID);
     }
 }
@@ -57,12 +68,11 @@ void event_slave_thread()
 {
     unsigned int event;
 
-    while (1)
-    {
+    while (1) {
         /* 阻塞方式读事件，等待事件到达*/
         event = LOS_EventRead(&m_event, EVENT_WAIT, LOS_WAITMODE_AND, LOS_WAIT_FOREVER);
         printf("%s read event:0x%x\n", __func__, event);
-        LOS_Msleep(1000);
+        LOS_Msleep(SLAVE_EVENT_DELAY_MSEC);
     }
 }
 
@@ -81,34 +91,30 @@ void event_example()
     unsigned int ret = LOS_OK;
 
     ret = LOS_EventInit(&m_event);
-    if (ret != LOS_OK)
-    {
+    if (ret != LOS_OK) {
         printf("Falied to create EventFlags\n");
         return;
     }
 
     task1.pfnTaskEntry = (TSK_ENTRY_FUNC)event_master_thread;
-    task1.uwStackSize = 2048;
+    task1.uwStackSize = TASK_STACK_SIZE;
     task1.pcName = "event_master_thread";
-    task1.usTaskPrio = 5;
+    task1.usTaskPrio = TASK_PRIO;
     ret = LOS_TaskCreate(&thread_id1, &task1);
-    if (ret != LOS_OK)
-    {
+    if (ret != LOS_OK) {
         printf("Falied to create event_master_thread ret:0x%x\n", ret);
         return;
     }
 
     task2.pfnTaskEntry = (TSK_ENTRY_FUNC)event_slave_thread;
-    task2.uwStackSize = 2048;
+    task2.uwStackSize = TASK_STACK_SIZE;
     task2.pcName = "event_slave_thread";
-    task2.usTaskPrio = 5;
+    task2.usTaskPrio = TASK_PRIO;
     ret = LOS_TaskCreate(&thread_id2, &task2);
-    if (ret != LOS_OK)
-    {
+    if (ret != LOS_OK) {
         printf("Falied to create event_slave_thread ret:0x%x\n", ret);
         return;
     }
 }
 
 APP_FEATURE_INIT(event_example);
-

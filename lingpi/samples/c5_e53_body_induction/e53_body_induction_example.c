@@ -17,6 +17,15 @@
 #include "los_task.h"
 #include "e53_body_induction.h"
 
+/* 任务的堆栈大小 */
+#define TASK_STACK_SIZE     20480
+/* 任务的优先级 */
+#define TASK_PRIO           24
+
+/* 循环等待时间 */
+#define WAIT_MSEC           1000
+
+
 /***************************************************************
 * 函数名称: e53_bi_thread
 * 说    明: 人体感应模块线程
@@ -30,26 +39,24 @@ void e53_bi_thread()
 
     e53_bi_init();
 
-    while (1)
-    {
+    while (1) {
         ret = LzGpioGetVal(GPIO0_PA5, &val);
-        if (ret != LZ_HARDWARE_SUCCESS)
-        {
+        if (ret != LZ_HARDWARE_SUCCESS) {
             printf("get gpio value failed ret:%d\n", ret);
         }
-        if (val_last != val)
-        {
-            if (val == LZGPIO_LEVEL_HIGH)
-            {
+        
+        if (val_last != val) {
+            if (val == LZGPIO_LEVEL_HIGH) {
                 buzzer_set_status(ON);
                 printf("buzzer on\n");
-                LOS_Msleep(1000);
+                LOS_Msleep(WAIT_MSEC);
                 buzzer_set_status(OFF);
                 printf("buzzer off\n");
             }
             val_last = val;
         }
-        LOS_Msleep(1000);
+        
+        LOS_Msleep(WAIT_MSEC);
     }
 }
 
@@ -66,12 +73,11 @@ void e53_bi_example()
     TSK_INIT_PARAM_S task = {0};
 
     task.pfnTaskEntry = (TSK_ENTRY_FUNC)e53_bi_thread;
-    task.uwStackSize = 10240;
+    task.uwStackSize = TASK_STACK_SIZE;
     task.pcName = "e53_bi_thread";
-    task.usTaskPrio = 24;
+    task.usTaskPrio = TASK_PRIO;
     ret = LOS_TaskCreate(&thread_id, &task);
-    if (ret != LOS_OK)
-    {
+    if (ret != LOS_OK) {
         printf("Falied to create e53_bi_thread ret:0x%x\n", ret);
         return;
     }

@@ -18,8 +18,7 @@
 #ifndef RTDURI_H_
 #define RTDURI_H_
 
-typedef enum
-{
+typedef enum {
     freeForm,   //0x00     No prepending is done ... the entire URI is contained in the URI Field
     httpWWW,    //0x01     http://www.
     httpsWWW,   //0x02     https://www.
@@ -60,15 +59,13 @@ typedef enum
      */
 } UriTypeE;
 
-typedef struct
-{
+typedef struct {
     char     *body;
     uint8_t  bodyLength;
     void     *extraData; // herre should be stored specific URI msgs
 } RtdUriUserPayload;
 
-typedef struct
-{
+typedef struct {
     UriTypeE            type;
     RtdUriUserPayload   userPayload; // here should be stored specific URI msgs
 } RTDUriTypeStr;

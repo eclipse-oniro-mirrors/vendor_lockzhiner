@@ -42,7 +42,7 @@ unsigned int eeprom_get_blocksize();
 /***************************************************************
 * 函数名称: eeprom_readbyte
 * 说    明: EEPROM读一个字节
-* 参    数: 
+* 参    数:
 *           @addr: EEPROM存储地址
 *           @data: 存放EERPOM的数据指针
 * 返 回 值: 返回读取字节的长度，反之为错误
@@ -52,7 +52,7 @@ unsigned int eeprom_readbyte(unsigned int addr, unsigned char *data);
 /***************************************************************
 * 函数名称: eeprom_writebyte
 * 说    明: EEPROM写一个字节
-* 参    数: 
+* 参    数:
 *           @addr: EEPROM存储地址
 *           @data: 写ERPOM的数据
 * 返 回 值: 返回写入数据的长度，反之为错误
@@ -62,7 +62,7 @@ unsigned int eeprom_writebyte(unsigned int addr, unsigned char data);
 /***************************************************************
 * 函数名称: eeprom_writepage
 * 说    明: EEPROM写1个页字节
-* 参    数: 
+* 参    数:
 *           @addr: EEPROM存储地址，必须是页地址
 *           @data: 写ERPOM的数据指针
 *           @data_len: 写EEPROM数据的长度，必须是小于或等于1个页大小
@@ -73,7 +73,7 @@ unsigned int eeprom_writepage(unsigned int addr, unsigned char *data, unsigned i
 /***************************************************************
 * 函数名称: eeprom_read
 * 说    明: EEPROM读多个字节
-* 参    数: 
+* 参    数:
 *           @addr: EERPOM存储地址
 *           @data: 存放EERPOM的数据指针
 *           @data_len: 读取EERPOM数据的长度
@@ -84,7 +84,7 @@ unsigned int eeprom_read(unsigned int addr, unsigned char *data, unsigned int da
 /***************************************************************
 * 函数名称: eeprom_write
 * 说    明: EEPROM写多个字节
-* 参    数: 
+* 参    数:
 *           @addr: EEPROM存储地址
 *           @data: 写ERPOM的数据指针
 *           @data_len: 写EEPROM数据的长度
