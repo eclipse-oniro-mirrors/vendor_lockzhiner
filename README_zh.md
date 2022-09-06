@@ -33,7 +33,7 @@ vendor/lockzhiner/                  --- vendor_lockzhiner 仓库路径
 
 ## 相关仓
 
-[device/board/lockzhiner](https://gitee.com/openharmony-sig/device_board_lockzhiner)
+[device/board/lockzhiner](https://gitee.com/openharmony/device_board_lockzhiner)
 
-[device/soc/rockchip](https://gitee.com/openharmony-sig/device_soc_rockchip)
+[device/soc/rockchip](https://gitee.com/openharmony/device_soc_rockchip)
 
