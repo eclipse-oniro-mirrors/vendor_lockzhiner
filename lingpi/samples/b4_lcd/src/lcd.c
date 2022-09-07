@@ -82,6 +82,10 @@ static LzSpiConfig m_spiConf = {.bitsPerWord = SPI_PERWORD_8BITS, .firstBit = SP
 #define LCD_HORIZONTAL_MODE1    1
 #define LCD_HORIZONTAL_MODE2    2
 
+/* 中文转化为UTF-8的字节数 */
+#define CHINESE_TO_BYTES        2
+
+
 static void lcd_write_bus(uint8_t dat)
 {
 #if LCD_ENABLE_SPI
@@ -758,7 +762,7 @@ void lcd_show_chinese(uint16_t x, uint16_t y, uint8_t *s, uint16_t fc, uint16_t 
     /* utf8格式汉字转化为ascii格式 */
     chinese_utf8_to_ascii(s, strlen(s), buffer, &buffer_len);
 
-    for (uint32_t i = 0; i < buffer_len; i += 2, x += sizey) {
+    for (uint32_t i = 0; i < buffer_len; i += CHINESE_TO_BYTES, x += sizey) {
         if (sizey == LCD_FONT_SIZE12) {
             lcd_show_chinese_12x12(x, y, &buffer[i], fc, bc, sizey, mode);
         } else if (sizey == LCD_FONT_SIZE16) {

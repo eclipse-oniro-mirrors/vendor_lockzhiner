@@ -101,7 +101,7 @@ float e53_isl_read_data()
     /* 等待从设备准备完毕 */
 #define WAIT_SLAVE_DEVICE_START_MSEC        180
     /* 读取光强度寄存器数值，计算出实际光强度数值 */
-#define CALC_LIGHT(recv_data)               ((float)((((recv_data[0]) << 8) + (recv_data[1])) / 1.2))
+#define CALC_LIGHT(data)                    ((float)((((data[0]) << 8) + (data[1])) / 1.2))
     float lum = 0;
     uint8_t recv_data[2] = {0};
 

@@ -38,12 +38,12 @@ static unsigned char m_nfc_is_init = NFC_NOT_INIT;
 bool nfc_store_uri_http(RecordPosEnu position, uint8_t *http)
 {
     NDEFDataStr data;
-
+    
     if (m_nfc_is_init == NFC_NOT_INIT) {
         printf("%s, %s, %d: NFC is not init!\n", __FILE__, __func__, __LINE__);
         return 0;
     }
-
+    
     prepareUrihttp(&data, position, http);
     return NT3HwriteRecord(&data);
 }
@@ -60,12 +60,12 @@ bool nfc_store_uri_http(RecordPosEnu position, uint8_t *http)
 bool nfc_store_text(RecordPosEnu position, uint8_t *text)
 {
     NDEFDataStr data;
-
+    
     if (m_nfc_is_init == NFC_NOT_INIT) {
         printf("%s, %s, %d: NFC is not init!\n", __FILE__, __func__, __LINE__);
         return 0;
     }
-
+    
     prepareText(&data, position, text);
     return NT3HwriteRecord(&data);
 }
@@ -79,18 +79,18 @@ bool nfc_store_text(RecordPosEnu position, uint8_t *text)
 unsigned int nfc_init(void)
 {
     unsigned int ret = 0;
-
+    
     if (m_nfc_is_init == NFC_IS_INIT) {
         printf("%s, %s, %d: Nfc readly init!\n", __FILE__, __func__, __LINE__);
         return __LINE__;
     }
-
+    
     ret = NT3HI2cInit();
     if (ret != 0) {
         printf("%s, %s, %d: NT3HI2cInit failed!\n", __FILE__, __func__, __LINE__);
         return __LINE__;
     }
-
+    
     m_nfc_is_init = 1;
     return 0;
 }

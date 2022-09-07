@@ -21,7 +21,7 @@
 /* 定义报文类型 */
 #define TYPE_FUNCT_TEXT         0
 #define TYPE_FUNCT_URI          1
-#define TYPE_FUNCT_INVALID      -1
+#define TYPE_FUNCT_INVALID      (-1)
 
 bool NT3HwriteRecord(const NDEFDataStr *data);
 
