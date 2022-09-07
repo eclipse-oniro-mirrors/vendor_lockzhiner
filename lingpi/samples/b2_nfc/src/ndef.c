@@ -211,7 +211,7 @@ bool NT3HwriteRecord(const NDEFDataStr *data)
     addPage.page = 0;
     
     // calculate the last used page
-    if (data->ndefPosition != NDEFFirstPos ) {
+    if (data->ndefPosition != NDEFFirstPos) {
         NT3HReadHeaderNfc(&recordLength, &mbMe);
         addPage.page  = (recordLength + sizeof(NDEFHeaderStr) + 1) / NFC_PAGE_SIZE;
         
