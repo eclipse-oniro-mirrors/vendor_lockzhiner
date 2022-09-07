@@ -57,8 +57,8 @@ static unsigned int m_i2c_freq = 400000;
 #define OLED_CMD            0 // OLED的命令操作标记
 #define OLED_DATA           1 // OLED的数据操作标记
 
-//////////////////////////////////////////////////////////////
-
+/* 字节的bits数目 */
+#define BYTE_TO_BITS        8
 
 /***************************************************************
  * 函数名称: oled_pow
@@ -136,7 +136,7 @@ static inline void write_iic_byte(unsigned char iic_byte)
     unsigned char m, da;
     da = iic_byte;
     OLED_SCLK_Clr();
-    for (i = 0; i < 8; i++) {
+    for (i = 0; i < BYTE_TO_BITS; i++) {
         m = da;
         //OLED_SCLK_Clr();
         m = m & 0x80;
@@ -372,11 +372,11 @@ void oled_clear()
 {
     uint8_t i, n;
 
-    for (i = 0; i < 8; i++) {
+    for (i = 0; i < BYTE_TO_BITS; i++) {
         oled_wr_byte(0xb0 + i, OLED_CMD); //设置页地址（0~7）
         oled_wr_byte(0x00, OLED_CMD); //设置显示位置—列低地址
         oled_wr_byte(0x10, OLED_CMD); //设置显示位置—列高地址
-        for (n = 0; n < 128; n++) {
+        for (n = 0; n < OLED_COLUMN_MAX; n++) {
             oled_wr_byte(0, OLED_DATA);
         }
     }
@@ -423,6 +423,8 @@ void oled_display_off(void)
  ***************************************************************/
 void oled_show_char(uint8_t x, uint8_t y, uint8_t chr, uint8_t chr_size)
 {
+#define F8X16_LINE_DATA         8
+#define F6X8_LINE_DATA          6
     unsigned char c = 0, i = 0;
 
     c = chr - ' '; //得到偏移后的值
@@ -432,21 +434,20 @@ void oled_show_char(uint8_t x, uint8_t y, uint8_t chr, uint8_t chr_size)
         y = y + 2;
     }
 
-    if (chr_size == 16) {
+    if (chr_size == OLED_CHR_SIZE_16) {
         oled_set_pos(x, y);
-        for (i = 0; i < 8; i++) {
+        for (i = 0; i < F8X16_LINE_DATA; i++) {
             oled_wr_byte(F8X16[c * 16 + i], OLED_DATA);
         }
         oled_set_pos(x, y + 1);
-        for (i = 0; i < 8; i++) {
+        for (i = 0; i < F8X16_LINE_DATA; i++) {
             oled_wr_byte(F8X16[c * 16 + i + 8], OLED_DATA);
         }
     } else {
         oled_set_pos(x, y);
-        for (i = 0; i < 6; i++) {
+        for (i = 0; i < F6X8_LINE_DATA; i++) {
             oled_wr_byte(F6x8[c][i], OLED_DATA);
         }
-
     }
 }
 
@@ -500,7 +501,7 @@ void oled_show_string(uint8_t x, uint8_t y, uint8_t *chr, uint8_t chr_size)
     while (chr[j] != '\0') {
         oled_show_char(x, y, chr[j], chr_size);
         x += 8;
-        if (x > 120) {
+        if (x > OLED_COLUMN_MAX) {
             x = 0;
             y += 2;
         }

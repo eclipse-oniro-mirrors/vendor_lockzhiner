@@ -19,6 +19,10 @@
 #define OLED_COLUMN_MAX         128
 #define OLED_ROW_MAX            64
 
+/* 定义OLED字体大小 */
+#define OLED_CHR_SIZE_12        12
+#define OLED_CHR_SIZE_16        16
+
 /***************************************************************
  * 函数名称: oled_init
  * 说    明: oled初始化

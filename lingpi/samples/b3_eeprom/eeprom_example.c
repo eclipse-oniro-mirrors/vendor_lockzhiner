@@ -31,6 +31,7 @@ void eeprom_proress(void *arg)
 #define FOR_ADDRESS         32
 #define CHAR_START          0x21
 #define CHAR_END            0x7F
+#define ADDR_OFFSET_MAX     200
     unsigned int ret = 0;
     unsigned char data_offset = CHAR_START;
     unsigned int addr_offset = 3;
@@ -71,7 +72,7 @@ void eeprom_proress(void *arg)
         }
 
         addr_offset += FOR_ADDRESS;
-        if (addr_offset >= 200) {
+        if (addr_offset >= ADDR_OFFSET_MAX) {
             addr_offset = 0;
         }
         printf("\n");

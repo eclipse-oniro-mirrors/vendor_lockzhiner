@@ -75,6 +75,13 @@ static LzSpiConfig m_spiConf = {.bitsPerWord = SPI_PERWORD_8BITS, .firstBit = SP
 #define UINT16_TO_H(val)        (((val) & 0xFF00) >> 8)
 #define UINT16_TO_L(val)        ((val) & 0x00FF)
 
+/* 字节转化为bits */
+#define BYTE_TO_BITS            8
+
+/* LCD配置模式 */
+#define LCD_HORIZONTAL_MODE1    1
+#define LCD_HORIZONTAL_MODE2    2
+
 static void lcd_write_bus(uint8_t dat)
 {
 #if LCD_ENABLE_SPI
@@ -171,7 +178,7 @@ static void lcd_show_chinese_12x12(uint16_t x, uint16_t y, uint8_t *s, uint16_t 
         if ((tfont12[k].Index[0] == *(s)) && (tfont12[k].Index[1] == *(s + 1))) {
             lcd_address_set(x, y, x + sizey - 1, y + sizey - 1);
             for (i = 0; i < TypefaceNum; i++) {
-                for (j = 0; j < 8; j++) {
+                for (j = 0; j < BYTE_TO_BITS; j++) {
                     if (!mode) {
                         /* 非叠加方式 */
                         if (tfont12[k].Msk[i] & (0x01 << j)) {
@@ -236,7 +243,7 @@ static void lcd_show_chinese_16x16(uint16_t x, uint16_t y, uint8_t *s, uint16_t 
         if ((tfont16[k].Index[0] == *(s)) && (tfont16[k].Index[1] == *(s + 1))) {
             lcd_address_set(x, y, x + sizey - 1, y + sizey - 1);
             for (i = 0; i < TypefaceNum; i++) {
-                for (j = 0; j < 8; j++) {
+                for (j = 0; j < BYTE_TO_BITS; j++) {
                     if (!mode) {
                         /* 非叠加方式 */
                         if (tfont16[k].Msk[i] & (0x01 << j)) {
@@ -302,7 +309,7 @@ static void lcd_show_chinese_24x24(uint16_t x, uint16_t y, uint8_t *s, uint16_t 
         if ((tfont24[k].Index[0] == *(s)) && (tfont24[k].Index[1] == *(s + 1))) {
             lcd_address_set(x, y, x + sizey - 1, y + sizey - 1);
             for (i = 0; i < TypefaceNum; i++) {
-                for (j = 0; j < 8; j++) {
+                for (j = 0; j < BYTE_TO_BITS; j++) {
                     if (!mode) {
                         /* 非叠加方式 */
                         if (tfont24[k].Msk[i] & (0x01 << j)) {
@@ -368,7 +375,7 @@ static void lcd_show_chinese_32x32(uint16_t x, uint16_t y, uint8_t *s, uint16_t 
         if ((tfont32[k].Index[0] == *(s)) && (tfont32[k].Index[1] == *(s + 1))) {
             lcd_address_set(x, y, x + sizey - 1, y + sizey - 1);
             for (i = 0; i < TypefaceNum; i++) {
-                for (j = 0; j < 8; j++) {
+                for (j = 0; j < BYTE_TO_BITS; j++) {
                     if (!mode) {
                         /* 非叠加方式 */
                         if (tfont32[k].Msk[i] & (0x01 << j)) {
@@ -462,9 +469,9 @@ unsigned int lcd_init()
     lcd_wr_reg(0X36);
     if (USE_HORIZONTAL == 0) {
         lcd_wr_data8(0x00);
-    } else if (USE_HORIZONTAL == 1) {
+    } else if (USE_HORIZONTAL == LCD_HORIZONTAL_MODE1) {
         lcd_wr_data8(0xC0);
-    } else if (USE_HORIZONTAL == 2) {
+    } else if (USE_HORIZONTAL == LCD_HORIZONTAL_MODE2) {
         lcd_wr_data8(0x70);
     } else {
         lcd_wr_data8(0xA0);
@@ -752,37 +759,18 @@ void lcd_show_chinese(uint16_t x, uint16_t y, uint8_t *s, uint16_t fc, uint16_t 
     chinese_utf8_to_ascii(s, strlen(s), buffer, &buffer_len);
 
     for (uint32_t i = 0; i < buffer_len; i += 2, x += sizey) {
-        if (sizey == 12) {
+        if (sizey == LCD_FONT_SIZE12) {
             lcd_show_chinese_12x12(x, y, &buffer[i], fc, bc, sizey, mode);
-        } else if (sizey == 16) {
+        } else if (sizey == LCD_FONT_SIZE16) {
             lcd_show_chinese_16x16(x, y, &buffer[i], fc, bc, sizey, mode);
-        } else if (sizey == 24) {
+        } else if (sizey == LCD_FONT_SIZE24) {
             lcd_show_chinese_24x24(x, y, &buffer[i], fc, bc, sizey, mode);
-        } else if (sizey == 32) {
+        } else if (sizey == LCD_FONT_SIZE32) {
             lcd_show_chinese_32x32(x, y, &buffer[i], fc, bc, sizey, mode);
         } else {
             return;
         }
     }
-
-
-#if 0
-    while (*s != 0) {
-        if (sizey == 12) {
-            lcd_show_chinese_12x12(x, y, s, fc, bc, sizey, mode);
-        } else if (sizey == 16) {
-            lcd_show_chinese_16x16(x, y, s, fc, bc, sizey, mode);
-        } else if (sizey == 24) {
-            lcd_show_chinese_24x24(x, y, s, fc, bc, sizey, mode);
-        } else if (sizey == 32) {
-            lcd_show_chinese_32x32(x, y, s, fc, bc, sizey, mode);
-        } else {
-            return;
-        }
-        s += 2;
-        x += sizey;
-    }
-#endif
 }
 
 
@@ -816,23 +804,23 @@ void lcd_show_char(uint16_t x, uint16_t y, uint8_t num, uint16_t fc, uint16_t bc
     lcd_address_set(x, y, x + sizex - 1, y + sizey - 1);
 
     for (i = 0; i < TypefaceNum; i++) {
-        if (sizey == 12) {
+        if (sizey == LCD_FONT_SIZE12) {
             /* 调用6x12字体 */
             temp = ascii_1206[num][i];
-        } else if (sizey == 16) {
+        } else if (sizey == LCD_FONT_SIZE16) {
             /* 调用8x16字体 */
             temp = ascii_1608[num][i];
-        } else if (sizey == 24) {
+        } else if (sizey == LCD_FONT_SIZE24) {
             /* 调用12x24字体 */
             temp = ascii_2412[num][i];
-        } else if (sizey == 32) {
+        } else if (sizey == LCD_FONT_SIZE32) {
             /* 调用16x32字体 */
             temp = ascii_3216[num][i];
         } else {
             return;
         }
 
-        for (t = 0; t < 8; t++) {
+        for (t = 0; t < BYTE_TO_BITS; t++) {
             if (!mode) {
                 /* 非叠加模式 */
                 if (temp & (0x01 << t)) {
@@ -870,7 +858,7 @@ void lcd_show_char(uint16_t x, uint16_t y, uint8_t num, uint16_t fc, uint16_t bc
  * 说    明: 显示字符串
  * 参    数:
  *       @x：指定字符的起始位置X坐标
- *       @y：指定字串的起始位置X坐标
+ *       @y：指定字串的起始位置Y坐标
  *       @s：指定字串
  *       @fc: 字的颜色
  *       @bc: 字的背景色
@@ -880,9 +868,10 @@ void lcd_show_char(uint16_t x, uint16_t y, uint8_t num, uint16_t fc, uint16_t bc
  ***************************************************************/
 void lcd_show_string(uint16_t x, uint16_t y, const uint8_t *p, uint16_t fc, uint16_t bc, uint8_t sizey, uint8_t mode)
 {
+#define X_OFFSET(sizey)         ((sizey) / 2) /* 根据字体大小偏移X轴坐标 */
     while (*p != '\0') {
         lcd_show_char(x, y, *p, fc, bc, sizey, mode);
-        x += (sizey / 2);
+        x += X_OFFSET(sizey);
         p++;
     }
 }
@@ -935,19 +924,23 @@ void lcd_show_int_num(uint16_t x, uint16_t y, uint16_t num, uint8_t len, uint16_
  ***************************************************************/
 void lcd_show_float_num1(uint16_t x, uint16_t y, float num, uint8_t len, uint16_t fc, uint16_t bc, uint8_t sizey)
 {
+#define X_OFFSET(sizey)         ((sizey) / 2)   /* 根据字体大小偏移X坐标移动点数 */
+#define FLOAT_TO_INT(num)       ((num) * 100)   /* 将float数值转化为int数值 */
+#define DECIMAL_TOW             2               /* 保留小数点后2个数值 */
+#define CHAR_0                  ((uint8_t)('0'))
     uint8_t t, temp, sizex;
     uint16_t num1;
 
-    sizex = sizey / 2;
-    num1 = num * 100;
+    sizex = X_OFFSET(sizey);
+    num1 = FLOAT_TO_INT(num);
     for (t = 0; t < len; t++) {
         temp = (num1 / mypow(10, len - t - 1)) % 10;
-        if (t == (len - 2)) {
-            lcd_show_char(x + (len - 2)*sizex, y, '.', fc, bc, sizey, 0);
+        if (t == (len - DECIMAL_TOW)) {
+            lcd_show_char(x + (len - DECIMAL_TOW)*sizex, y, '.', fc, bc, sizey, 0);
             t++;
             len += 1;
         }
-        lcd_show_char(x + t * sizex, y, temp + 48, fc, bc, sizey, 0);
+        lcd_show_char(x + t * sizex, y, temp + CHAR_0, fc, bc, sizey, 0);
     }
 }
 

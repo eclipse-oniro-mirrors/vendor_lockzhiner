@@ -38,12 +38,15 @@ static unsigned int m_sem;
 ***************************************************************/
 void control_thread()
 {
+#define CYCLES          3
     unsigned int count = 0;
 
     while (1) {
-        /*释放两次信号量，sem_one_thread和sem_two_thread同步执行;
-        释放一次信号量，sem_one_thread和sem_two_thread交替执行*/
-        if ((count++) % 3) {
+        /*
+         * 释放两次信号量，sem_one_thread和sem_two_thread同步执行;
+         * 释放一次信号量，sem_one_thread和sem_two_thread交替执行
+         */
+        if ((count++) % CYCLES) {
             LOS_SemPost(m_sem);
             printf("control_thread Release once Semaphore\n");
         } else {

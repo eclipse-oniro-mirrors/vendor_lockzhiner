@@ -28,12 +28,6 @@
 /* 图片数据 */
 extern const unsigned char gImage_lingzhi[IMAGE_MAXSIZE_LINGZHI];
 
-/* 字体大小 */
-#define SIZEY_12                12
-#define SIZEY_16                16
-#define SIZEY_24                24
-#define SIZEY_32                32
-
 /* LCD的位置 */
 #define LCD_FILL_X              0
 #define LCD_FILL_Y              0
@@ -135,14 +129,14 @@ void lcd_process(void *arg)
 
         lcd_fill(LCD_CHINESE_X, LCD_CHINESE_Y, LCD_W, LCD_H, LCD_WHITE);
         lcd_show_chinese(LCD_CHINESE_X, LCD_CHINESE_Y, chinese_string, LCD_RED, LCD_WHITE, cur_sizey, LCD_CHINESE_MODE);
-        if (cur_sizey == SIZEY_12) {
-            cur_sizey = SIZEY_16;
-        } else if (cur_sizey == SIZEY_16) {
-            cur_sizey = SIZEY_24;
-        } else if (cur_sizey == SIZEY_24) {
-            cur_sizey = SIZEY_32;
+        if (cur_sizey == LCD_FONT_SIZE12) {
+            cur_sizey = LCD_FONT_SIZE16;
+        } else if (cur_sizey == LCD_FONT_SIZE16) {
+            cur_sizey = LCD_FONT_SIZE24;
+        } else if (cur_sizey == LCD_FONT_SIZE24) {
+            cur_sizey = LCD_FONT_SIZE32;
         } else {
-            cur_sizey = SIZEY_12;
+            cur_sizey = LCD_FONT_SIZE12;
         }
 
         printf("\n");

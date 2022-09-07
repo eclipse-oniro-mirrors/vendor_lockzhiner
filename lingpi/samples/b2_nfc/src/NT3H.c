@@ -88,7 +88,6 @@ unsigned int NT3HI2cInit()
     ulValue &= ~((0x7 << 8) | (0x7 << 4));
     ulValue |= ((0x1 << 8) | (0x1 << 4));
     pGrf[7] = ulValue | (0xFFFF << 16);
-    printf("%s, %d: GRF_GPIO0D_IOMUX_H(0x%x) = 0x%x\n", __func__, __LINE__, &pGrf[7], pGrf[7]);
 
     if (I2cIoInit(m_i2c2m0) != LZ_HARDWARE_SUCCESS) {
         printf("%s, %s, %d: I2cIoInit failed!\n", __FILE__, __func__, __LINE__);
@@ -109,6 +108,10 @@ unsigned int NT3HI2cDeInit()
 
 bool NT3HReadHeaderNfc(uint8_t *endRecordsPtr, uint8_t *ndefHeader)
 {
+#define STRING_OFFSET_NDEF_START        0
+#define STRING_OFFSET_NEND_RECORD       1
+#define STRING_OFFSET_NTAG_ERASED       2
+
     *endRecordsPtr = 0;
     bool ret = NT3HReadUserData(0);
 
@@ -116,9 +119,9 @@ bool NT3HReadHeaderNfc(uint8_t *endRecordsPtr, uint8_t *ndefHeader)
     if (ret == true) {
         // if the first byte is equals to NDEF_START_BYTE there are some records
         // store theend of that
-        if ((NDEF_START_BYTE == nfcPageBuffer[0]) && (NTAG_ERASED != nfcPageBuffer[2])) {
-            *endRecordsPtr = nfcPageBuffer[1];
-            *ndefHeader    = nfcPageBuffer[2];
+        if ((NDEF_START_BYTE == nfcPageBuffer[STRING_OFFSET_NDEF_START]) && (NTAG_ERASED != nfcPageBuffer[STRING_OFFSET_NTAG_ERASED])) {
+            *endRecordsPtr = nfcPageBuffer[STRING_OFFSET_NEND_RECORD];
+            *ndefHeader    = nfcPageBuffer[STRING_OFFSET_NTAG_ERASED];
         }
         return true;
     } else {
@@ -240,10 +243,11 @@ bool NT3HReadSram(void)
 
 void NT3HGetNxpSerialNumber(char* buffer)
 {
+#define MANUF_BUFFER_MAXSIZE        6
     uint8_t manuf[16];
 
     if (NT3HReaddManufactoringData(manuf)) {
-        for (int i = 0; i < 6; i++) {
+        for (int i = 0; i < MANUF_BUFFER_MAXSIZE; i++) {
             buffer[i] = manuf[i];
         }
     }
