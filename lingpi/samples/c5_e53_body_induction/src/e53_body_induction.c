@@ -40,19 +40,7 @@ static PwmBusIo m_buzzer  = {
 void e53_bi_init()
 {
     uint32_t ret = LZ_HARDWARE_SUCCESS;
-#if 0
-    /*初始化I2C*/
-    ret = I2cIoInit(m_bi_i2c0m2);
-    if (ret != LZ_HARDWARE_SUCCESS) {
-        printf("init I2C I2C0 io fail ret:%d\n", ret);
-        return;
-    }
-    ret = LzI2cInit(BI_I2C0, 400000);
-    if (ret != LZ_HARDWARE_SUCCESS) {
-        printf("init I2C I2C0 fail ret:%d\n", ret);
-        return;
-    }
-#endif
+
     ret = PwmIoInit(m_buzzer);
     if (ret != LZ_HARDWARE_SUCCESS) {
         printf("PwmIoInit failed ret:%d\n", ret);

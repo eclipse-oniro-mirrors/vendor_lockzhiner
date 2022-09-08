@@ -237,7 +237,7 @@ void e53_ia_read_data(e53_ia_data_t *pData)
     data[2] = SHT30_Data_Buffer[2];
     rc = sht30_check_crc(data, 2, data[2]);
     if (!rc) {
-        tmp = ((uint16_t)data[0] << 8) | data[1];
+        tmp = ((uint16_t)data[0] << high_byte_bit) | data[1];
         pData->temperature = sht30_calc_temperature(tmp);
     }
 

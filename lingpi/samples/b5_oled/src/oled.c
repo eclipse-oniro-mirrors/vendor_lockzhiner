@@ -439,6 +439,7 @@ void oled_show_char(uint8_t x, uint8_t y, uint8_t chr, uint8_t chr_size)
 {
 #define F8X16_LINE_DATA         8
 #define F6X8_LINE_DATA          6
+#define BYTE_BITS               8
     unsigned char c = 0, i = 0;
 
     c = chr - ' '; // 得到偏移后的值
@@ -455,7 +456,7 @@ void oled_show_char(uint8_t x, uint8_t y, uint8_t chr, uint8_t chr_size)
         }
         oled_set_pos(x, y + 1);
         for (i = 0; i < F8X16_LINE_DATA; i++) {
-            oled_wr_byte(F8X16[c * 16 + i + 8], OLED_DATA);
+            oled_wr_byte(F8X16[c * 16 + i + BYTE_BITS], OLED_DATA);
         }
     } else {
         oled_set_pos(x, y);
@@ -479,6 +480,7 @@ void oled_show_char(uint8_t x, uint8_t y, uint8_t chr, uint8_t chr_size)
  ***************************************************************/
 void oled_show_num(uint8_t x, uint8_t y, uint32_t num, uint8_t len, uint8_t size2)
 {
+    uint8_t div = 2;
     uint8_t t, temp;
     uint8_t enshow = 0;
 
@@ -486,14 +488,14 @@ void oled_show_num(uint8_t x, uint8_t y, uint32_t num, uint8_t len, uint8_t size
         temp = (num / oled_pow(10, len - t - 1)) % 10;
         if (enshow == 0 && t < (len - 1)) {
             if (temp == 0) {
-                oled_show_char(x + (size2 / 2)*t, y, ' ', size2);
+                oled_show_char(x + (size2 / div)*t, y, ' ', size2);
                 continue;
             } else {
                 enshow = 1;
             }
 
         }
-        oled_show_char(x + (size2 / 2)*t, y, temp + '0', size2);
+        oled_show_char(x + (size2 / div)*t, y, temp + '0', size2);
     }
 }
 
@@ -537,13 +539,14 @@ void oled_show_string(uint8_t x, uint8_t y, uint8_t *chr, uint8_t chr_size)
  ***************************************************************/
 void oled_draw_bmp(unsigned char x0, unsigned char y0, unsigned char x1, unsigned char y1, unsigned char bmp[])
 {
+    unsigned char xy_points = 8;
     unsigned int j = 0;
     unsigned char x, y;
 
-    if (y1 % 8 == 0) {
-        y = y1 / 8;
+    if (y1 % xy_points == 0) {
+        y = y1 / xy_points;
     } else {
-        y = y1 / 8 + 1;
+        y = y1 / xy_points + 1;
     }
 
     for (y = y0; y < y1; y++) {

@@ -773,4 +773,3 @@ unsigned int e53_gs_get_gesture_state(unsigned short *flag)
     }
 }
 
-

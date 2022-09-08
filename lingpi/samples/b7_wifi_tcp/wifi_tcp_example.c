@@ -227,7 +227,7 @@ int wifi_client(void* arg)
             return -1;
         }
 
-        /* 
+        /*
          * 设置调用close(socket)后,仍可继续重用该socket。
          * 调用close(socket)一般不会立即关闭socket，而经历TIME_WAIT的过程。
          */
