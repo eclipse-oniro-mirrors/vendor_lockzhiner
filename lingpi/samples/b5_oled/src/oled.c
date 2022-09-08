@@ -45,8 +45,22 @@
 #else
 #define OLED_I2C_BUS        1
 static I2cBusIo m_i2cBus = {
-    .scl =  {.gpio = GPIO0_PC2, .func = MUX_FUNC5, .type = PULL_NONE, .drv = DRIVE_KEEP, .dir = LZGPIO_DIR_KEEP, .val = LZGPIO_LEVEL_KEEP},
-    .sda =  {.gpio = GPIO0_PC1, .func = MUX_FUNC5, .type = PULL_NONE, .drv = DRIVE_KEEP, .dir = LZGPIO_DIR_KEEP, .val = LZGPIO_LEVEL_KEEP},
+    .scl =  {
+        .gpio = GPIO0_PC2,
+        .func = MUX_FUNC5,
+        .type = PULL_NONE,
+        .drv = DRIVE_KEEP,
+        .dir = LZGPIO_DIR_KEEP,
+        .val = LZGPIO_LEVEL_KEEP
+    },
+    .sda =  {
+        .gpio = GPIO0_PC1,
+        .func = MUX_FUNC5,
+        .type = PULL_NONE,
+        .drv = DRIVE_KEEP,
+        .dir = LZGPIO_DIR_KEEP,
+        .val = LZGPIO_LEVEL_KEEP
+    },
     .id = FUNC_ID_I2C1,
     .mode = FUNC_MODE_M1,
 };
@@ -64,8 +78,8 @@ static unsigned int m_i2c_freq = 400000;
  * 函数名称: oled_pow
  * 说    明: 计算m^n
  * 参    数:
- *      @m：
- *      @n：
+ *      @m：计算m^n的m
+ *      @n：计算m^n中的n
  * 返 回 值: 计算结果值
  ***************************************************************/
 static uint32_t oled_pow(uint8_t m, uint8_t n)
@@ -305,40 +319,40 @@ unsigned int oled_init()
 
     LOS_Msleep(200);
 
-    oled_wr_byte(0xAE, OLED_CMD); //--display off
-    oled_wr_byte(0x00, OLED_CMD); //---set low column address
-    oled_wr_byte(0x10, OLED_CMD); //---set high column address
-    oled_wr_byte(0x40, OLED_CMD); //--set start line address
-    oled_wr_byte(0xB0, OLED_CMD); //--set page address
+    oled_wr_byte(0xAE, OLED_CMD); // --display off
+    oled_wr_byte(0x00, OLED_CMD); // ---set low column address
+    oled_wr_byte(0x10, OLED_CMD); // ---set high column address
+    oled_wr_byte(0x40, OLED_CMD); // --set start line address
+    oled_wr_byte(0xB0, OLED_CMD); // --set page address
     oled_wr_byte(0x81, OLED_CMD); // contract control
-    oled_wr_byte(0xFF, OLED_CMD); //--128
-    oled_wr_byte(0xA1, OLED_CMD); //set segment remap
-    oled_wr_byte(0xA6, OLED_CMD); //--normal / reverse
-    oled_wr_byte(0xA8, OLED_CMD); //--set multiplex ratio(1 to 64)
-    oled_wr_byte(0x3F, OLED_CMD); //--1/32 duty
-    oled_wr_byte(0xC8, OLED_CMD); //Com scan direction
-    oled_wr_byte(0xD3, OLED_CMD); //-set display offset
-    oled_wr_byte(0x00, OLED_CMD); //
+    oled_wr_byte(0xFF, OLED_CMD); // --128
+    oled_wr_byte(0xA1, OLED_CMD); // set segment remap
+    oled_wr_byte(0xA6, OLED_CMD); // --normal / reverse
+    oled_wr_byte(0xA8, OLED_CMD); // --set multiplex ratio(1 to 64)
+    oled_wr_byte(0x3F, OLED_CMD); // --1/32 duty
+    oled_wr_byte(0xC8, OLED_CMD); // Com scan direction
+    oled_wr_byte(0xD3, OLED_CMD); // -set display offset
+    oled_wr_byte(0x00, OLED_CMD);
 
-    oled_wr_byte(0xD5, OLED_CMD); //set osc division
-    oled_wr_byte(0x80, OLED_CMD); //
+    oled_wr_byte(0xD5, OLED_CMD); // set osc division
+    oled_wr_byte(0x80, OLED_CMD);
 
-    oled_wr_byte(0xD8, OLED_CMD); //set area color mode off
-    oled_wr_byte(0x05, OLED_CMD); //
+    oled_wr_byte(0xD8, OLED_CMD); // set area color mode off
+    oled_wr_byte(0x05, OLED_CMD);
 
-    oled_wr_byte(0xD9, OLED_CMD); //Set Pre-Charge Period
-    oled_wr_byte(0xF1, OLED_CMD); //
+    oled_wr_byte(0xD9, OLED_CMD); // Set Pre-Charge Period
+    oled_wr_byte(0xF1, OLED_CMD);
 
-    oled_wr_byte(0xDA, OLED_CMD); //set com pin configuartion
-    oled_wr_byte(0x12, OLED_CMD); //
+    oled_wr_byte(0xDA, OLED_CMD); // set com pin configuartion
+    oled_wr_byte(0x12, OLED_CMD);
 
-    oled_wr_byte(0xDB, OLED_CMD); //set Vcomh
-    oled_wr_byte(0x30, OLED_CMD); //
+    oled_wr_byte(0xDB, OLED_CMD); // set Vcomh
+    oled_wr_byte(0x30, OLED_CMD);
 
-    oled_wr_byte(0x8D, OLED_CMD); //set charge pump enable
-    oled_wr_byte(0x14, OLED_CMD); //
+    oled_wr_byte(0x8D, OLED_CMD); // set charge pump enable
+    oled_wr_byte(0x14, OLED_CMD);
 
-    oled_wr_byte(0xAF, OLED_CMD); //--turn on oled panel
+    oled_wr_byte(0xAF, OLED_CMD); // --turn on oled panel
 
     return 0;
 }
@@ -373,9 +387,9 @@ void oled_clear()
     uint8_t i, n;
 
     for (i = 0; i < BYTE_TO_BITS; i++) {
-        oled_wr_byte(0xb0 + i, OLED_CMD); //设置页地址（0~7）
-        oled_wr_byte(0x00, OLED_CMD); //设置显示位置—列低地址
-        oled_wr_byte(0x10, OLED_CMD); //设置显示位置—列高地址
+        oled_wr_byte(0xb0 + i, OLED_CMD);   // 设置页地址（0~7）
+        oled_wr_byte(0x00, OLED_CMD);       // 设置显示位置—列低地址
+        oled_wr_byte(0x10, OLED_CMD);       // 设置显示位置—列高地址
         for (n = 0; n < OLED_COLUMN_MAX; n++) {
             oled_wr_byte(0, OLED_DATA);
         }
@@ -391,9 +405,9 @@ void oled_clear()
  ***************************************************************/
 void oled_display_on(void)
 {
-    oled_wr_byte(0X8D, OLED_CMD); //SET DCDC命令
-    oled_wr_byte(0X14, OLED_CMD); //DCDC ON
-    oled_wr_byte(0XAF, OLED_CMD); //DISPLAY ON
+    oled_wr_byte(0X8D, OLED_CMD); // SET DCDC命令
+    oled_wr_byte(0X14, OLED_CMD); // DCDC ON
+    oled_wr_byte(0XAF, OLED_CMD); // DISPLAY ON
 }
 
 
@@ -405,9 +419,9 @@ void oled_display_on(void)
  ***************************************************************/
 void oled_display_off(void)
 {
-    oled_wr_byte(0X8D, OLED_CMD); //SET DCDC命令
-    oled_wr_byte(0X10, OLED_CMD); //DCDC OFF
-    oled_wr_byte(0XAE, OLED_CMD); //DISPLAY OFF
+    oled_wr_byte(0X8D, OLED_CMD); // SET DCDC命令
+    oled_wr_byte(0X10, OLED_CMD); // DCDC OFF
+    oled_wr_byte(0XAE, OLED_CMD); // DISPLAY OFF
 }
 
 
@@ -427,7 +441,7 @@ void oled_show_char(uint8_t x, uint8_t y, uint8_t chr, uint8_t chr_size)
 #define F6X8_LINE_DATA          6
     unsigned char c = 0, i = 0;
 
-    c = chr - ' '; //得到偏移后的值
+    c = chr - ' '; // 得到偏移后的值
 
     if (x > (OLED_COLUMN_MAX - 1)) {
         x = 0;

@@ -895,6 +895,7 @@ void lcd_show_string(uint16_t x, uint16_t y, const uint8_t *p, uint16_t fc, uint
  ***************************************************************/
 void lcd_show_int_num(uint16_t x, uint16_t y, uint16_t num, uint8_t len, uint16_t fc, uint16_t bc, uint8_t sizey)
 {
+    uint8_t base = 48; /* ASCII字符'0' */
     uint8_t t, temp;
     uint8_t enshow = 0;
     uint8_t sizex = sizey / 2;
@@ -909,7 +910,7 @@ void lcd_show_int_num(uint16_t x, uint16_t y, uint16_t num, uint8_t len, uint16_
                 enshow = 1;
             }
         }
-        lcd_show_char(x + t * sizex, y, temp + 48, fc, bc, sizey, 0);
+        lcd_show_char(x + t * sizex, y, temp + base, fc, bc, sizey, 0);
     }
 }
 

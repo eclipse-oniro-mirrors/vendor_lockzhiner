@@ -48,7 +48,6 @@
 /* 缓冲区大小 */
 #define BUFF_LEN                256
 
-
 int get_wifi_info(WifiLinkedInfo *info)
 {
     int ret = -1;
@@ -114,8 +113,8 @@ void tcp_server_msg_handle(int fd)
         memset(buf, 0, BUFF_LEN);
         printf("-------------------------------------------------------\n");
         printf("[tcp server] waitting client msg\n");
-        count = recv(client_fd, buf, BUFF_LEN, 0);       //read是阻塞函数，没有数据就一直阻塞
-        // count = lwip_read(client_fd, buf, BUFF_LEN);  //read是阻塞函数，没有数据就一直阻塞
+        count = recv(client_fd, buf, BUFF_LEN, 0);       // read是阻塞函数，没有数据就一直阻塞
+        // count = lwip_read(client_fd, buf, BUFF_LEN);  // read是阻塞函数，没有数据就一直阻塞
         if (count == -1) {
             printf("[tcp server] recieve data fail!\n");
             LOS_Msleep(SERVER_WAIT_MSEC);
@@ -125,8 +124,8 @@ void tcp_server_msg_handle(int fd)
         memset(buf, 0, BUFF_LEN);
         sprintf(buf, "I have recieved %d bytes data! recieved cnt:%d", count, ++cnt);
         printf("[tcp server] send msg:%s\n", buf);
-        send(client_fd, buf, strlen(buf), 0);        //发送信息给client
-        // lwip_write(client_fd, buf, strlen(buf));  //发送信息给client
+        send(client_fd, buf, strlen(buf), 0);           // 发送信息给client
+        // lwip_write(client_fd, buf, strlen(buf));     // 发送信息给client
     }
     lwip_close(client_fd);
     lwip_close(fd);
@@ -137,14 +136,16 @@ int wifi_server(void* arg)
     int server_fd, ret;
 
     while (1) {
-        server_fd = socket(AF_INET, SOCK_STREAM, 0);         //AF_INET:IPV4;SOCK_STREAM:TCP
-        // server_fd = lwip_socket(AF_INET, SOCK_STREAM, 0); //AF_INET:IPV4;SOCK_STREAM:TCP
+        server_fd = socket(AF_INET, SOCK_STREAM, 0);         // AF_INET:IPV4;SOCK_STREAM:TCP
+        // server_fd = lwip_socket(AF_INET, SOCK_STREAM, 0); // AF_INET:IPV4;SOCK_STREAM:TCP
         if (server_fd < 0) {
             printf("create socket fail!\n");
             return -1;
         }
 
-        /*设置调用close(socket)后,仍可继续重用该socket。调用close(socket)一般不会立即关闭socket，而经历TIME_WAIT的过程。*/
+        /* 设置调用close(socket)后,仍可继续重用该socket。
+         * 调用close(socket)一般不会立即关闭socket，而经历TIME_WAIT的过程。
+         */
         int flag = 1;
         ret = setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &flag, sizeof(int));
         if (ret != 0) {
@@ -153,9 +154,11 @@ int wifi_server(void* arg)
 
         struct sockaddr_in serv_addr = {0};
         serv_addr.sin_family = AF_INET;
-        serv_addr.sin_addr.s_addr = htonl(INADDR_ANY); //IP地址，需要进行网络序转换，INADDR_ANY：本地地址
-        // serv_addr.sin_addr.s_addr = inet_addr(OC_SERVER_IP); //IP地址，需要进行网络序转换，INADDR_ANY：本地地址
-        serv_addr.sin_port = htons(SERVER_PORT);       //端口号，需要网络序转换
+        /* IP地址，需要进行网络序转换，INADDR_ANY：本地地址 */
+        serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+        // serv_addr.sin_addr.s_addr = inet_addr(OC_SERVER_IP);
+        /* 端口号，需要网络序转换 */
+        serv_addr.sin_port = htons(SERVER_PORT);
         /* 绑定服务器地址结构 */
         ret = bind(server_fd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
         // ret = lwip_bind(server_fd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
@@ -173,12 +176,11 @@ int wifi_server(void* arg)
             return -1;
         }
         printf("[tcp server] listen:%d<%s:%d>\n", server_fd, inet_ntoa(serv_addr.sin_addr), ntohs(serv_addr.sin_port));
-        tcp_server_msg_handle(server_fd);   //处理接收到的数据
+        /* 处理接收到的数据 */
+        tcp_server_msg_handle(server_fd);
         LOS_Msleep(SERVER_WAIT_MSEC);
     }
 }
-
-
 
 void tcp_client_msg_handle(int fd, struct sockaddr* dst)
 {
@@ -189,20 +191,20 @@ void tcp_client_msg_handle(int fd, struct sockaddr* dst)
         printf("connect server failed...%d\n", ++count);
         lwip_close(fd);
         LOS_Msleep(CLIENT_WAIT_MSEC);
-        fd = socket(AF_INET, SOCK_STREAM, 0); //AF_INET:IPV4;SOCK_STREAM:TCP
+        fd = socket(AF_INET, SOCK_STREAM, 0); // AF_INET:IPV4;SOCK_STREAM:TCP
     }
 
     while (1) {
         char buf[BUFF_LEN];
         sprintf(buf, "TCP TEST cilent send:%d", ++cnt);
-        count = send(fd, buf, strlen(buf), 0);                      //发送数据给server
-        // count = lwip_write(fd, buf, strlen(buf));                   //发送数据给server
+        count = send(fd, buf, strlen(buf), 0);                          // 发送数据给server
+        // count = lwip_write(fd, buf, strlen(buf));                    // 发送数据给server
         printf("------------------------------------------------------------\n");
         printf("[tcp client] send:%s\n", buf);
         printf("[tcp client] client sendto msg to server %d,waitting server respond msg!!!\n", count);
         memset(buf, 0, BUFF_LEN);
-        count = recv(fd, buf, BUFF_LEN, 0);       //接收来自server的信息
-        // count = lwip_read(fd, buf, BUFF_LEN);     //接收来自server的信息
+        count = recv(fd, buf, BUFF_LEN, 0);                             // 接收来自server的信息
+        // count = lwip_read(fd, buf, BUFF_LEN);                        // 接收来自server的信息
         if (count == -1) {
             printf("[tcp client] recieve data fail!\n");
             LOS_Msleep(CLIENT_WAIT_MSEC);
@@ -219,13 +221,16 @@ int wifi_client(void* arg)
     struct sockaddr_in serv_addr;
 
     while (1) {
-        client_fd = socket(AF_INET, SOCK_STREAM, 0);//AF_INET:IPV4;SOCK_STREAM:TCP
+        client_fd = socket(AF_INET, SOCK_STREAM, 0);    // AF_INET:IPV4;SOCK_STREAM:TCP
         if (client_fd < 0) {
             printf("create socket fail!\n");
             return -1;
         }
 
-        /*设置调用close(socket)后,仍可继续重用该socket。调用close(socket)一般不会立即关闭socket，而经历TIME_WAIT的过程。*/
+        /* 
+         * 设置调用close(socket)后,仍可继续重用该socket。
+         * 调用close(socket)一般不会立即关闭socket，而经历TIME_WAIT的过程。
+         */
         int flag = 1;
         ret = setsockopt(client_fd, SOL_SOCKET, SO_REUSEADDR, &flag, sizeof(int));
         if (ret != 0) {
@@ -236,8 +241,8 @@ int wifi_client(void* arg)
         serv_addr.sin_family = AF_INET;
         serv_addr.sin_addr.s_addr = inet_addr(OC_SERVER_IP);
         serv_addr.sin_port = htons(SERVER_PORT);
-        printf("[tcp client] connect:%d<%s:%d>\n", client_fd, inet_ntoa(serv_addr.sin_addr), ntohs(serv_addr.sin_port));
-
+        printf("[tcp client] connect:%d<%s:%d>\n", client_fd, inet_ntoa(serv_addr.sin_addr),
+            ntohs(serv_addr.sin_port));
 
         tcp_client_msg_handle(client_fd, (struct sockaddr*)&serv_addr);
 
@@ -271,7 +276,6 @@ void wifi_tcp_example(void)
     unsigned int ret = LOS_OK;
     unsigned int thread_id;
     TSK_INIT_PARAM_S task = {0};
-    printf("%s start ....\n", __FUNCTION__);
 
     task.pfnTaskEntry = (TSK_ENTRY_FUNC)wifi_process;
     task.uwStackSize = TASK_STACK_SIZE;

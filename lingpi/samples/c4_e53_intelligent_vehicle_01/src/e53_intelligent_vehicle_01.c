@@ -408,5 +408,3 @@ void e53_iv01_buzzer_set(unsigned char is_on, unsigned int duty_ns, unsigned int
     }
 }
 
-
-

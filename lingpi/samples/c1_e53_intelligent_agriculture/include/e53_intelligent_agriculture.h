@@ -19,9 +19,9 @@
 #include "lz_hardware.h"
 
 typedef struct {
-    float luminance;/*亮度*/
-    float humidity;/*湿度*/
-    float temperature;/*温度*/
+    float luminance;    /* 亮度 */
+    float humidity;     /* 湿度 */
+    float temperature;  /* 温度 */
 } e53_ia_data_t;
 
 typedef enum {

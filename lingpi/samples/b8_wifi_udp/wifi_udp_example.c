@@ -33,7 +33,6 @@
 #define SERVER_WAIT_MSEC        2000
 #define CLIENT_WAIT_MSEC        100
 
-
 /* 打印信息 */
 #define LOG_TAG             "udp"
 
@@ -106,20 +105,24 @@ void udp_server_msg_handle(int fd)
     while (1) {
         memset(buf, 0, BUFF_LEN);
         len = sizeof(client_addr);
+    
         printf("[udp server]------------------------------------------------\n");
         printf("[udp server] waitting client message!!!\n");
-        count = recvfrom(fd, buf, BUFF_LEN, 0, (struct sockaddr*)&client_addr, &len);       //recvfrom是阻塞函数，没有数据就一直阻塞
+        
+        /* recvfrom是阻塞函数，没有数据就一直阻塞 */
+        count = recvfrom(fd, buf, BUFF_LEN, 0, (struct sockaddr*)&client_addr, &len);
         if (count == -1) {
             printf("[udp server] recieve data fail!\n");
             LOS_Msleep(SERVER_WAIT_MSEC);
             break;
         }
+        
         printf("[udp server] remote addr:%s port:%u\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
         printf("[udp server] rev:%s\n", buf);
         memset(buf, 0, BUFF_LEN);
         sprintf(buf, "I have recieved %d bytes data! recieved cnt:%d", count, ++cnt);
         printf("[udp server] send:%s\n", buf);
-        sendto(fd, buf, strlen(buf), 0, (struct sockaddr*)&client_addr, len);        //发送信息给client
+        sendto(fd, buf, strlen(buf), 0, (struct sockaddr*)&client_addr, len);   // 发送信息给client
     }
     lwip_close(fd);
 }
@@ -130,14 +133,18 @@ int wifi_udp_server(void* arg)
     struct in_addr addr;
 
     while (1) {
-        server_fd = socket(AF_INET, SOCK_DGRAM, 0); //AF_INET:IPV4;SOCK_DGRAM:UDP
+        server_fd = socket(AF_INET, SOCK_DGRAM, 0); // AF_INET:IPV4;SOCK_DGRAM:UDP
         if (server_fd < 0) {
             printf("create socket fail!\n");
             return -1;
         }
 
-        /*设置调用close(socket)后,仍可继续重用该socket。调用close(socket)一般不会立即关闭socket，而经历TIME_WAIT的过程。*/
+        /*
+         * 设置调用close(socket)后,仍可继续重用该socket。
+         * 调用close(socket)一般不会立即关闭socket，而经历TIME_WAIT的过程。
+         */
         int flag = 1;
+        
         ret = setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &flag, sizeof(int));
         if (ret != 0) {
             printf("[CommInitUdpServer]setsockopt fail, ret[%d]!\n", ret);
@@ -145,9 +152,11 @@ int wifi_udp_server(void* arg)
 
         struct sockaddr_in serv_addr = {0};
         serv_addr.sin_family = AF_INET;
-        serv_addr.sin_addr.s_addr = htonl(INADDR_ANY); //IP地址，需要进行网络序转换，INADDR_ANY：本地地址
+        /* IP地址，需要进行网络序转换，INADDR_ANY：本地地址 */
+        serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
         // serv_addr.sin_addr.s_addr = wifiinfo.ipAddress;
-        serv_addr.sin_port = htons(SERVER_PORT);       //端口号，需要网络序转换
+        /* 端口号，需要网络序转换 */
+        serv_addr.sin_port = htons(SERVER_PORT);
         /* 绑定服务器地址结构 */
         ret = bind(server_fd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
         if (ret < 0) {
@@ -155,10 +164,12 @@ int wifi_udp_server(void* arg)
             lwip_close(server_fd);
             return -1;
         }
+        
         addr.s_addr = (in_addr_t)wifiinfo.ipAddress;
         printf("[udp server] local  addr:%s,port:%u\n", inet_ntoa(addr), ntohs(serv_addr.sin_port));
 
-        udp_server_msg_handle(server_fd);   //处理接收到的数据
+        /* 处理接收到的数据 */
+        udp_server_msg_handle(server_fd);
         LOS_Msleep(SERVER_WAIT_MSEC);
     }
 }
@@ -172,17 +183,24 @@ void udp_client_msg_handle(int fd, struct sockaddr* dst)
     struct sockaddr_in client_addr;
     int cnt = 0, count = 0;
 
-    printf("[udp client] remote addr:%s port:%u\n", inet_ntoa(((struct sockaddr_in*)dst)->sin_addr), ntohs(((struct sockaddr_in*)dst)->sin_port));
+    printf("[udp client] remote addr:%s port:%u\n", inet_ntoa(((struct sockaddr_in*)dst)->sin_addr),
+        ntohs(((struct sockaddr_in*)dst)->sin_port));
     connect(fd, dst, len);
     getsockname(fd, (struct sockaddr*)&client_addr, &len);
     printf("[udp client] local  addr:%s port:%u\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
 
     while (1) {
         char buf[BUFF_LEN];
+        
         printf("[udp client]------------------------------------------------\n");
         printf("[udp client] waitting server message!!!\n");
-        // count = recv(fd, buf, BUFF_LEN, 0);       //接收来自server的信息
-        count = recvfrom(fd, buf, BUFF_LEN, 0, (struct sockaddr*)&client_addr, &len);       //recvfrom是阻塞函数，没有数据就一直阻塞
+
+        /*
+         * recv接收来server的消息
+         * recvfrom是阻塞函数，没有数据就一直阻塞
+         */
+        // count = recv(fd, buf, BUFF_LEN, 0);
+        count = recvfrom(fd, buf, BUFF_LEN, 0, (struct sockaddr*)&client_addr, &len);
         if (count == -1) {
             printf("[udp client] No server message!!!\n");
         } else {
@@ -191,8 +209,9 @@ void udp_client_msg_handle(int fd, struct sockaddr* dst)
         }
         memset(buf, 0, BUFF_LEN);
         sprintf(buf, "UDP TEST cilent send:%d", ++cnt);
-        // count = send(fd, buf, strlen(buf), 0);                      //发送数据给server
-        count = sendto(fd, buf, strlen(buf), 0, (struct sockaddr*)&client_addr, len);        //发送信息给client
+        /* 发送数据给server */
+        // count = send(fd, buf, strlen(buf), 0);
+        count = sendto(fd, buf, strlen(buf), 0, (struct sockaddr*)&client_addr, len);
         printf("[udp client] send:%s\n", buf);
         printf("[udp client] client sendto msg to server %dbyte,waitting server respond msg!!!\n", count);
 
@@ -208,13 +227,16 @@ int wifi_udp_client(void* arg)
     struct sockaddr_in serv_addr, local_addr;
 
     while (1) {
-        client_fd = socket(AF_INET, SOCK_DGRAM, 0);//AF_INET:IPV4;SOCK_DGRAM:UDP
+        client_fd = socket(AF_INET, SOCK_DGRAM, 0); // AF_INET:IPV4;SOCK_DGRAM:UDP
         if (client_fd < 0) {
             printf("create socket fail!\n");
             return -1;
         }
 
-        /*设置调用close(socket)后,仍可继续重用该socket。调用close(socket)一般不会立即关闭socket，而经历TIME_WAIT的过程。*/
+        /*
+         * 设置调用close(socket)后,仍可继续重用该socket。
+         * 调用close(socket)一般不会立即关闭socket，而经历TIME_WAIT的过程。
+         */
         int flag = 1;
         ret = setsockopt(client_fd, SOL_SOCKET, SO_REUSEADDR, &flag, sizeof(int));
         if (ret != 0) {
@@ -227,7 +249,7 @@ int wifi_udp_client(void* arg)
         local_addr.sin_family = AF_INET;
         local_addr.sin_addr.s_addr = wifiinfo.ipAddress;
         local_addr.sin_port = htons(CLIENT_LOCAL_PORT);
-        //绑定本地ip端口号
+        /* 绑定本地ip端口号 */
         ret = bind(client_fd, (struct sockaddr*)&local_addr, sizeof(local_addr));
         if (ret == -1) {
             printf("client bind failed(%d)\n", ret);
@@ -237,8 +259,9 @@ int wifi_udp_client(void* arg)
 
         memset(&serv_addr, 0, sizeof(serv_addr));
         serv_addr.sin_family = AF_INET;
-        serv_addr.sin_addr.s_addr = htonl(INADDR_ANY); //IP地址，需要进行网络序转换，INADDR_ANY：本地地址
-        // serv_addr.sin_addr.s_addr = inet_addr(OC_SERVER_IP);  //指定ip接收
+        /* IP地址，需要进行网络序转换，INADDR_ANY：本地地址 */
+        serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+        // serv_addr.sin_addr.s_addr = inet_addr(OC_SERVER_IP);
         serv_addr.sin_port = htons(SERVER_PORT);
         udp_client_msg_handle(client_fd, (struct sockaddr*)&serv_addr);
 
@@ -286,5 +309,6 @@ void wifi_udp_example(void)
         return;
     }
 }
+
 
 APP_FEATURE_INIT(wifi_udp_example);
