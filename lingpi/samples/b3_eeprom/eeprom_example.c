@@ -94,7 +94,7 @@ void eeprom_example()
     ret = LOS_TaskCreate(&thread_id, &task);
     if (ret != LOS_OK)
     {
-        printf("Falied to create task ret:0x%x\n", ret);
+        printf("Failed to create task ret:0x%x\n", ret);
         return;
     }
 }

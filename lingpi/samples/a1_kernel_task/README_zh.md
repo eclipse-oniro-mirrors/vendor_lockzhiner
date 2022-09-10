@@ -85,7 +85,7 @@ void task_example()
     ret = LOS_TaskCreate(&thread_id1, &task1);
     if (ret != LOS_OK)
     {
-        printf("Falied to create Task_One ret:0x%x\n", ret);
+        printf("Failed to create Task_One ret:0x%x\n", ret);
         return;
     }
 
@@ -96,7 +96,7 @@ void task_example()
     ret = LOS_TaskCreate(&thread_id2, &task2);
     if (ret != LOS_OK)
     {
-        printf("Falied to create Task_Two ret:0x%x\n", ret);
+        printf("Failed to create Task_Two ret:0x%x\n", ret);
         return;
     }
 }

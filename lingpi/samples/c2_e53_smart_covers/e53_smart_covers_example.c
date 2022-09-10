@@ -89,7 +89,7 @@ void e53_sc_example()
     ret = LOS_TaskCreate(&thread_id, &task);
     if (ret != LOS_OK)
     {
-        printf("Falied to create e53_sc_thread ret:0x%x\n", ret);
+        printf("Failed to create e53_sc_thread ret:0x%x\n", ret);
         return;
     }
 }

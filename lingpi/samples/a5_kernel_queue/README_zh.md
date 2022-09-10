@@ -117,7 +117,7 @@ void queue_example()
     ret = LOS_QueueCreate("queue", MSG_QUEUE_LENGTH, &m_msg_queue, 0, BUFFER_LEN);
     if (ret != LOS_OK)
     {
-        printf("Falied to create Message Queue ret:0x%x\n", ret);
+        printf("Failed to create Message Queue ret:0x%x\n", ret);
         return;
     }
 
@@ -128,7 +128,7 @@ void queue_example()
     ret = LOS_TaskCreate(&thread_id1, &task1);
     if (ret != LOS_OK)
     {
-        printf("Falied to create msg_write_thread ret:0x%x\n", ret);
+        printf("Failed to create msg_write_thread ret:0x%x\n", ret);
         return;
     }
 
@@ -139,7 +139,7 @@ void queue_example()
     ret = LOS_TaskCreate(&thread_id2, &task2);
     if (ret != LOS_OK)
     {
-        printf("Falied to create msg_read_thread ret:0x%x\n", ret);
+        printf("Failed to create msg_read_thread ret:0x%x\n", ret);
         return;
     }
 }

@@ -269,7 +269,7 @@ void wifi_udp_example(void)
     ret = LOS_TaskCreate(&thread_id, &task);
     if (ret != LOS_OK)
     {
-        printf("Falied to create wifi_process ret:0x%x\n", ret);
+        printf("Failed to create wifi_process ret:0x%x\n", ret);
         return;
     }
 }

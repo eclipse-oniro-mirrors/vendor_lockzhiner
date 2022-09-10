@@ -125,20 +125,20 @@ void mutex_example()
     ret = LOS_MuxCreate(&m_mutex_id);
     if (ret != LOS_OK)
     {
-        printf("Falied to create Mutex\n");
+        printf("Failed to create Mutex\n");
     }
 
     ret = CreateThread(&thread_id1, write_thread, NULL, "write_thread");
     if (ret != LOS_OK)
     {
-        printf("Falied to create write_thread\n");
+        printf("Failed to create write_thread\n");
         return;
     }
 
     ret = CreateThread(&thread_id2, read_thread, NULL, "read_thread");
     if (ret != LOS_OK)
     {
-        printf("Falied to create read_thread\n");
+        printf("Failed to create read_thread\n");
         return;
     }
 }

@@ -69,7 +69,7 @@ void e53_isl_example()
     ret = LOS_TaskCreate(&thread_id, &task);
     if (ret != LOS_OK)
     {
-        printf("Falied to create e53_isl_thread ret:0x%x\n", ret);
+        printf("Failed to create e53_isl_thread ret:0x%x\n", ret);
         return;
     }
 }
