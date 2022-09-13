@@ -77,7 +77,7 @@ void mutex_example()
     ret = LOS_MuxCreate(&m_mutex_id);
     if (ret != LOS_OK)
     {
-        printf("Falied to create Mutex\n");
+        printf("Failed to create Mutex\n");
     }
 
     task1.pfnTaskEntry = (TSK_ENTRY_FUNC)write_thread;
@@ -87,7 +87,7 @@ void mutex_example()
     ret = LOS_TaskCreate(&thread_id1, &task1);
     if (ret != LOS_OK)
     {
-        printf("Falied to create write_thread ret:0x%x\n", ret);
+        printf("Failed to create write_thread ret:0x%x\n", ret);
         return;
     }
 
@@ -98,7 +98,7 @@ void mutex_example()
     ret = LOS_TaskCreate(&thread_id2, &task2);
     if (ret != LOS_OK)
     {
-        printf("Falied to create read_thread ret:0x%x\n", ret);
+        printf("Failed to create read_thread ret:0x%x\n", ret);
         return;
     }
 }

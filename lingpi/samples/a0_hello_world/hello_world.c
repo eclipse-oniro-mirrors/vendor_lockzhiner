@@ -72,7 +72,7 @@ void helloworld_example()
     ret = LOS_TaskCreate(&thread_id1, &task1);              // 创建任务
     if (ret != LOS_OK)
     {
-        printf("Falied to create task_helloworld ret:0x%x\n", ret);
+        printf("Failed to create task_helloworld ret:0x%x\n", ret);
         return;
     }
 
@@ -83,7 +83,7 @@ void helloworld_example()
     ret = LOS_TaskCreate(&thread_id2, &task2);              // 创建任务
     if (ret != LOS_OK)
     {
-        printf("Falied to create task_openharmony ret:0x%x\n", ret);
+        printf("Failed to create task_openharmony ret:0x%x\n", ret);
         return;
     }
 }
