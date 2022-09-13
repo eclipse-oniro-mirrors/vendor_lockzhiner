@@ -32,6 +32,17 @@ static I2cBusIo m_ia_i2c0m2 = {
     .mode = FUNC_MODE_M2,
 };
 
+/* 读取SHT30的SHT30_ADDR寄存器位移定义 */
+enum enum_offset_sht30_reg {
+    EOFFSET_SHT30_REG_TEMP_H = 0,       /* 温度寄存器数值高位 */
+    EOFFSET_SHT30_REG_TEMP_L,           /* 温度寄存器数值低位 */
+    EOFFSET_SHT30_REG_TEMP_CRC,         /* 温度寄存器数值校验位 */
+    EOFFSET_SHT30_REG_HUMIDITY_H,       /* 湿度寄存器数值高位 */
+    EOFFSET_SHT30_REG_HUMIDITY_L,       /* 湿度寄存器数值低位 */
+    EOFFSET_SHT30_REG_HUMIDITY_CRC,     /* 湿度寄存器数值校验位 */
+    EOFFSET_SHT30_REG_MAX
+};
+
 /***************************************************************
 * 函数名称: init_sht30
 * 说    明: 初始化SHT30，设置测量周期
@@ -222,7 +233,7 @@ void e53_ia_read_data(e53_ia_data_t *pData)
     uint8_t data[3];
     uint16_t tmp;
     /* byte 0,1 is temperature byte 4,5 is humidity */
-    uint8_t SHT30_Data_Buffer[6];
+    uint8_t SHT30_Data_Buffer[EOFFSET_SHT30_REG_MAX];
     memset(SHT30_Data_Buffer, 0, 6);
     uint8_t send_data[2] = {0xE0, 0x00};
     uint32_t send_len = 2;
@@ -232,9 +243,9 @@ void e53_ia_read_data(e53_ia_data_t *pData)
     // printf("SHT30 data:0x%x%x%x)", SHT30_Data_Buffer[0], SHT30_Data_Buffer[1], SHT30_Data_Buffer[2]);
 
     /* check temperature */
-    data[0] = SHT30_Data_Buffer[0];
-    data[1] = SHT30_Data_Buffer[1];
-    data[2] = SHT30_Data_Buffer[2];
+    data[0] = SHT30_Data_Buffer[EOFFSET_SHT30_REG_TEMP_H];
+    data[1] = SHT30_Data_Buffer[EOFFSET_SHT30_REG_TEMP_L];
+    data[2] = SHT30_Data_Buffer[EOFFSET_SHT30_REG_TEMP_CRC];
     rc = sht30_check_crc(data, 2, data[2]);
     if (!rc) {
         tmp = ((uint16_t)data[0] << high_byte_bit) | data[1];
@@ -242,9 +253,9 @@ void e53_ia_read_data(e53_ia_data_t *pData)
     }
 
     /* check humidity */
-    data[0] = SHT30_Data_Buffer[3];
-    data[1] = SHT30_Data_Buffer[4];
-    data[2] = SHT30_Data_Buffer[5];
+    data[0] = SHT30_Data_Buffer[EOFFSET_SHT30_REG_HUMIDITY_H];
+    data[1] = SHT30_Data_Buffer[EOFFSET_SHT30_REG_HUMIDITY_L];
+    data[2] = SHT30_Data_Buffer[EOFFSET_SHT30_REG_HUMIDITY_CRC];
     rc = sht30_check_crc(data, 2, data[2]);
     if (!rc) {
         tmp = ((uint16_t)data[0] << high_byte_bit) | data[1];

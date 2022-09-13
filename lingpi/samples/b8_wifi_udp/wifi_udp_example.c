@@ -154,7 +154,6 @@ int wifi_udp_server(void* arg)
         serv_addr.sin_family = AF_INET;
         /* IP地址，需要进行网络序转换，INADDR_ANY：本地地址 */
         serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-        // serv_addr.sin_addr.s_addr = wifiinfo.ipAddress;
         /* 端口号，需要网络序转换 */
         serv_addr.sin_port = htons(SERVER_PORT);
         /* 绑定服务器地址结构 */
@@ -199,7 +198,6 @@ void udp_client_msg_handle(int fd, struct sockaddr* dst)
          * recv接收来server的消息
          * recvfrom是阻塞函数，没有数据就一直阻塞
          */
-        // count = recv(fd, buf, BUFF_LEN, 0);
         count = recvfrom(fd, buf, BUFF_LEN, 0, (struct sockaddr*)&client_addr, &len);
         if (count == -1) {
             printf("[udp client] No server message!!!\n");
@@ -210,7 +208,6 @@ void udp_client_msg_handle(int fd, struct sockaddr* dst)
         memset(buf, 0, BUFF_LEN);
         sprintf(buf, "UDP TEST cilent send:%d", ++cnt);
         /* 发送数据给server */
-        // count = send(fd, buf, strlen(buf), 0);
         count = sendto(fd, buf, strlen(buf), 0, (struct sockaddr*)&client_addr, len);
         printf("[udp client] send:%s\n", buf);
         printf("[udp client] client sendto msg to server %dbyte,waitting server respond msg!!!\n", count);
@@ -261,7 +258,6 @@ int wifi_udp_client(void* arg)
         serv_addr.sin_family = AF_INET;
         /* IP地址，需要进行网络序转换，INADDR_ANY：本地地址 */
         serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-        // serv_addr.sin_addr.s_addr = inet_addr(OC_SERVER_IP);
         serv_addr.sin_port = htons(SERVER_PORT);
         udp_client_msg_handle(client_fd, (struct sockaddr*)&serv_addr);
 

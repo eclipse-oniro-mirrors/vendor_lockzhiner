@@ -440,6 +440,7 @@ void oled_show_char(uint8_t x, uint8_t y, uint8_t chr, uint8_t chr_size)
 #define F8X16_LINE_DATA         8
 #define F6X8_LINE_DATA          6
 #define BYTE_BITS               8
+#define CHAR_LEN                16
     unsigned char c = 0, i = 0;
 
     c = chr - ' '; // 得到偏移后的值
@@ -456,7 +457,7 @@ void oled_show_char(uint8_t x, uint8_t y, uint8_t chr, uint8_t chr_size)
         }
         oled_set_pos(x, y + 1);
         for (i = 0; i < F8X16_LINE_DATA; i++) {
-            oled_wr_byte(F8X16[c * 16 + i + BYTE_BITS], OLED_DATA);
+            oled_wr_byte(F8X16[c * CHAR_LEN + i + BYTE_BITS], OLED_DATA);
         }
     } else {
         oled_set_pos(x, y);
