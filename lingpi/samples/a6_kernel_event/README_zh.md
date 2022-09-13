@@ -130,7 +130,7 @@ void event_example()
     ret = LOS_EventInit(&m_event);
     if (ret != LOS_OK)
     {
-        printf("Falied to create EventFlags\n");
+        printf("Failed to create EventFlags\n");
         return;
     }
 
@@ -141,7 +141,7 @@ void event_example()
     ret = LOS_TaskCreate(&thread_id1, &task1);
     if (ret != LOS_OK)
     {
-        printf("Falied to create event_master_thread ret:0x%x\n", ret);
+        printf("Failed to create event_master_thread ret:0x%x\n", ret);
         return;
     }
 
@@ -152,7 +152,7 @@ void event_example()
     ret = LOS_TaskCreate(&thread_id2, &task2);
     if (ret != LOS_OK)
     {
-        printf("Falied to create event_slave_thread ret:0x%x\n", ret);
+        printf("Failed to create event_slave_thread ret:0x%x\n", ret);
         return;
     }
 }

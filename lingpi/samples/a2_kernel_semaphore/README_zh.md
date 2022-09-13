@@ -137,7 +137,7 @@ void semaphore_example()
     ret = LOS_SemCreate(MAX_COUNT, &m_sem);
     if (ret != LOS_OK)
     {
-        printf("Falied to create Semaphore\n");
+        printf("Failed to create Semaphore\n");
         return;
     }
 
@@ -148,7 +148,7 @@ void semaphore_example()
     ret = LOS_TaskCreate(&thread_crtl, &task1);
     if (ret != LOS_OK)
     {
-        printf("Falied to create control_thread ret:0x%x\n", ret);
+        printf("Failed to create control_thread ret:0x%x\n", ret);
         return;
     }
 
@@ -159,7 +159,7 @@ void semaphore_example()
     ret = LOS_TaskCreate(&thread_id1, &task2);
     if (ret != LOS_OK)
     {
-        printf("Falied to create sem_one_thread ret:0x%x\n", ret);
+        printf("Failed to create sem_one_thread ret:0x%x\n", ret);
         return;
     }
 
@@ -170,7 +170,7 @@ void semaphore_example()
     ret = LOS_TaskCreate(&thread_id2, &task3);
     if (ret != LOS_OK)
     {
-        printf("Falied to create sem_two_thread ret:0x%x\n", ret);
+        printf("Failed to create sem_two_thread ret:0x%x\n", ret);
         return;
     }
 }
