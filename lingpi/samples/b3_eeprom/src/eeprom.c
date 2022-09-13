@@ -30,19 +30,22 @@ static I2cBusIo m_i2cBus = {
 
 static unsigned int m_i2c_freq = 100000;
 
-////////////////////////////////////////////////////////
+/* 等待时间 */
+#define EEPROG_DELAY_USEC       1
+#define K24C02_DELAY_USEC       1000
 
 /***************************************************************
 * 函数名称: eeprog_delay_usec
 * 说    明: 忙等待usec
-* 参    数: 
+* 参    数:
 *       @usec：等待时间，单位：usec
 * 返 回 值: 无
 ***************************************************************/
 static inline void eeprog_delay_usec(unsigned int usec)
 {
-    for (unsigned int i = 0; i < usec; i++)
-        HAL_DelayUs(1);
+    for (unsigned int i = 0; i < usec; i++) {
+        HAL_DelayUs(EEPROG_DELAY_USEC);
+    }
 }
 
 /***************************************************************
@@ -98,7 +101,7 @@ unsigned int eeprom_get_blocksize()
 /***************************************************************
 * 函数名称: eeprom_readbyte
 * 说    明: EEPROM读一个字节
-* 参    数: 
+* 参    数:
 *           @addr: EEPROM存储地址
 *           @data: 存放EERPOM的数据指针
 * 返 回 值: 返回读取字节的长度，反之为错误
@@ -127,11 +130,11 @@ unsigned int eeprom_readbyte(unsigned int addr, unsigned char *data)
     msgs[1].buf = data;
     msgs[1].len = 1;
 
-   ret = LzI2cTransfer(EEPROM_I2C_BUS, msgs, 2);
-   if (ret != LZ_HARDWARE_SUCCESS) {
-       printf("%s, %s, %d: LzI2cTransfer failed(%d)!\n", __FILE__, __func__, __LINE__, ret);
-       return 0;
-   }
+    ret = LzI2cTransfer(EEPROM_I2C_BUS, msgs, 2);
+    if (ret != LZ_HARDWARE_SUCCESS) {
+        printf("%s, %s, %d: LzI2cTransfer failed(%d)!\n", __FILE__, __func__, __LINE__, ret);
+        return 0;
+    }
 
     return 1;
 }
@@ -139,7 +142,7 @@ unsigned int eeprom_readbyte(unsigned int addr, unsigned char *data)
 /***************************************************************
 * 函数名称: eeprom_writebyte
 * 说    明: EEPROM写一个字节
-* 参    数: 
+* 参    数:
 *           @addr: EEPROM存储地址
 *           @data: 写EERPOM的数据
 * 返 回 值: 返回写入数据的长度，反之为错误
@@ -166,8 +169,8 @@ unsigned int eeprom_writebyte(unsigned int addr, unsigned char data)
 
     ret = LzI2cTransfer(EEPROM_I2C_BUS, msgs, 1);
     if (ret != LZ_HARDWARE_SUCCESS) {
-       printf("%s, %s, %d: LzI2cTransfer failed(%d)!\n", __FILE__, __func__, __LINE__, ret);
-       return 0;
+        printf("%s, %s, %d: LzI2cTransfer failed(%d)!\n", __FILE__, __func__, __LINE__, ret);
+        return 0;
     }
 
     /* K24C02芯片需要时间完成写操作，在此之前不响应其他操作*/
@@ -179,7 +182,7 @@ unsigned int eeprom_writebyte(unsigned int addr, unsigned char data)
 /***************************************************************
 * 函数名称: eeprom_writepage
 * 说    明: EEPROM写1个页字节
-* 参    数: 
+* 参    数:
 *           @addr: EEPROM存储地址，必须是页地址
 *           @data: 写EERPOM的数据指针
 *           @data_len: 写EEPROM数据的长度，必须是小于1个页大小
@@ -190,7 +193,7 @@ unsigned int eeprom_writepage(unsigned int addr, unsigned char *data, unsigned i
     unsigned int ret = 0;
     LzI2cMsg msgs[1];
     unsigned char buffer[EEPROM_PAGE + 1];
-    
+
     /* K24C02的存储地址是0~255 */
     if (addr >= EEPROM_ADDRESS_MAX) {
         printf("%s, %s, %d: addr(0x%x) >= EEPROM_ADDRESS_MAX(0x%x)\n", __FILE__, __func__, __LINE__, addr, EEPROM_ADDRESS_MAX);
@@ -214,7 +217,7 @@ unsigned int eeprom_writepage(unsigned int addr, unsigned char *data, unsigned i
 
     buffer[0] = addr;
     memcpy(&buffer[1], data, data_len);
-    
+
     msgs[0].addr = EEPROM_I2C_ADDRESS;
     msgs[0].flags = 0;
     msgs[0].buf = &buffer[0];
@@ -222,12 +225,12 @@ unsigned int eeprom_writepage(unsigned int addr, unsigned char *data, unsigned i
 
     ret = LzI2cTransfer(EEPROM_I2C_BUS, msgs, 1);
     if (ret != LZ_HARDWARE_SUCCESS) {
-       printf("%s, %s, %d: LzI2cTransfer failed(%d)!\n", __FILE__, __func__, __LINE__, ret);
-       return 0;
+        printf("%s, %s, %d: LzI2cTransfer failed(%d)!\n", __FILE__, __func__, __LINE__, ret);
+        return 0;
     }
 
     /* K24C02芯片需要时间完成写操作，在此之前不响应其他操作*/
-    eeprog_delay_usec(1000);
+    eeprog_delay_usec(K24C02_DELAY_USEC);
 
     return data_len;
 }
@@ -235,13 +238,13 @@ unsigned int eeprom_writepage(unsigned int addr, unsigned char *data, unsigned i
 /***************************************************************
 * 函数名称: eeprom_read
 * 说    明: EEPROM读多个字节
-* 参    数: 
+* 参    数:
 *           @addr:      EERPOM存储地址
 *           @data:      存放EERPOM的数据指针
 *           @data_len:  读取EERPOM数据的长度
 * 返 回 值: 返回读取字节的长度，反之为错误
 ***************************************************************/
-unsigned int eeprom_read(unsigned int addr, unsigned char *data, unsigned int data_len) 
+unsigned int eeprom_read(unsigned int addr, unsigned char *data, unsigned int data_len)
 {
     unsigned int ret = 0;
 
@@ -253,7 +256,7 @@ unsigned int eeprom_read(unsigned int addr, unsigned char *data, unsigned int da
     if ((addr + data_len) > EEPROM_ADDRESS_MAX) {
         printf("%s, %s, %d: addr + len(0x%x) > EEPROM_ADDRESS_MAX(0x%x)\n", __FILE__, __func__, __LINE__, addr + data_len, EEPROM_ADDRESS_MAX);
         return 0;
-    }   
+    }
 
     ret = eeprom_readbyte(addr, data);
     if (ret != 1) {
@@ -275,7 +278,7 @@ unsigned int eeprom_read(unsigned int addr, unsigned char *data, unsigned int da
 /***************************************************************
 * 函数名称: eeprom_write
 * 说    明: EEPROM写多个字节
-* 参    数: 
+* 参    数:
 *           @addr: EEPROM存储地址
 *           @data: 写EERPOM的数据指针
 *           @data_len: 写EEPROM数据的长度
@@ -315,7 +318,7 @@ unsigned int eeprom_write(unsigned int addr, unsigned char *data, unsigned int d
     }
 
     offset_current = 0;
-    
+
     /* 处理前面非页地址的数据，如果是页地址则不执行 */
     for (unsigned int i = addr; i < (page_start * EEPROM_PAGE); i++) {
         ret = eeprom_writebyte(i, data[offset_current]);
@@ -332,7 +335,7 @@ unsigned int eeprom_write(unsigned int addr, unsigned char *data, unsigned int d
         if ((page == (page_end - 1)) && (is_data_back)) {
             len = (addr + data_len) % EEPROM_PAGE;
         }
-    
+
         ret = eeprom_writepage(page * EEPROM_PAGE, &data[offset_current], len);
         if (ret != len) {
             printf("%s, %s, %d: EepromWritePage failed(%d)\n", __FILE__, __func__, __LINE__, ret);

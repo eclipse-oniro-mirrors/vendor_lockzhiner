@@ -28,13 +28,13 @@
 typedef struct {
     char *body;
     uint8_t bodyLength;
-}RtdTextUserPayload;
+} RtdTextUserPayload;
 
 typedef struct {
     uint8_t     status;
     uint8_t     language[2];
     RtdTextUserPayload rtdPayload;
-}RtdTextTypeStr;
+} RtdTextTypeStr;
 
 uint8_t addRtdText(RtdTextTypeStr *typeStr);
 void prepareText(NDEFDataStr *data, RecordPosEnu position, uint8_t *text);

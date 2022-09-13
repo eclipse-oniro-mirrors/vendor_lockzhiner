@@ -16,26 +16,56 @@
 #include "ohos_init.h"
 #include "lz_hardware.h"
 
+/* 任务的堆栈大小 */
+#define TASK_STACK_SIZE         20480
+/* 任务的优先级 */
+#define TASK_PRIO               24
+
+/* 循环等待时间 */
+#define WAIT_MSEC               1000
+
+/* 字符串最大长度 */
+#define STRING_MAXSIZE          32
+
+/* OLED显示字符串1的位置、长度和宽度 */
+#define OLED_STRING1_X          6
+#define OLED_STRING1_Y          0
+#define OLED_STRING1_TEXT       "0.96' OLED TEST"
+#define OLED_STRING1_SIZE       16
+/* OLED显示字符串2的位置、长度和宽度 */
+#define OLED_STRING2_X          0
+#define OLED_STRING2_Y          3
+#define OLED_STRING2_TEXT       "ASCII:"
+#define OLED_STRING2_SIZE       16
+/* OLED显示字符串3的位置、长度和宽度 */
+#define OLED_STRING3_X          64
+#define OLED_STRING3_Y          3
+#define OLED_STRING3_TEXT       "CODE:"
+#define OLED_STRING3_SIZE       16
+/* OLED显示字符串4的位置、长度和宽度 */
+#define OLED_STRING4_X          40
+#define OLED_STRING4_Y          6
+#define OLED_STRING4_SIZE       16
+
 void oled_process(void *arg)
 {
-    unsigned char buffer[32];
+    unsigned char buffer[STRING_MAXSIZE];
     int i = 0;
-    
+
     oled_init();
     oled_clear();
-    
-    while (1)
-    {
+
+    while (1) {
         printf("========= Oled Process =============\n");
-        oled_show_string(6, 0, "0.96' OLED TEST", 16);
-        oled_show_string(0, 3, "ASCII:", 16);
-        oled_show_string(64, 3, "CODE:", 16);
-        
+        oled_show_string(OLED_STRING1_X, OLED_STRING1_Y, OLED_STRING1_TEXT, OLED_STRING1_SIZE);
+        oled_show_string(OLED_STRING2_X, OLED_STRING2_Y, OLED_STRING2_TEXT, OLED_STRING2_SIZE);
+        oled_show_string(OLED_STRING3_X, OLED_STRING3_Y, OLED_STRING3_TEXT, OLED_STRING3_SIZE);
+
         snprintf(buffer, sizeof(buffer), "%d Sec!", i++);
-        oled_show_string(40, 6, buffer, 16);
-        
+        oled_show_string(OLED_STRING4_X, OLED_STRING4_Y, buffer, OLED_STRING4_SIZE);
+
         printf("\n\n");
-        LOS_Msleep(1000);
+        LOS_Msleep(WAIT_MSEC);
     }
 }
 
@@ -53,13 +83,12 @@ void oled_example()
     unsigned int ret = LOS_OK;
 
     task.pfnTaskEntry = (TSK_ENTRY_FUNC)oled_process;
-    task.uwStackSize = 2048;
+    task.uwStackSize = TASK_STACK_SIZE;
     task.pcName = "oled process";
-    task.usTaskPrio = 24;
+    task.usTaskPrio = TASK_PRIO;
     ret = LOS_TaskCreate(&thread_id, &task);
-    if (ret != LOS_OK)
-    {
-        printf("Failed to create task ret:0x%x\n", ret);
+    if (ret != LOS_OK) {
+        printf("Falied to create task ret:0x%x\n", ret);
         return;
     }
 }

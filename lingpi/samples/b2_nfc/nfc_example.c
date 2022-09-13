@@ -17,6 +17,14 @@
 #include "los_task.h"
 #include "ohos_init.h"
 
+/* 任务的堆栈大小 */
+#define TASK_STACK_SIZE     10240
+/* 任务的优先级 */
+#define TASK_PRIO           24
+
+/* 循环等待时间 */
+#define WAIT_MSEC           1000
+
 #define TEXT        "XiaoZhiPai!"
 #define WEB         "fzlzdz.com"
 
@@ -31,27 +39,23 @@ void nfc_process(void)
     unsigned int ret = 0;
 
     /* 初始化NFC设备 */
-    printf("%s, %d: \n", __FILE__, __LINE__);
     nfc_init();
 
-    printf("%s, %d: \n", __FILE__, __LINE__);
     ret = nfc_store_text(NDEFFirstPos, (uint8_t *)TEXT);
     if (ret != 1) {
         printf("NFC Write Text Failed: %d\n", ret);
     }
 
-    printf("%s, %d: \n", __FILE__, __LINE__);
     ret = nfc_store_uri_http(NDEFLastPos, (uint8_t *)WEB);
     if (ret != 1) {
         printf("NFC Write Url Failed: %d\n", ret);
     }
-    
-    printf("%s, %d: \n", __FILE__, __LINE__);
+
     while (1) {
         printf("==============NFC Example==============\r\n");
         printf("Please use the mobile phone with NFC function close to the development board!\r\n");
         printf("\n\n");
-        LOS_Msleep(1000);
+        LOS_Msleep(WAIT_MSEC);
     }
 }
 
@@ -69,13 +73,12 @@ void nfc_example()
     unsigned int ret = LOS_OK;
 
     task.pfnTaskEntry = (TSK_ENTRY_FUNC)nfc_process;
-    task.uwStackSize = 10240;
+    task.uwStackSize = TASK_STACK_SIZE;
     task.pcName = "nfc process";
-    task.usTaskPrio = 24;
+    task.usTaskPrio = TASK_PRIO;
     ret = LOS_TaskCreate(&thread_id, &task);
-    if (ret != LOS_OK)
-    {
-        printf("Failed to create task ret:0x%x\n", ret);
+    if (ret != LOS_OK) {
+        printf("Falied to create task ret:0x%x\n", ret);
         return;
     }
 }

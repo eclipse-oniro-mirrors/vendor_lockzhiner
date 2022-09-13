@@ -75,21 +75,15 @@ uint8_t composeRtdUri(const NDEFDataStr *ndef, NDEFRecordStr *ndefRecord, uint8_
 
 void composeNDEFMBME(bool isFirstRecord, bool isLastRecord, NDEFRecordStr *ndefRecord)
 {
-    if (isFirstRecord)
-    {
+    if (isFirstRecord) {
         ndefRecord->header |= BIT_MB;
-    }
-    else
-    {
+    } else {
         ndefRecord->header &= ~MASK_MB;
     }
     
-    if (isLastRecord)
-    {
+    if (isLastRecord) {
         ndefRecord->header |= BIT_ME;
-    }
-    else
-    {
+    } else {
         ndefRecord->header &= ~MASK_ME;
     }
 }

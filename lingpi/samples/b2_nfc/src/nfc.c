@@ -20,9 +20,10 @@
 #include "rtdUri.h"
 #include "ndef.h"
 
-
 /* 记录是否已经初始化 */
-static unsigned char m_nfc_is_init = 0;
+#define NFC_NOT_INIT        0
+#define NFC_IS_INIT         1
+static unsigned char m_nfc_is_init = NFC_NOT_INIT;
 
 //////////////////////////////////////////////////////////////////////
 
@@ -38,8 +39,7 @@ bool nfc_store_uri_http(RecordPosEnu position, uint8_t *http)
 {
     NDEFDataStr data;
     
-    if (m_nfc_is_init == 0)
-    {
+    if (m_nfc_is_init == NFC_NOT_INIT) {
         printf("%s, %s, %d: NFC is not init!\n", __FILE__, __func__, __LINE__);
         return 0;
     }
@@ -61,8 +61,7 @@ bool nfc_store_text(RecordPosEnu position, uint8_t *text)
 {
     NDEFDataStr data;
     
-    if (m_nfc_is_init == 0)
-    {
+    if (m_nfc_is_init == NFC_NOT_INIT) {
         printf("%s, %s, %d: NFC is not init!\n", __FILE__, __func__, __LINE__);
         return 0;
     }
@@ -81,15 +80,13 @@ unsigned int nfc_init(void)
 {
     unsigned int ret = 0;
     
-    if (m_nfc_is_init == 1)
-    {
+    if (m_nfc_is_init == NFC_IS_INIT) {
         printf("%s, %s, %d: Nfc readly init!\n", __FILE__, __func__, __LINE__);
         return __LINE__;
     }
     
     ret = NT3HI2cInit();
-    if (ret != 0)
-    {
+    if (ret != 0) {
         printf("%s, %s, %d: NT3HI2cInit failed!\n", __FILE__, __func__, __LINE__);
         return __LINE__;
     }
@@ -107,7 +104,7 @@ unsigned int nfc_init(void)
  ***************************************************************/
 unsigned int nfc_deinit(void)
 {
-    m_nfc_is_init = 0;
+    m_nfc_is_init = NFC_NOT_INIT;
     NT3HI2cDeInit();
     return 0;
 }

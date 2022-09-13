@@ -26,10 +26,23 @@
 static unsigned int NFC_I2C_PORT = 2;
 
 /* i2c配置 */
-static I2cBusIo m_i2c2m0 =
-{
-    .scl =  {.gpio = GPIO0_PD6, .func = MUX_FUNC1, .type = PULL_NONE, .drv = DRIVE_KEEP, .dir = LZGPIO_DIR_KEEP, .val = LZGPIO_LEVEL_KEEP},
-    .sda =  {.gpio = GPIO0_PD5, .func = MUX_FUNC1, .type = PULL_NONE, .drv = DRIVE_KEEP, .dir = LZGPIO_DIR_KEEP, .val = LZGPIO_LEVEL_KEEP},
+static I2cBusIo m_i2c2m0 = {
+    .scl =  {
+        .gpio = GPIO0_PD6,
+        .func = MUX_FUNC1,
+        .type = PULL_NONE,
+        .drv = DRIVE_KEEP,
+        .dir = LZGPIO_DIR_KEEP,
+        .val = LZGPIO_LEVEL_KEEP
+    },
+    .sda =  {
+        .gpio = GPIO0_PD5,
+        .func = MUX_FUNC1,
+        .type = PULL_NONE,
+        .drv = DRIVE_KEEP,
+        .dir = LZGPIO_DIR_KEEP,
+        .val = LZGPIO_LEVEL_KEEP
+    },
     .id = FUNC_ID_I2C2,
     .mode = FUNC_MODE_M0,
 };
@@ -51,8 +64,7 @@ static bool writeTimeout(  uint8_t *data, uint8_t dataSend)
     uint32_t status = 0;
     
     status = LzI2cWrite(NFC_I2C_PORT, NT3H1X_SLAVE_ADDRESS, data, dataSend);
-    if (status != LZ_HARDWARE_SUCCESS)
-    {
+    if (status != LZ_HARDWARE_SUCCESS) {
         printf("===== Error: I2C write status1 = 0x%x! =====\r\n", status);
         return 0;
     }
@@ -67,15 +79,13 @@ static bool readTimeout(uint8_t address, uint8_t *block_data)
     uint8_t  buffer[1] = {address};
     
     status = LzI2cWrite(NFC_I2C_PORT, NT3H1X_SLAVE_ADDRESS, &buffer[0], 1);
-    if (status != LZ_HARDWARE_SUCCESS)
-    {
+    if (status != LZ_HARDWARE_SUCCESS) {
         printf("===== Error: I2C write status1 = 0x%x! =====\r\n", status);
         return 0;
     }
     
     status = LzI2cRead(NFC_I2C_PORT, NT3H1X_SLAVE_ADDRESS, block_data, NFC_PAGE_SIZE);
-    if (status != 0)
-    {
+    if (status != 0) {
         printf("===== Error: I2C write status = 0x%x! =====\r\n", status);
         return 0;
     }
@@ -92,15 +102,12 @@ unsigned int NT3HI2cInit()
     ulValue &= ~((0x7 << 8) | (0x7 << 4));
     ulValue |= ((0x1 << 8) | (0x1 << 4));
     pGrf[7] = ulValue | (0xFFFF << 16);
-    printf("%s, %d: GRF_GPIO0D_IOMUX_H(0x%x) = 0x%x\n", __func__, __LINE__, &pGrf[7], pGrf[7]);
     
-    if (I2cIoInit(m_i2c2m0) != LZ_HARDWARE_SUCCESS)
-    {
+    if (I2cIoInit(m_i2c2m0) != LZ_HARDWARE_SUCCESS) {
         printf("%s, %s, %d: I2cIoInit failed!\n", __FILE__, __func__, __LINE__);
         return __LINE__;
     }
-    if (LzI2cInit(NFC_I2C_PORT, m_i2c2_freq) != LZ_HARDWARE_SUCCESS)
-    {
+    if (LzI2cInit(NFC_I2C_PORT, m_i2c2_freq) != LZ_HARDWARE_SUCCESS) {
         printf("%s, %s, %d: LzI2cInit failed!\n", __FILE__, __func__, __LINE__);
         return __LINE__;
     }
@@ -115,23 +122,24 @@ unsigned int NT3HI2cDeInit()
 
 bool NT3HReadHeaderNfc(uint8_t *endRecordsPtr, uint8_t *ndefHeader)
 {
+#define STRING_OFFSET_NDEF_START        0
+#define STRING_OFFSET_NEND_RECORD       1
+#define STRING_OFFSET_NTAG_ERASED       2
+
     *endRecordsPtr = 0;
     bool ret = NT3HReadUserData(0);
     
     // read the first page to see where is the end of the Records.
-    if (ret == true)
-    {
+    if (ret == true) {
         // if the first byte is equals to NDEF_START_BYTE there are some records
         // store theend of that
-        if ((NDEF_START_BYTE == nfcPageBuffer[0]) && (NTAG_ERASED != nfcPageBuffer[2]))
-        {
-            *endRecordsPtr = nfcPageBuffer[1];
-            *ndefHeader    = nfcPageBuffer[2];
+        if ((NDEF_START_BYTE == nfcPageBuffer[STRING_OFFSET_NDEF_START])
+            && (NTAG_ERASED != nfcPageBuffer[STRING_OFFSET_NTAG_ERASED])) {
+            *endRecordsPtr = nfcPageBuffer[STRING_OFFSET_NEND_RECORD];
+            *ndefHeader    = nfcPageBuffer[STRING_OFFSET_NTAG_ERASED];
         }
         return true;
-    }
-    else
-    {
+    } else {
         errNo = NT3HERROR_READ_HEADER;
     }
     
@@ -144,19 +152,15 @@ bool NT3HWriteHeaderNfc(uint8_t endRecordsPtr, uint8_t ndefHeader)
 
     // read the first page to see where is the end of the Records.
     bool ret = NT3HReadUserData(0);
-    if (ret == true)
-    {
+    if (ret == true) {
     
         nfcPageBuffer[1] = endRecordsPtr;
         nfcPageBuffer[2] = ndefHeader;
         ret = NT3HWriteUserData(0, nfcPageBuffer);
-        if (ret == false)
-        {
+        if (ret == false) {
             errNo = NT3HERROR_WRITE_HEADER;
         }
-    }
-    else
-    {
+    } else {
         errNo = NT3HERROR_READ_HEADER;
     }
     
@@ -171,8 +175,7 @@ bool NT3HEraseAllTag(void)
     uint8_t erase[NFC_PAGE_SIZE + 1] = {USER_START_REG, 0x03, 0x03, 0xD0, 0x00, 0x00, 0xFE};
     ret = writeTimeout(erase, sizeof(erase));
     
-    if (ret == false)
-    {
+    if (ret == false) {
         errNo = NT3HERROR_ERASE_USER_MEMORY_PAGE;
     }
     return ret;
@@ -198,16 +201,14 @@ bool NT3HReadUserData(uint8_t page)
 {
     uint8_t reg = USER_START_REG + page;
     // if the requested page is out of the register exit with error
-    if (reg > USER_END_REG)
-    {
+    if (reg > USER_END_REG) {
         errNo = NT3HERROR_INVALID_USER_MEMORY_PAGE;
         return false;
     }
     
     bool ret = readTimeout(reg, nfcPageBuffer);
     
-    if (ret == false)
-    {
+    if (ret == false) {
         errNo = NT3HERROR_READ_USER_MEMORY_PAGE;
     }
     
@@ -222,8 +223,7 @@ bool NT3HWriteUserData(uint8_t page, const uint8_t* data)
     uint8_t reg = USER_START_REG + page;
     
     // if the requested page is out of the register exit with error
-    if (reg > USER_END_REG)
-    {
+    if (reg > USER_END_REG) {
         errNo = NT3HERROR_INVALID_USER_MEMORY_PAGE;
         ret = false;
         goto end;
@@ -232,8 +232,7 @@ bool NT3HWriteUserData(uint8_t page, const uint8_t* data)
     dataSend[0] = reg; // store the register
     memcpy(&dataSend[1], data, NFC_PAGE_SIZE);
     ret = writeTimeout(dataSend, sizeof(dataSend));
-    if (ret == false)
-    {
+    if (ret == false) {
         errNo = NT3HERROR_WRITE_USER_MEMORY_PAGE;
         goto end;
     }
@@ -246,11 +245,9 @@ end:
 bool NT3HReadSram(void)
 {
     bool ret = false;
-    for (int i = SRAM_START_REG, j = 0; i <= SRAM_END_REG; i++, j++)
-    {
+    for (int i = SRAM_START_REG, j = 0; i <= SRAM_END_REG; i++, j++) {
         ret = readTimeout(i, nfcPageBuffer);
-        if (ret == false)
-        {
+        if (ret == false) {
             return ret;
         }
         //memcpy(&userData[offset], pageBuffer, sizeof(pageBuffer));
@@ -261,12 +258,11 @@ bool NT3HReadSram(void)
 
 void NT3HGetNxpSerialNumber(char* buffer)
 {
+#define MANUF_BUFFER_MAXSIZE        6
     uint8_t manuf[16];
     
-    if (NT3HReaddManufactoringData(manuf))
-    {
-        for (int i = 0; i < 6; i++)
-        {
+    if (NT3HReaddManufactoringData(manuf)) {
+        for (int i = 0; i < MANUF_BUFFER_MAXSIZE; i++) {
             buffer[i] = manuf[i];
         }
     }

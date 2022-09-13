@@ -19,6 +19,10 @@
 #define OLED_COLUMN_MAX         128
 #define OLED_ROW_MAX            64
 
+/* 定义OLED字体大小 */
+#define OLED_CHR_SIZE_12        12
+#define OLED_CHR_SIZE_16        16
+
 /***************************************************************
  * 函数名称: oled_init
  * 说    明: oled初始化
@@ -67,7 +71,7 @@ void oled_clear(void);
 /***************************************************************
  * 函数名称: oled_show_char
  * 说    明: oled显示字符
- * 参    数: 
+ * 参    数:
  *      @x：字符的X轴坐标
  *      @y：字符的Y轴坐标
  *      @chr：字符
@@ -80,7 +84,7 @@ void oled_show_char(uint8_t x, uint8_t y, uint8_t chr, uint8_t chr_size);
 /***************************************************************
  * 函数名称: oled_show_num
  * 说    明: oled显示数字
- * 参    数: 
+ * 参    数:
  *      @x：数字的X轴坐标
  *      @y：数字的Y轴坐标
  *      @num：数字
@@ -94,7 +98,7 @@ void oled_show_num(uint8_t x, uint8_t y, uint32_t num, uint8_t len, uint8_t size
 /***************************************************************
  * 函数名称: oled_show_string
  * 说    明: oled显示字符串
- * 参    数: 
+ * 参    数:
  *      @x：字符串的X轴坐标
  *      @y：字符串的Y轴坐标
  *      @p：字符串
@@ -107,7 +111,7 @@ void oled_show_string(uint8_t x, uint8_t y, uint8_t *p, uint8_t chr_size);
 /***************************************************************
  * 函数名称: oled_draw_bmp
  * 说    明: oled显示图片
- * 参    数: 
+ * 参    数:
  *      @x0：图片的起始点X轴坐标，取值为0~127
  *      @y0：图片的起始点Y轴坐标，取值为0~63
  *      @x1：图片的结束点X轴坐标，取值为0~127
@@ -118,5 +122,4 @@ void oled_show_string(uint8_t x, uint8_t y, uint8_t *p, uint8_t chr_size);
 void oled_draw_bmp(unsigned char x0, unsigned char y0, unsigned char x1, unsigned char y1, unsigned char bmp[]);
 
 
-#endif
-/** @} */
+#endif /* _OLED_H_ */

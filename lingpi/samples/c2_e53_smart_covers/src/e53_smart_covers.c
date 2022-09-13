@@ -15,12 +15,27 @@
 
 #include "e53_smart_covers.h"
 
-#define SC_I2C0                                    0
-
-
+/* 传感器与CPU连接的I2C口 */
+#define SC_I2C0                         0
+/* I2C通信频率 */
+#define I2C_RATE                        400000
 static I2cBusIo m_sc_i2c0m2 = {
-    .scl =  {.gpio = GPIO0_PA1, .func = MUX_FUNC3, .type = PULL_NONE, .drv = DRIVE_KEEP, .dir = LZGPIO_DIR_KEEP, .val = LZGPIO_LEVEL_KEEP},
-    .sda =  {.gpio = GPIO0_PA0, .func = MUX_FUNC3, .type = PULL_NONE, .drv = DRIVE_KEEP, .dir = LZGPIO_DIR_KEEP, .val = LZGPIO_LEVEL_KEEP},
+    .scl =  {
+        .gpio = GPIO0_PA1,
+        .func = MUX_FUNC3,
+        .type = PULL_NONE,
+        .drv = DRIVE_KEEP,
+        .dir = LZGPIO_DIR_KEEP,
+        .val = LZGPIO_LEVEL_KEEP
+    },
+    .sda =  {
+        .gpio = GPIO0_PA0,
+        .func = MUX_FUNC3,
+        .type = PULL_NONE,
+        .drv = DRIVE_KEEP,
+        .dir = LZGPIO_DIR_KEEP,
+        .val = LZGPIO_LEVEL_KEEP
+    },
     .id = FUNC_ID_I2C0,
     .mode = FUNC_MODE_M2,
 };
@@ -35,35 +50,31 @@ void e53_sc_io_init()
 {
     unsigned int ret = LZ_HARDWARE_SUCCESS;
 
-    /*led1 gpio init*/
+    /* led1 gpio init */
     LzGpioInit(GPIO0_PA5);
     /*led2 gpio init*/
     LzGpioInit(GPIO1_PD0);
 
-    /*设置GPIO0_PA5为输出模式*/
+    /* 设置GPIO0_PA5为输出模式 */
     ret = LzGpioSetDir(GPIO0_PA5, LZGPIO_DIR_OUT);
-    if (ret != LZ_HARDWARE_SUCCESS)
-    {
+    if (ret != LZ_HARDWARE_SUCCESS) {
         printf("set GPIO0_PA5 Direction fail ret:%d\n", ret);
         return;
     }
 
-    /*设置GPIO1_PD0为输出模式*/
+    /* 设置GPIO1_PD0为输出模式 */
     ret = LzGpioSetDir(GPIO1_PD0, LZGPIO_DIR_OUT);
-    if (ret != LZ_HARDWARE_SUCCESS)
-    {
+    if (ret != LZ_HARDWARE_SUCCESS) {
         printf("set GPIO1_PD0 Direction fail ret:%d\n", ret);
         return;
     }
 
-    if (I2cIoInit(m_sc_i2c0m2) != LZ_HARDWARE_SUCCESS)
-    {
+    if (I2cIoInit(m_sc_i2c0m2) != LZ_HARDWARE_SUCCESS) {
         printf("init I2C I2C0 io fail\n");
         return;
     }
-    /*I2c时钟频率400K*/
-    if (LzI2cInit(SC_I2C0, 400000) != LZ_HARDWARE_SUCCESS)
-    {
+    /* I2c时钟频率400K */
+    if (LzI2cInit(SC_I2C0, I2C_RATE) != LZ_HARDWARE_SUCCESS) {
         printf("init I2C I2C0 fail\n");
         return;
     }
@@ -79,19 +90,18 @@ void e53_sc_io_init()
 ***************************************************************/
 uint8_t MPU6050_Read_Buffer(uint8_t reg, uint8_t *p_buffer, uint16_t length)
 {
-  
+
     uint32_t status = 0;
     uint8_t  buffer[1] = {reg};
 
-    status = LzI2cWrite(SC_I2C0, MPU6050_SLAVE_ADDRESS, buffer, 1);
-    if (status != 0)
-    {
+    status = LzI2cWrite(SC_I2C0, MPU6050_SLAVE_ADDRESS, buffer, sizeof(buffer));
+    if (status != 0) {
         printf("Error: I2C write status:0x%x\n", status);
         return status;
     }
 
     LzI2cRead(SC_I2C0, MPU6050_SLAVE_ADDRESS, p_buffer, length);
-    return 0;  
+    return 0;
 }
 
 /***************************************************************
@@ -105,7 +115,7 @@ void mpu6050_write_reg(uint8_t reg, uint8_t data)
 {
     uint8_t send_data[2] = {reg, data};
 
-    LzI2cWrite(SC_I2C0, MPU6050_SLAVE_ADDRESS, send_data, 2);
+    LzI2cWrite(SC_I2C0, MPU6050_SLAVE_ADDRESS, send_data, sizeof(send_data));
 }
 
 /***************************************************************
@@ -129,11 +139,21 @@ void mpu6050_read_data(uint8_t reg, unsigned char *buf, uint8_t length)
 ***************************************************************/
 void mpu6050_read_acc(short *acc_data)
 {
+/* 加速度数据位置定义 */
+#define REG_ACCEL_X_H           0
+#define REG_ACCEL_X_L           1
+#define REG_ACCEL_Y_H           2
+#define REG_ACCEL_Y_L           3
+#define REG_ACCEL_Z_H           4
+#define REG_ACCEL_Z_L           5
+/* 高8位移位 */
+#define HIGH_BYTE_SHIFT         8
     uint8_t buf[6];
-    mpu6050_read_data(MPU6050_ACC_OUT, buf, 6);
-    acc_data[0] = (buf[0] << 8) | buf[1];
-    acc_data[1] = (buf[2] << 8) | buf[3];
-    acc_data[2] = (buf[4] << 8) | buf[5];
+
+    mpu6050_read_data(MPU6050_ACC_OUT, buf, sizeof(buf));
+    acc_data[EACCEL_X] = (buf[REG_ACCEL_X_H] << HIGH_BYTE_SHIFT) | buf[REG_ACCEL_X_L];
+    acc_data[EACCEL_Y] = (buf[REG_ACCEL_Y_H] << HIGH_BYTE_SHIFT) | buf[REG_ACCEL_Y_L];
+    acc_data[EACCEL_Z] = (buf[REG_ACCEL_Z_H] << HIGH_BYTE_SHIFT) | buf[REG_ACCEL_Z_L];
 }
 
 /***************************************************************
@@ -144,8 +164,8 @@ void mpu6050_read_acc(short *acc_data)
 ***************************************************************/
 void action_interrupt()
 {
-    mpu6050_write_reg(MPU6050_RA_MOT_THR,0x03);//运动阈值
-    mpu6050_write_reg(MPU6050_RA_MOT_DUR,0x14);//检测时间20ms 单位1ms
+    mpu6050_write_reg(MPU6050_RA_MOT_THR, 0x03); // 运动阈值
+    mpu6050_write_reg(MPU6050_RA_MOT_DUR, 0x14); // 检测时间20ms 单位1ms
 }
 
 /***************************************************************
@@ -156,27 +176,27 @@ void action_interrupt()
 ***************************************************************/
 void mpu6050_init()
 {
+#define DELAY_COUNT         1000000
+#define RESET_DELAY_MSEC    20          /* 复位等待设备重启完毕 */
     int i = 0, j = 0;
-    /*在初始化之前要延时一段时间，若没有延时，则断电后再上电数据可能会出错*/
-    for(i=0;i<1000;i++)
-    {
-        for(j=0;j<1000;j++)
-        {
 
-        }
+    /* 在初始化之前要延时一段时间，若没有延时，则断电后再上电数据可能会出错 */
+    for (i = 0; i < DELAY_COUNT; i++) {
+        /* 延时等待 */
     }
-    mpu6050_write_reg(MPU6050_RA_PWR_MGMT_1, 0X80);  //复位MPU6050
-    usleep(20000);
-    mpu6050_write_reg(MPU6050_RA_PWR_MGMT_1, 0X00);  //唤醒MPU6050
-    mpu6050_write_reg(MPU6050_RA_INT_ENABLE, 0X00);  //关闭所有中断
-    mpu6050_write_reg(MPU6050_RA_USER_CTRL, 0X00);   //I2C主模式关闭
-    mpu6050_write_reg(MPU6050_RA_FIFO_EN, 0X00);     //关闭FIFO
-    mpu6050_write_reg(MPU6050_RA_INT_PIN_CFG, 0X80); //中断的逻辑电平模式,设置为0，中断信号为高电；设置为1，中断信号为低电平时。
-    action_interrupt();                              //运动中断
-    mpu6050_write_reg(MPU6050_RA_CONFIG, 0x04);      //配置外部引脚采样和DLPF数字低通滤波器
-    mpu6050_write_reg(MPU6050_RA_ACCEL_CONFIG, 0x1C);//加速度传感器量程和高通滤波器配置
-    mpu6050_write_reg(MPU6050_RA_INT_PIN_CFG, 0X1C); //INT引脚低电平平时
-    mpu6050_write_reg(MPU6050_RA_INT_ENABLE, 0x40);  //中断使能寄存器
+
+    mpu6050_write_reg(MPU6050_RA_PWR_MGMT_1, 0X80);  // 复位MPU6050
+    LOS_Msleep(RESET_DELAY_MSEC);
+    mpu6050_write_reg(MPU6050_RA_PWR_MGMT_1, 0X00);  // 唤醒MPU6050
+    mpu6050_write_reg(MPU6050_RA_INT_ENABLE, 0X00);  // 关闭所有中断
+    mpu6050_write_reg(MPU6050_RA_USER_CTRL, 0X00);   // I2C主模式关闭
+    mpu6050_write_reg(MPU6050_RA_FIFO_EN, 0X00);     // 关闭FIFO
+    mpu6050_write_reg(MPU6050_RA_INT_PIN_CFG, 0X80); // 中断的逻辑电平模式,设置为0，中断信号为高电；设置为1，中断信号为低电平时。
+    action_interrupt();                              // 运动中断
+    mpu6050_write_reg(MPU6050_RA_CONFIG, 0x04);      // 配置外部引脚采样和DLPF数字低通滤波器
+    mpu6050_write_reg(MPU6050_RA_ACCEL_CONFIG, 0x1C);// 加速度传感器量程和高通滤波器配置
+    mpu6050_write_reg(MPU6050_RA_INT_PIN_CFG, 0X1C); // INT引脚低电平平时
+    mpu6050_write_reg(MPU6050_RA_INT_ENABLE, 0x40);  // 中断使能寄存器
 }
 
 /***************************************************************
@@ -184,18 +204,16 @@ void mpu6050_init()
   * 输入参数: 无
   * 返 回 值: 无
   * 说    明: 无
-  ***************************************************************/ 
+  ***************************************************************/
 uint8_t mpu6050_read_id()
 {
     unsigned char buff = 0;
+
     mpu6050_read_data(MPU6050_RA_WHO_AM_I, &buff, 1);
-    if(buff != 0x68)
-    {
+    if (buff != MPU6050_SLAVE_ADDRESS) {
         printf("MPU6050 dectected error Re:%u\n", buff);
         return 0;
-    }
-    else
-    {
+    } else {
         return 1;
     }
 }
@@ -208,9 +226,10 @@ uint8_t mpu6050_read_id()
 ***************************************************************/
 void e53_sc_init()
 {
+#define WAIT_MPU6050_INIT_MSEC      1000
     e53_sc_io_init();
     mpu6050_init();
-    usleep(1000000);
+    LOS_Msleep(WAIT_MPU6050_INIT_MSEC);
 }
 
 /***************************************************************
@@ -221,17 +240,21 @@ void e53_sc_init()
 ***************************************************************/
 void e53_sc_read_data(e53_sc_data_t *p_data)
 {
+#define MPU6050_READ_DELAY_MSEC     50
     short accel[3];
     short temp;
-    if (mpu6050_read_id() == 0)
-    {
-        while(1);
+    int i;
+
+    /* 等待读取设备地址正常 */
+    if (mpu6050_read_id() == 0) {
+        while (1);
     }
+
     mpu6050_read_acc(accel);
-    p_data->accel[0] = accel[0];
-    p_data->accel[1] = accel[1];
-    p_data->accel[2] = accel[2];
-    usleep(50000);
+    p_data->accel[EACCEL_X] = accel[EACCEL_X];
+    p_data->accel[EACCEL_Y] = accel[EACCEL_Y];
+    p_data->accel[EACCEL_Z] = accel[EACCEL_Z];
+    LOS_Msleep(MPU6050_READ_DELAY_MSEC);
 }
 
 /***************************************************************
@@ -243,14 +266,11 @@ void e53_sc_read_data(e53_sc_data_t *p_data)
 ***************************************************************/
 void led_d1_set(SWITCH_STATUS_ENUM status)
 {
-    if(status == ON)
-    {   
-        /*设置GPIO0_PA5输出低电平点亮灯*/
+    if (status == ON) {
+        /* 设置GPIO0_PA5输出低电平点亮灯 */
         LzGpioSetVal(GPIO0_PA5, LZGPIO_LEVEL_LOW);
-    }
-    else if(status == OFF)
-    {   
-        /*设置GPIO0_PA5输出高电平关闭灯*/
+    } else if (status == OFF) {
+        /* 设置GPIO0_PA5输出高电平关闭灯 */
         LzGpioSetVal(GPIO0_PA5, LZGPIO_LEVEL_HIGH);
     }
 }
@@ -264,14 +284,11 @@ void led_d1_set(SWITCH_STATUS_ENUM status)
 ***************************************************************/
 void led_d2_set(SWITCH_STATUS_ENUM status)
 {
-    if(status == ON)
-    {   
-        /*设置GPIO1_PD0输出低电平点亮灯*/
+    if (status == ON) {
+        /* 设置GPIO1_PD0输出低电平点亮灯 */
         LzGpioSetVal(GPIO1_PD0, LZGPIO_LEVEL_LOW);
-    }
-    else if(status == OFF)
-    {   
-        /*设置GPIO1_PD0输出高电平关闭灯*/
+    } else if (status == OFF) {
+        /* 设置GPIO1_PD0输出高电平关闭灯 */
         LzGpioSetVal(GPIO1_PD0, LZGPIO_LEVEL_HIGH);
     }
 }

@@ -16,15 +16,31 @@
 #include "e53_intelligent_agriculture.h"
 #include "lz_hardware.h"
 
-#define IA_I2C0                                    0
-#define BH1750_ADDR                                0x23
-#define SHT30_ADDR                                 0x44
+/* i2c的设备编号 */
+#define IA_I2C0                             0
+/* i2c的通信速率 */
+#define I2C_RATE                            100000
+/* BH1750的i2c从设备地址 */
+#define BH1750_ADDR                         0x23
+/* sht30的i2c从设备地址 */
+#define SHT30_ADDR                          0x44
 
 static I2cBusIo m_ia_i2c0m2 = {
     .scl =  {.gpio = GPIO0_PA1, .func = MUX_FUNC3, .type = PULL_NONE, .drv = DRIVE_KEEP, .dir = LZGPIO_DIR_KEEP, .val = LZGPIO_LEVEL_KEEP},
     .sda =  {.gpio = GPIO0_PA0, .func = MUX_FUNC3, .type = PULL_NONE, .drv = DRIVE_KEEP, .dir = LZGPIO_DIR_KEEP, .val = LZGPIO_LEVEL_KEEP},
     .id = FUNC_ID_I2C0,
     .mode = FUNC_MODE_M2,
+};
+
+/* 读取SHT30的SHT30_ADDR寄存器位移定义 */
+enum enum_offset_sht30_reg {
+    EOFFSET_SHT30_REG_TEMP_H = 0,       /* 温度寄存器数值高位 */
+    EOFFSET_SHT30_REG_TEMP_L,           /* 温度寄存器数值低位 */
+    EOFFSET_SHT30_REG_TEMP_CRC,         /* 温度寄存器数值校验位 */
+    EOFFSET_SHT30_REG_HUMIDITY_H,       /* 湿度寄存器数值高位 */
+    EOFFSET_SHT30_REG_HUMIDITY_L,       /* 湿度寄存器数值低位 */
+    EOFFSET_SHT30_REG_HUMIDITY_CRC,     /* 湿度寄存器数值校验位 */
+    EOFFSET_SHT30_REG_MAX
 };
 
 /***************************************************************
@@ -38,7 +54,7 @@ void init_sht30()
     uint8_t send_data[2] = {0x22, 0x36};
     uint32_t send_len = 2;
 
-    LzI2cWrite(IA_I2C0, SHT30_ADDR, send_data, send_len); 
+    LzI2cWrite(IA_I2C0, SHT30_ADDR, send_data, send_len);
 }
 
 /***************************************************************
@@ -52,7 +68,7 @@ void init_bh1750()
     uint8_t send_data[1] = {0x01};
     uint32_t send_len = 1;
 
-    LzI2cWrite(IA_I2C0, BH1750_ADDR, send_data, send_len); 
+    LzI2cWrite(IA_I2C0, BH1750_ADDR, send_data, send_len);
 }
 
 /***************************************************************
@@ -79,10 +95,10 @@ float sht30_calc_RH(uint16_t u16sRH)
 {
     float humidityRH = 0;
 
-    /*clear bits [1..0] (status bits)*/
+    /* clear bits [1..0] (status bits) */
     u16sRH &= ~0x0003;
-    /*calculate relative humidity [%RH]*/
-    /*RH = rawValue / (2^16-1) * 10*/
+    /* calculate relative humidity [%RH] */
+    /* RH = rawValue / (2^16-1) * 10 */
     humidityRH = (100 * (float)u16sRH / 65535);
 
     return humidityRH;
@@ -98,10 +114,10 @@ float sht30_calc_temperature(uint16_t u16sT)
 {
     float temperature = 0;
 
-    /*clear bits [1..0] (status bits)*/
+    /* clear bits [1..0] (status bits) */
     u16sT &= ~0x0003;
-    /*calculate temperature [℃]*/
-    /*T = -45 + 175 * rawValue / (2^16-1)*/
+    /* calculate temperature [℃] */
+    /* T = -45 + 175 * rawValue / (2^16-1) */
     temperature = (175 * (float)u16sT / 65535 - 45);
 
     return temperature;
@@ -117,26 +133,30 @@ float sht30_calc_temperature(uint16_t u16sT)
 ***************************************************************/
 uint8_t sht30_check_crc(uint8_t *data, uint8_t nbrOfBytes, uint8_t checksum)
 {
+    uint8_t byte_to_bits = 8;
+    uint8_t high_bit = 0x80;
     uint8_t crc = 0xFF;
     uint8_t bit = 0;
     uint8_t byteCtr ;
     const int16_t POLYNOMIAL = 0x131;
 
-    /*calculates 8-Bit checksum with given polynomial*/
-    for(byteCtr = 0; byteCtr < nbrOfBytes; ++byteCtr)
-    {
+    /* calculates 8-Bit checksum with given polynomial */
+    for (byteCtr = 0; byteCtr < nbrOfBytes; ++byteCtr) {
         crc ^= (data[byteCtr]);
-        for ( bit = 8; bit > 0; --bit)
-        {
-            if (crc & 0x80) crc = (crc << 1) ^ POLYNOMIAL;
-            else crc = (crc << 1);
+        for (bit = byte_to_bits; bit > 0; --bit) {
+            if (crc & high_bit) {
+                crc = (crc << 1) ^ POLYNOMIAL;
+            } else {
+                crc = (crc << 1);
+            }
         }
     }
 
-    if(crc != checksum)
+    if (crc != checksum) {
         return 1;
-    else
+    } else {
         return 0;
+    }
 }
 
 /***************************************************************
@@ -149,33 +169,29 @@ void e53_ia_io_init()
 {
     uint32_t ret = LZ_HARDWARE_FAILURE;
 
-    /*初始化紫光灯GPIO*/
+    /* 初始化紫光灯GPIO */
     LzGpioInit(GPIO0_PA2);
-    /*初始化电机GPIO*/
+    /* 初始化电机GPIO */
     LzGpioInit(GPIO1_PD0);
 
-    /*设置GPIO0_PA2为输出模式*/
+    /* 设置GPIO0_PA2为输出模式 */
     ret = LzGpioSetDir(GPIO0_PA2, LZGPIO_DIR_OUT);
-    if (ret != LZ_HARDWARE_SUCCESS)
-    {
+    if (ret != LZ_HARDWARE_SUCCESS) {
         printf("set GPIO0_PA2 Direction fail\n");
     }
 
-    /*设置GPIO1_PD0为输出模式*/
+    /* 设置GPIO1_PD0为输出模式 */
     ret = LzGpioSetDir(GPIO1_PD0, LZGPIO_DIR_OUT);
-    if (ret != LZ_HARDWARE_SUCCESS)
-    {
+    if (ret != LZ_HARDWARE_SUCCESS) {
         printf("set GPIO0_PD0 Direction fail\n");
     }
 
-    /*初始化I2C*/
-    if (I2cIoInit(m_ia_i2c0m2) != LZ_HARDWARE_SUCCESS)
-    {
+    /* 初始化I2C */
+    if (I2cIoInit(m_ia_i2c0m2) != LZ_HARDWARE_SUCCESS) {
         printf("init I2C I2C0 io fail\n");
     }
-    /*I2C时钟频率100K*/
-    if (LzI2cInit(IA_I2C0, 100000) != LZ_HARDWARE_SUCCESS)
-    {
+    /* I2C时钟频率100K */
+    if (LzI2cInit(IA_I2C0, I2C_RATE) != LZ_HARDWARE_SUCCESS) {
         printf("init I2C I2C0 fail\n");
     }
 }
@@ -201,6 +217,7 @@ void e53_ia_init()
 ***************************************************************/
 void e53_ia_read_data(e53_ia_data_t *pData)
 {
+    uint16_t high_byte_bit = 8;
     uint8_t recv_data[2] = {0};
     uint32_t receive_len = 2;
     uint8_t rc;
@@ -209,41 +226,39 @@ void e53_ia_read_data(e53_ia_data_t *pData)
     LOS_Msleep(180);
 
     LzI2cRead(IA_I2C0, BH1750_ADDR, recv_data, receive_len);
-    pData->luminance = (float)(((recv_data[0]<<8) + recv_data[1])/1.2);
-    //printf("BH1750 data:0x%x%x", recv_data[0], recv_data[1]);
+    pData->luminance = (float)(((recv_data[0] << 8) + recv_data[1]) / 1.2);
+    // printf("BH1750 data:0x%x%x", recv_data[0], recv_data[1]);
 
-    /*checksum verification*/
+    /* checksum verification */
     uint8_t data[3];
     uint16_t tmp;
-    /*byte 0,1 is temperature byte 4,5 is humidity*/
-    uint8_t SHT30_Data_Buffer[6];
+    /* byte 0,1 is temperature byte 4,5 is humidity */
+    uint8_t SHT30_Data_Buffer[EOFFSET_SHT30_REG_MAX];
     memset(SHT30_Data_Buffer, 0, 6);
     uint8_t send_data[2] = {0xE0, 0x00};
     uint32_t send_len = 2;
     LzI2cWrite(IA_I2C0, SHT30_ADDR, send_data, send_len);
     receive_len = 6;
     LzI2cRead(IA_I2C0, SHT30_ADDR, SHT30_Data_Buffer, receive_len);
-    //printf("SHT30 data:0x%x%x%x)", SHT30_Data_Buffer[0], SHT30_Data_Buffer[1], SHT30_Data_Buffer[2]);
+    // printf("SHT30 data:0x%x%x%x)", SHT30_Data_Buffer[0], SHT30_Data_Buffer[1], SHT30_Data_Buffer[2]);
 
-    /*check temperature*/
-    data[0] = SHT30_Data_Buffer[0];
-    data[1] = SHT30_Data_Buffer[1];
-    data[2] = SHT30_Data_Buffer[2];
+    /* check temperature */
+    data[0] = SHT30_Data_Buffer[EOFFSET_SHT30_REG_TEMP_H];
+    data[1] = SHT30_Data_Buffer[EOFFSET_SHT30_REG_TEMP_L];
+    data[2] = SHT30_Data_Buffer[EOFFSET_SHT30_REG_TEMP_CRC];
     rc = sht30_check_crc(data, 2, data[2]);
-    if(!rc)
-    {
-        tmp = ((uint16_t)data[0] << 8) | data[1];
+    if (!rc) {
+        tmp = ((uint16_t)data[0] << high_byte_bit) | data[1];
         pData->temperature = sht30_calc_temperature(tmp);
     }
-    
-    /*check humidity*/
-    data[0] = SHT30_Data_Buffer[3];
-    data[1] = SHT30_Data_Buffer[4];
-    data[2] = SHT30_Data_Buffer[5];
+
+    /* check humidity */
+    data[0] = SHT30_Data_Buffer[EOFFSET_SHT30_REG_HUMIDITY_H];
+    data[1] = SHT30_Data_Buffer[EOFFSET_SHT30_REG_HUMIDITY_L];
+    data[2] = SHT30_Data_Buffer[EOFFSET_SHT30_REG_HUMIDITY_CRC];
     rc = sht30_check_crc(data, 2, data[2]);
-    if(!rc)
-    {
-        tmp = ((uint16_t)data[0] << 8) | data[1];
+    if (!rc) {
+        tmp = ((uint16_t)data[0] << high_byte_bit) | data[1];
         pData->humidity = sht30_calc_RH(tmp);
     }
 }
@@ -251,21 +266,19 @@ void e53_ia_read_data(e53_ia_data_t *pData)
 /***************************************************************
 * 函数名称: light_set
 * 说    明: 紫光灯控制
-* 参    数: 
+* 参    数:
 *          OFF,关
 *          ON,开
 * 返 回 值: 无
 ***************************************************************/
 void light_set(SWITCH_STATUS_ENUM status)
 {
-    if(status == ON)
-    {
-        /*设置GPIO0_PA2输出高电平点亮灯*/
+    if (status == ON) {
+        /* 设置GPIO0_PA2输出高电平点亮灯 */
         LzGpioSetVal(GPIO0_PA2, LZGPIO_LEVEL_HIGH);
     }
-    if(status == OFF)
-    {
-        /*设置GPIO0_PA2输出低电平关闭灯*/
+    if (status == OFF) {
+        /* 设置GPIO0_PA2输出低电平关闭灯 */
         LzGpioSetVal(GPIO0_PA2, LZGPIO_LEVEL_LOW);
     }
 }
@@ -273,21 +286,19 @@ void light_set(SWITCH_STATUS_ENUM status)
 /***************************************************************
 * 函数名称: motor_set_status
 * 说    明: 电机控制
-* 参    数: 
+* 参    数:
 *          OFF,关
 *          ON,开
 * 返 回 值: 无
 ***************************************************************/
 void motor_set_status(SWITCH_STATUS_ENUM status)
 {
-    if(status == ON)
-    {
-        /*设置GPIO0_PD0输出高电平打开电机*/
+    if (status == ON) {
+        /* 设置GPIO0_PD0输出高电平打开电机 */
         LzGpioSetVal(GPIO1_PD0, LZGPIO_LEVEL_HIGH);
     }
-    if(status == OFF)
-    {   
-        /*设置GPIO0_PD0输出低电平关闭电机*/
+    if (status == OFF) {
+        /* 设置GPIO0_PD0输出低电平关闭电机 */
         LzGpioSetVal(GPIO1_PD0, LZGPIO_LEVEL_LOW);
     }
 }

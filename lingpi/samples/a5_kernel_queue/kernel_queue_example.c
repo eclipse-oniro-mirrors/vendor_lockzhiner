@@ -16,8 +16,18 @@
 #include "los_task.h"
 #include "ohos_init.h"
 
-#define MSG_QUEUE_LENGTH                                16
-#define BUFFER_LEN                                      50
+/* 任务的堆栈大小 */
+#define TASK_STACK_SIZE         2048
+/* 任务的优先级 */
+#define MSG_WRITE_TASK_PRIO     24
+#define MSG_READ_TASK_PRIO      25
+
+/* 等待时间 */
+#define MSG_WRITE_WAIT_MSEC     1000
+
+/* 消息队列长度 */
+#define MSG_QUEUE_LENGTH        16
+#define BUFFER_LEN              50
 
 static unsigned int m_msg_queue;
 
@@ -32,21 +42,17 @@ void msg_write_thread(void *arg)
     unsigned int data = 0;
     unsigned int ret = LOS_OK;
 
-    while (1)
-    {
+    while (1) {
         data++;
         ret = LOS_QueueWrite(m_msg_queue, (void *)&data, sizeof(data), LOS_WAIT_FOREVER);
-        if (LOS_OK != ret)
-        {
+        if (LOS_OK != ret) {
             printf("%s write Message Queue msg fail ret:0x%x\n", __func__, ret);
-        }
-        else
-        {
+        } else {
             printf("%s write Message Queue msg:%u\n", __func__, data);
         }
 
         /*delay 1s*/
-        LOS_Msleep(1000);
+        LOS_Msleep(MSG_WRITE_WAIT_MSEC);
     }
 }
 
@@ -62,17 +68,13 @@ void msg_read_thread(void *arg)
     unsigned int ret = LOS_OK;
     unsigned int *pData = NULL;
 
-    while (1)
-    {
+    while (1) {
         /*wait for message*/
         ret = LOS_QueueRead(m_msg_queue, (void *)&addr, BUFFER_LEN, LOS_WAIT_FOREVER);
-        if (ret == LOS_OK)
-        {
+        if (ret == LOS_OK) {
             pData = addr;
             printf("%s read Message Queue msg:%u\n", __func__, *pData);
-        }
-        else
-        {
+        } else {
             printf("%s read Message Queue fail ret:0x%x\n", __func__, ret);
         }
     }
@@ -93,34 +95,30 @@ void queue_example()
     unsigned int ret = LOS_OK;
 
     ret = LOS_QueueCreate("queue", MSG_QUEUE_LENGTH, &m_msg_queue, 0, BUFFER_LEN);
-    if (ret != LOS_OK)
-    {
-        printf("Failed to create Message Queue ret:0x%x\n", ret);
+    if (ret != LOS_OK) {
+        printf("Falied to create Message Queue ret:0x%x\n", ret);
         return;
     }
 
     task1.pfnTaskEntry = (TSK_ENTRY_FUNC)msg_write_thread;
-    task1.uwStackSize = 2048;
+    task1.uwStackSize = TASK_STACK_SIZE;
     task1.pcName = "msg_write_thread";
-    task1.usTaskPrio = 24;
+    task1.usTaskPrio = MSG_WRITE_TASK_PRIO;
     ret = LOS_TaskCreate(&thread_id1, &task1);
-    if (ret != LOS_OK)
-    {
-        printf("Failed to create msg_write_thread ret:0x%x\n", ret);
+    if (ret != LOS_OK) {
+        printf("Falied to create msg_write_thread ret:0x%x\n", ret);
         return;
     }
 
     task2.pfnTaskEntry = (TSK_ENTRY_FUNC)msg_read_thread;
-    task2.uwStackSize = 2048;
+    task2.uwStackSize = TASK_STACK_SIZE;
     task2.pcName = "msg_read_thread";
-    task2.usTaskPrio = 25;
+    task2.usTaskPrio = MSG_READ_TASK_PRIO;
     ret = LOS_TaskCreate(&thread_id2, &task2);
-    if (ret != LOS_OK)
-    {
-        printf("Failed to create msg_read_thread ret:0x%x\n", ret);
+    if (ret != LOS_OK) {
+        printf("Falied to create msg_read_thread ret:0x%x\n", ret);
         return;
     }
 }
 
 APP_FEATURE_INIT(queue_example);
-

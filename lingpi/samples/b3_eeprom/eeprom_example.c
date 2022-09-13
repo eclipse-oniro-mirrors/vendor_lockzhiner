@@ -17,67 +17,67 @@
 #include "ohos_init.h"
 #include "eeprom.h"
 
+/* 任务的堆栈大小 */
+#define TASK_STACK_SIZE     20480
+/* 任务的优先级 */
+#define TASK_PRIO           24
+
+/* 循环等待时间 */
+#define WAIT_MSEC           5000
+
 void eeprom_proress(void *arg)
 {
 #define FOR_CHAR            30
 #define FOR_ADDRESS         32
 #define CHAR_START          0x21
 #define CHAR_END            0x7F
+#define ADDR_OFFSET_MAX     200
     unsigned int ret = 0;
     unsigned char data_offset = CHAR_START;
     unsigned int addr_offset = 3;
     unsigned char data;
     unsigned char buffer[FOR_CHAR];
-    
+
     eeprom_init();
-    
-    while (1)
-    {
+
+    while (1) {
         printf("************ Eeprom Process ************\n");
         printf("BlockSize = 0x%x\n", eeprom_get_blocksize());
-        
+
         /* 写EEPROM */
         memset(buffer, 0, sizeof(buffer));
-        for (unsigned int i = 0; i < FOR_CHAR; i++)
-        {
+        for (unsigned int i = 0; i < FOR_CHAR; i++) {
             buffer[i] = data_offset + i;
             printf("Write Byte: %d = %c\n", addr_offset + i, buffer[i]);
         }
         ret = eeprom_write(addr_offset, buffer, FOR_CHAR);
-        if (ret != FOR_CHAR)
-        {
+        if (ret != FOR_CHAR) {
             printf("EepromWrite failed(%d)\n", ret);
         }
-        
+
         /* 读EEPROM */
         memset(buffer, 0, sizeof(buffer));
         ret = eeprom_read(addr_offset, buffer, FOR_CHAR);
-        if (ret != FOR_CHAR)
-        {
+        if (ret != FOR_CHAR) {
             printf("Read Bytes: failed!\n");
-        }
-        else
-        {
-            for (unsigned int i = 0; i < FOR_CHAR; i++)
-            {
+        } else {
+            for (unsigned int i = 0; i < FOR_CHAR; i++) {
                 printf("Read Byte: %d = %c\n", addr_offset + i, buffer[i]);
             }
         }
-        
+
         data_offset++;
-        if (data_offset >= CHAR_END)
-        {
+        if (data_offset >= CHAR_END) {
             data_offset = CHAR_START;
         }
-        
+
         addr_offset += FOR_ADDRESS;
-        if (addr_offset >= 200)
-        {
+        if (addr_offset >= ADDR_OFFSET_MAX) {
             addr_offset = 0;
         }
         printf("\n");
-        
-        LOS_Msleep(5000);
+
+        LOS_Msleep(WAIT_MSEC);
     }
 }
 
@@ -88,17 +88,14 @@ void eeprom_example()
     unsigned int ret = LOS_OK;
 
     task.pfnTaskEntry = (TSK_ENTRY_FUNC)eeprom_proress;
-    task.uwStackSize = 2048;
+    task.uwStackSize = TASK_STACK_SIZE;
     task.pcName = "eeprom process";
-    task.usTaskPrio = 24;
+    task.usTaskPrio = TASK_PRIO;
     ret = LOS_TaskCreate(&thread_id, &task);
-    if (ret != LOS_OK)
-    {
-        printf("Failed to create task ret:0x%x\n", ret);
+    if (ret != LOS_OK) {
+        printf("Falied to create task ret:0x%x\n", ret);
         return;
     }
 }
 
 APP_FEATURE_INIT(eeprom_example);
-
-

@@ -18,8 +18,7 @@
 
 #include "lz_hardware.h"
 
-typedef enum
-{
+typedef enum {
     OFF = 0,
     ON
 } SWITCH_STATUS_ENUM;

@@ -17,6 +17,15 @@
 #include "los_task.h"
 #include "e53_smart_covers.h"
 
+/* 任务的堆栈大小 */
+#define TASK_STACK_SIZE     20480
+/* 任务的优先级 */
+#define TASK_PRIO           24
+
+/* 循环等待时间 */
+#define WAIT_MSEC           2000
+
+
 /***************************************************************
 * 函数名称: e53_sc_thread
 * 说    明: E53智慧井盖线程
@@ -32,41 +41,37 @@ void e53_sc_thread()
     led_d1_set(OFF);
     led_d2_set(OFF);
 
-    while (1)
-    {
+    while (1) {
         e53_sc_read_data(&data);
-        printf("x is %d\n", (int)data.accel[0]);
-        printf("y is %d\n", (int)data.accel[1]);
-        printf("z is %d\n", (int)data.accel[2]);
+        printf("x is %d\n", (int)data.accel[EACCEL_X]);
+        printf("y is %d\n", (int)data.accel[EACCEL_Y]);
+        printf("z is %d\n", (int)data.accel[EACCEL_Z]);
         printf("init x:%d y:%d z:%d\n", x, y, z);
 
-        if (x == 0 && y == 0 && z == 0)
-        {
-            x = (int)data.accel[0];
-            y = (int)data.accel[1];
-            z = (int)data.accel[2];
-        }
-        else
-        {
-            if ((x + DELTA) < data.accel[0] || (x - DELTA) > data.accel[0] ||
-                (y + DELTA) < data.accel[1] || (y - DELTA) > data.accel[1] ||
-                (z + DELTA) < data.accel[2] || (z - DELTA) > data.accel[2])
-            {
+        if (x == 0 && y == 0 && z == 0) {
+            x = (int)data.accel[EACCEL_X];
+            y = (int)data.accel[EACCEL_Y];
+            z = (int)data.accel[EACCEL_Z];
+        } else {
+            if ((x + DELTA) < data.accel[EACCEL_X]
+                || (x - DELTA) > data.accel[EACCEL_X]
+                || (y + DELTA) < data.accel[EACCEL_Y]
+                || (y - DELTA) > data.accel[EACCEL_Y]
+                || (z + DELTA) < data.accel[EACCEL_Z]
+                || (z - DELTA) > data.accel[EACCEL_Z]) {
                 /*倾斜告警*/
                 led_d1_set(OFF);
                 led_d2_set(ON);
                 data.tilt_status = 1;
                 printf("tilt warning \nLED1 OFF LED2 On\n");
-            }
-            else
-            {
+            } else {
                 led_d1_set(ON);
                 led_d2_set(OFF);
                 data.tilt_status = 0;
                 printf("normal \nLED1 ON LED2 OFF\n");
             }
         }
-        LOS_Msleep(2000);
+        LOS_Msleep(WAIT_MSEC);
     }
 }
 
@@ -83,13 +88,12 @@ void e53_sc_example()
     TSK_INIT_PARAM_S task = {0};
 
     task.pfnTaskEntry = (TSK_ENTRY_FUNC)e53_sc_thread;
-    task.uwStackSize = 10240;
+    task.uwStackSize = TASK_STACK_SIZE;
     task.pcName = "e53_sc_thread";
-    task.usTaskPrio = 24;
+    task.usTaskPrio = TASK_PRIO;
     ret = LOS_TaskCreate(&thread_id, &task);
-    if (ret != LOS_OK)
-    {
-        printf("Failed to create e53_sc_thread ret:0x%x\n", ret);
+    if (ret != LOS_OK) {
+        printf("Falied to create e53_sc_thread ret:0x%x\n", ret);
         return;
     }
 }

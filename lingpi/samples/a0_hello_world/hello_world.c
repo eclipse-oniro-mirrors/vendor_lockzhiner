@@ -15,6 +15,16 @@
 
 #include "los_task.h"   // OpenHarmony LiteOS的任务管理头文件
 
+/* 等待时间 */
+#define HELLOWORLD_WAIT_MSEC        1000
+#define OPENHARMONY_WAIT_MSEC       2000
+
+/* 任务的堆栈大小 */
+#define TASK_STACK_SIZE             2048
+/* 任务的优先级 */
+#define HELLWORLD_TASK_PRIO         24
+#define OPENHARMONY_TASK_PRIO       25
+
 /***************************************************************
 * 函数名称: task_helloworld
 * 说    明: 线程函数helloworld
@@ -23,11 +33,10 @@
 ***************************************************************/
 void task_helloworld()
 {
-    while (1)
-    {
+    while (1) {
         printf("Hello World\n");
         /* 睡眠1秒。该函数为OpenHarmony LiteoS内核睡眠函数，单位为：毫秒 */
-        LOS_Msleep(1000);
+        LOS_Msleep(HELLOWORLD_WAIT_MSEC);
     }
 }
 
@@ -39,11 +48,10 @@ void task_helloworld()
 ***************************************************************/
 void task_openharmony()
 {
-    while (1)
-    {
+    while (1) {
         printf("Hello OpenHarmony\n");
-        /* 睡眠1秒。该函数为OpenHarmony内核睡眠函数，单位为：毫秒 */
-        LOS_Msleep(2000);
+        /* 睡眠2秒。该函数为OpenHarmony内核睡眠函数，单位为：毫秒 */
+        LOS_Msleep(OPENHARMONY_WAIT_MSEC);
     }
 }
 
@@ -66,24 +74,22 @@ void helloworld_example()
 
     /* 创建HelloWorld任务 */
     task1.pfnTaskEntry = (TSK_ENTRY_FUNC)task_helloworld;   // 运行函数入口
-    task1.uwStackSize = 2048;                               // 堆栈大小
+    task1.uwStackSize = TASK_STACK_SIZE;                    // 堆栈大小
     task1.pcName = "task_helloworld";                       // 函数注册名称
-    task1.usTaskPrio = 24;                                  // 任务的优先级，从0~63
+    task1.usTaskPrio = HELLWORLD_TASK_PRIO;                 // 任务的优先级，从0~63
     ret = LOS_TaskCreate(&thread_id1, &task1);              // 创建任务
-    if (ret != LOS_OK)
-    {
-        printf("Failed to create task_helloworld ret:0x%x\n", ret);
+    if (ret != LOS_OK) {
+        printf("Falied to create task_helloworld ret:0x%x\n", ret);
         return;
     }
 
     task2.pfnTaskEntry = (TSK_ENTRY_FUNC)task_openharmony;  // 运行函数入口
-    task2.uwStackSize = 2048;                               // 堆栈大小
+    task2.uwStackSize = TASK_STACK_SIZE;                    // 堆栈大小
     task2.pcName = "task_openharmony";                      // 函数注册名称
-    task2.usTaskPrio = 25;                                  // 任务的优先级，从0~63
+    task2.usTaskPrio = OPENHARMONY_TASK_PRIO;               // 任务的优先级，从0~63
     ret = LOS_TaskCreate(&thread_id2, &task2);              // 创建任务
-    if (ret != LOS_OK)
-    {
-        printf("Failed to create task_openharmony ret:0x%x\n", ret);
+    if (ret != LOS_OK) {
+        printf("Falied to create task_openharmony ret:0x%x\n", ret);
         return;
     }
 }

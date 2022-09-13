@@ -14,7 +14,7 @@
  */
 #include <stdio.h>
 #include <stdint.h>
-    
+
 #include "los_sem.h"
 #include "lz_hardware.h"
 
@@ -44,7 +44,7 @@ static unsigned int m_i2c_freq = 400000;
 typedef enum {
     BANK0 = 0,  /* Bank0寄存器 */
     BANK1,      /* Bank1寄存器 */
-}BankId;
+} BankId;
 
 /* BANK的寄存器地址和BANK0~1 */
 #define PAJ_REG_BANK_SEL                0xEF //BANK选择寄存器
@@ -69,9 +69,9 @@ typedef enum {
 /* BANK1 寄存器组 */
 #define PAJ_REG_SET_PS_GAIN             0x44 //设置检测增益大小 (0:1x gain 1:2x gain)
 #define PAJ_REG_SET_IDLE_S1_STEP_0      0x67 //设置S1的响应因子
-#define PAJ_REG_SET_IDLE_S1_STEP_1      0x68 
+#define PAJ_REG_SET_IDLE_S1_STEP_1      0x68
 #define PAJ_REG_SET_IDLE_S2_STEP_0      0x69 //设置S2的响应因子
-#define PAJ_REG_SET_IDLE_S2_STEP_1      0x6A 
+#define PAJ_REG_SET_IDLE_S2_STEP_1      0x6A
 #define PAJ_REG_SET_OP_TO_S1_STEP_0     0x6B //设置OP到S1的过度时间
 #define PAJ_REG_SET_OP_TO_S1_STEP_1     0x6C
 #define PAJ_REG_SET_S1_TO_S2_STEP_0     0x6D //设置S1到S2的过度时间
@@ -79,121 +79,121 @@ typedef enum {
 #define PAJ_REG_OPERATION_ENABLE        0x72 //设置PAJ7620U2使能寄存器
 
 static uint8_t m_Paj7620u2_InitRegisterConfig[][2] = {
-    {0xEF,0x00}, //切换bank0
-    {0x37,0x07}, //
-    {0x38,0x17},
-    {0x39,0x06},
-    {0x41,0x00},
-    {0x42,0x00},
-    {0x46,0x2D},
-    {0x47,0x0F},
-    {0x48,0x3C},
-    {0x49,0x00},
-    {0x4A,0x1E},
-    {0x4C,0x20},
-    {0x51,0x10},
-    {0x5E,0x10},
-    {0x60,0x27},
-    {0x80,0x42},
-    {0x81,0x44},
-    {0x82,0x04},
-    {0x8B,0x01},
-    {0x90,0x06},
-    {0x95,0x0A},
-    {0x96,0x0C},
-    {0x97,0x05},
-    {0x9A,0x14},
-    {0x9C,0x3F},
-    {0xA5,0x19},
-    {0xCC,0x19},
-    {0xCD,0x0B},
-    {0xCE,0x13},
-    {0xCF,0x64},
-    {0xD0,0x21},
-    {0xEF,0x01},
-    {0x02,0x0F},
-    {0x03,0x10},
-    {0x04,0x02},
-    {0x25,0x01},
-    {0x27,0x39},
-    {0x28,0x7F},
-    {0x29,0x08},
-    {0x3E,0xFF},
-    {0x5E,0x3D},
-    {0x65,0x96},
-    {0x67,0x97},
-    {0x69,0xCD},
-    {0x6A,0x01},
-    {0x6D,0x2C},
-    {0x6E,0x01},
-    {0x72,0x01},
-    {0x73,0x35},
-    {0x74,0x00},
-    {0x77,0x01},
+    {0xEF, 0x00}, //切换bank0
+    {0x37, 0x07}, //
+    {0x38, 0x17},
+    {0x39, 0x06},
+    {0x41, 0x00},
+    {0x42, 0x00},
+    {0x46, 0x2D},
+    {0x47, 0x0F},
+    {0x48, 0x3C},
+    {0x49, 0x00},
+    {0x4A, 0x1E},
+    {0x4C, 0x20},
+    {0x51, 0x10},
+    {0x5E, 0x10},
+    {0x60, 0x27},
+    {0x80, 0x42},
+    {0x81, 0x44},
+    {0x82, 0x04},
+    {0x8B, 0x01},
+    {0x90, 0x06},
+    {0x95, 0x0A},
+    {0x96, 0x0C},
+    {0x97, 0x05},
+    {0x9A, 0x14},
+    {0x9C, 0x3F},
+    {0xA5, 0x19},
+    {0xCC, 0x19},
+    {0xCD, 0x0B},
+    {0xCE, 0x13},
+    {0xCF, 0x64},
+    {0xD0, 0x21},
+    {0xEF, 0x01},
+    {0x02, 0x0F},
+    {0x03, 0x10},
+    {0x04, 0x02},
+    {0x25, 0x01},
+    {0x27, 0x39},
+    {0x28, 0x7F},
+    {0x29, 0x08},
+    {0x3E, 0xFF},
+    {0x5E, 0x3D},
+    {0x65, 0x96},
+    {0x67, 0x97},
+    {0x69, 0xCD},
+    {0x6A, 0x01},
+    {0x6D, 0x2C},
+    {0x6E, 0x01},
+    {0x72, 0x01},
+    {0x73, 0x35},
+    {0x74, 0x00},
+    {0x77, 0x01},
 };
 
 static uint8_t m_Paj7620u2_SetPSModeConfig[][2] = {
-    {0xEF,0x00},
-    {0x41,0x00},
-    {0x42,0x02},
-    {0x48,0x20},
-    {0x49,0x00},
-    {0x51,0x13},
-    {0x83,0x00},
-    {0x9F,0xF8},
-    {0x69,0x96},
-    {0x6A,0x02},
-    {0xEF,0x01},
-    {0x01,0x1E},
-    {0x02,0x0F},
-    {0x03,0x10},
-    {0x04,0x02},
-    {0x41,0x50},
-    {0x43,0x34},
-    {0x65,0xCE},
-    {0x66,0x0B},
-    {0x67,0xCE},
-    {0x68,0x0B},
-    {0x69,0xE9},
-    {0x6A,0x05},
-    {0x6B,0x50},
-    {0x6C,0xC3},
-    {0x6D,0x50},
-    {0x6E,0xC3},
-    {0x74,0x05},
+    {0xEF, 0x00},
+    {0x41, 0x00},
+    {0x42, 0x02},
+    {0x48, 0x20},
+    {0x49, 0x00},
+    {0x51, 0x13},
+    {0x83, 0x00},
+    {0x9F, 0xF8},
+    {0x69, 0x96},
+    {0x6A, 0x02},
+    {0xEF, 0x01},
+    {0x01, 0x1E},
+    {0x02, 0x0F},
+    {0x03, 0x10},
+    {0x04, 0x02},
+    {0x41, 0x50},
+    {0x43, 0x34},
+    {0x65, 0xCE},
+    {0x66, 0x0B},
+    {0x67, 0xCE},
+    {0x68, 0x0B},
+    {0x69, 0xE9},
+    {0x6A, 0x05},
+    {0x6B, 0x50},
+    {0x6C, 0xC3},
+    {0x6D, 0x50},
+    {0x6E, 0xC3},
+    {0x74, 0x05},
 };
 
 static uint8_t m_Paj7620u2_SetGestureModeConfig[][2] = {
-    {0xEF,0x00},
-    {0x41,0x00},
-    {0x42,0x00},
-    {0xEF,0x00},
-    {0x48,0x3C},
-    {0x49,0x00},
-    {0x51,0x10},
-    {0x83,0x20},
-    {0x9F,0xF9},
-    {0xEF,0x01},
-    {0x01,0x1E},
-    {0x02,0x0F},
-    {0x03,0x10},
-    {0x04,0x02},
-    {0x41,0x40},
-    {0x43,0x30},
-    {0x65,0x96},
-    {0x66,0x00},
-    {0x67,0x97},
-    {0x68,0x01},
-    {0x69,0xCD},
-    {0x6A,0x01},
-    {0x6B,0xB0},
-    {0x6C,0x04},
-    {0x6D,0x2C},
-    {0x6E,0x01},
-    {0x74,0x00},
-    {0xEF,0x00},
-    {0x41,0xFF},
-    {0x42,0x01},
+    {0xEF, 0x00},
+    {0x41, 0x00},
+    {0x42, 0x00},
+    {0xEF, 0x00},
+    {0x48, 0x3C},
+    {0x49, 0x00},
+    {0x51, 0x10},
+    {0x83, 0x20},
+    {0x9F, 0xF9},
+    {0xEF, 0x01},
+    {0x01, 0x1E},
+    {0x02, 0x0F},
+    {0x03, 0x10},
+    {0x04, 0x02},
+    {0x41, 0x40},
+    {0x43, 0x30},
+    {0x65, 0x96},
+    {0x66, 0x00},
+    {0x67, 0x97},
+    {0x68, 0x01},
+    {0x69, 0xCD},
+    {0x6A, 0x01},
+    {0x6B, 0xB0},
+    {0x6C, 0x04},
+    {0x6D, 0x2C},
+    {0x6E, 0x01},
+    {0x74, 0x00},
+    {0xEF, 0x00},
+    {0x41, 0xFF},
+    {0x42, 0x01},
 };
 
 /* 定义先进先出队列 */
@@ -202,7 +202,7 @@ typedef struct {
     uint16_t buffer[FIFO_MAXSIZE]; /* 相关bit定义参考paj7620u2.h的“手势识别效果” */
     uint16_t offset_read;
     uint16_t offset_write;
-}fifo_s;
+} fifo_s;
 static fifo_s m_fifo_intflags;
 
 /* 轮询方式访问 */
@@ -223,8 +223,9 @@ static inline void FifoPut(fifo_s *fifo, uint16_t flag)
 
 static inline uint16_t FifoGet(fifo_s *fifo, uint16_t *flag)
 {
-    if (fifo->offset_read == fifo->offset_write)
+    if (fifo->offset_read == fifo->offset_write) {
         return 0;
+    }
 
     *flag = fifo->buffer[fifo->offset_read];
     fifo->offset_read = (fifo->offset_read + 1) % FIFO_MAXSIZE;
@@ -289,7 +290,7 @@ static void e53_gs_led_init()
 /***************************************************************
 * 函数名称: paj7620u2_delay_usec
 * 说    明: 忙等待
-* 参    数: 
+* 参    数:
 *           @usec: 忙等待的微秒数
 * 返 回 值: 无
 ***************************************************************/
@@ -308,10 +309,9 @@ static inline void paj7620u2_delay_usec(uint32_t usec)
 static uint8_t paj7620U2_write_null()
 {
     unsigned int ret = 0;
-    
+
     ret = LzI2cWrite(E53_I2C_BUS, PAJ7620U2_I2C_SLAVE_ADDRESS, NULL, 0);
-    if (ret != LZ_HARDWARE_SUCCESS) 
-    {
+    if (ret != LZ_HARDWARE_SUCCESS) {
         printf("%s, %s, %d: LzI2cWrite failed(%d)\n", __FILE__, __func__, __LINE__, ret);
         return 0;
     }
@@ -322,7 +322,7 @@ static uint8_t paj7620U2_write_null()
 /***************************************************************
 * 函数名称: paj7620u2_write_data
 * 说    明: 使用i2c往PAJ7620U2写入数据
-* 参    数: 
+* 参    数:
 *           @addr: 寄存器地址
 *           @data: 数值
 * 返 回 值: 返回1为成功
@@ -336,8 +336,7 @@ static uint8_t paj7620u2_write_data(uint8_t addr, uint8_t data)
     buffer[0] = addr;
     buffer[1] = data;
     ret = LzI2cWrite(E53_I2C_BUS, PAJ7620U2_I2C_SLAVE_ADDRESS, buffer, 2);
-    if (ret != LZ_HARDWARE_SUCCESS) 
-    {
+    if (ret != LZ_HARDWARE_SUCCESS) {
         printf("%s, %s, %d: LzI2cWrite failed(%d)\n", __FILE__, __func__, __LINE__, ret);
         return 0;
     }
@@ -348,7 +347,7 @@ static uint8_t paj7620u2_write_data(uint8_t addr, uint8_t data)
 /***************************************************************
 * 函数名称: paj7620u2_read_data
 * 说    明: 使用i2c读取PAJ7620U2的寄存器数据
-* 参    数: 
+* 参    数:
 *           @addr: 寄存器地址
 *           @data: 数值
 * 返 回 值: 返回1为成功
@@ -361,15 +360,13 @@ static uint8_t paj7620u2_read_data(uint8_t addr, uint8_t *data)
     /* 发送地址给PAJ7620U2 */
     buffer[0] = addr;
     ret = LzI2cWrite(E53_I2C_BUS, PAJ7620U2_I2C_SLAVE_ADDRESS, buffer, 1);
-    if (ret != LZ_HARDWARE_SUCCESS) 
-    {
+    if (ret != LZ_HARDWARE_SUCCESS) {
         printf("%s, %s, %d: LzI2cWrite failed(%d)\n", __FILE__, __func__, __LINE__, ret);
         return 0;
     }
 
     ret = LzI2cRead(E53_I2C_BUS, PAJ7620U2_I2C_SLAVE_ADDRESS, data, 1);
-    if (ret != LZ_HARDWARE_SUCCESS) 
-    {
+    if (ret != LZ_HARDWARE_SUCCESS) {
         printf("%s, %s, %d: LzI2cRead failed(%d)\n", __FILE__, __func__, __LINE__, ret);
         return 0;
     }
@@ -380,23 +377,22 @@ static uint8_t paj7620u2_read_data(uint8_t addr, uint8_t *data)
 /***************************************************************
 * 函数名称: paj7620u2_select_bank
 * 说    明: 选择PAJ7620U2 BANK区域
-* 参    数: 
+* 参    数:
 *           @bank：bank区域[0,1]
 * 返 回 值: 无
 ***************************************************************/
 static void paj7620u2_select_bank(BankId bank)
 {
-    switch (bank)
-    {
-    case BANK0:
-        paj7620u2_write_data(PAJ_REG_BANK_SEL, PAJ_REB_BANK_SEL_BANK0);
-        break;
-    case BANK1:
-        paj7620u2_write_data(PAJ_REG_BANK_SEL, PAJ_REB_BANK_SEL_BANK1);
-        break;
-    default:
-        printf("%s, %s, %d: bank(%d) out of the range!\n", __FILE__, __func__, __LINE__, bank);
-        break;
+    switch (bank) {
+        case BANK0:
+            paj7620u2_write_data(PAJ_REG_BANK_SEL, PAJ_REB_BANK_SEL_BANK0);
+            break;
+        case BANK1:
+            paj7620u2_write_data(PAJ_REG_BANK_SEL, PAJ_REB_BANK_SEL_BANK1);
+            break;
+        default:
+            printf("%s, %s, %d: bank(%d) out of the range!\n", __FILE__, __func__, __LINE__, bank);
+            break;
     }
 }
 
@@ -409,7 +405,7 @@ static void paj7620u2_select_bank(BankId bank)
 static uint8_t paj7620u2_get_bank_id()
 {
     uint8_t bankId = 0;
-    
+
     paj7620u2_read_data(PAJ_REG_BANK_SEL, &bankId);
     return bankId;
 }
@@ -424,7 +420,7 @@ static uint32_t paj7620u2_wake_up()
 {
     uint8_t ret = 0;
     uint8_t data = 0;
-    
+
     /* 查询PAJ7620U2，用于唤醒它 */
     paj7620U2_write_null();
     paj7620u2_delay_usec(1000);
@@ -435,13 +431,11 @@ static uint32_t paj7620u2_wake_up()
     /* 读取bank0 addr 0x0，返回一定是0x20 */
     paj7620u2_select_bank(BANK0);
     ret = paj7620u2_read_data(0x00, &data);
-    if (ret != 1)
-    {
+    if (ret != 1) {
         printf("%s, %s, %d: paj7620u2_read_data failed(%d)\n", __FILE__, __func__, __LINE__, ret);
         return __LINE__;
     }
-    if (data != 0x20)
-    {
+    if (data != 0x20) {
         printf("%s, %s, %d: paj7620u2_read_data 0x%x != 0x20\n", __FILE__, __func__, __LINE__, data);
         return __LINE__;
     }
@@ -477,26 +471,24 @@ static VOID paj7620u2_poll_task(VOID *args)
     uint8_t int_flag1 = 0;
     uint8_t int_flag2 = 0;
     uint16_t value = 0;
-    
-    while (1)
-    {
+
+    while (1) {
         /* 读取Paj7620U2的手势中断寄存器 */
         paj7620u2_select_bank(BANK0);
         paj7620u2_read_data(PAJ_REG_GET_INT_FLAG1, &int_flag1);
         paj7620u2_read_data(PAJ_REG_GET_INT_FLAG2, &int_flag2);
 
         value = 0;
-        if (int_flag1 != 0)
-        {
+        if (int_flag1 != 0) {
             value |= (uint16_t)(int_flag1);
         }
-        if (int_flag2 != 0)
-        {
+        if (int_flag2 != 0) {
             value |= (uint16_t)(int_flag2 << 8);
         }
 
-        if (value != 0)
+        if (value != 0) {
             FifoPut(&m_fifo_intflags, value);
+        }
 
         LOS_Msleep(100);
     }
@@ -510,13 +502,11 @@ static VOID paj7620u2_poll_task(VOID *args)
 ***************************************************************/
 static void paj7620u2_i2c_init()
 {
-    if (I2cIoInit(m_i2cBus) != LZ_HARDWARE_SUCCESS)
-    {
+    if (I2cIoInit(m_i2cBus) != LZ_HARDWARE_SUCCESS) {
         printf("%s, %d: I2cIoInit failed!\n", __FILE__, __LINE__);
         return;
     }
-    if (LzI2cInit(E53_I2C_BUS, m_i2c_freq) != LZ_HARDWARE_SUCCESS)
-    {
+    if (LzI2cInit(E53_I2C_BUS, m_i2c_freq) != LZ_HARDWARE_SUCCESS) {
         printf("%s, %d: I2cIoInit failed!\n", __FILE__, __LINE__);
         return;
     }
@@ -536,7 +526,7 @@ static void paj7620u2_poll_task_init()
     TSK_INIT_PARAM_S task;
     uint8_t int_flag1, int_flag2;
     UINT32 ret;
-    
+
     /* 初始化先进先出缓冲区 */
     m_fifo_intflags.offset_read = 0;
     m_fifo_intflags.offset_write = 0;
@@ -551,8 +541,7 @@ static void paj7620u2_poll_task_init()
     task.uwStackSize    = 0x400;
     task.usTaskPrio     = 10;
     ret = LOS_TaskCreate(&m_pollTaskId, &task);
-    if (ret != LOS_OK)
-    {
+    if (ret != LOS_OK) {
         printf("%s, %d: LOS_TaskCreate failed(%d)\n", __func__, __LINE__, ret);
         /* 解锁任务调度 */
         LOS_TaskUnlock();
@@ -578,24 +567,21 @@ static void paj7620u2_init_config()
 {
     uint8_t ret = 0;
     uint32_t size;
-    
+
     ret = paj7620u2_wake_up();
-    if (ret != 0)
-    {
+    if (ret != 0) {
         printf("%s, %s, %d: paj7620u2_wake_up failed(%d)\n", __FILE__, __func__, __LINE__, ret);
     }
 
     /* 初始化PAJ7620U2 */
     size = sizeof(m_Paj7620u2_InitRegisterConfig) / (sizeof(uint8_t) * 2);
-    for (uint32_t i = 0; i < size; i++) 
-    {
+    for (uint32_t i = 0; i < size; i++) {
         paj7620u2_write_data(m_Paj7620u2_InitRegisterConfig[i][0], m_Paj7620u2_InitRegisterConfig[i][1]);
     }
 
     /* 设置为手势识别模式 */
     size = sizeof(m_Paj7620u2_SetGestureModeConfig) / (sizeof(uint8_t) * 2);
-    for (uint32_t i = 0; i < size; i++)
-    {
+    for (uint32_t i = 0; i < size; i++) {
         paj7620u2_write_data(m_Paj7620u2_SetGestureModeConfig[i][0], m_Paj7620u2_SetGestureModeConfig[i][1]);
     }
 
@@ -617,7 +603,7 @@ unsigned int e53_gs_init()
     e53_gs_led_init();
     /* 上电后，等待PAJ7620U2 700usec */
     paj7620u2_delay_usec(700);
-    /* 初始化i2c */    
+    /* 初始化i2c */
     paj7620u2_i2c_init();
     /* 初始化寄存器配置和工作模式 */
     paj7620u2_init_config();
@@ -628,18 +614,15 @@ unsigned int e53_gs_init()
 /***************************************************************
  * 函数名称: e53_gs_led_up_set
  * 说    明: 手势感应模块向上LED设置
- * 参    数: 
+ * 参    数:
  *          @is_on：1为开启，0为关闭
  * 返 回 值: 无
  ***************************************************************/
 void e53_gs_led_up_set(unsigned char is_on)
 {
-    if (is_on == 0)
-    {
+    if (is_on == 0) {
         LzGpioSetVal(GPIO_LED_UP, LZGPIO_LEVEL_HIGH);
-    }
-    else
-    {
+    } else {
         LzGpioSetVal(GPIO_LED_UP, LZGPIO_LEVEL_LOW);
     }
 }
@@ -647,18 +630,15 @@ void e53_gs_led_up_set(unsigned char is_on)
 /***************************************************************
  * 函数名称: e53_gs_led_down_set
  * 说    明: 手势感应模块向上LED设置
- * 参    数: 
+ * 参    数:
  *          @is_on：1为开启，0为关闭
  * 返 回 值: 无
  ***************************************************************/
 void e53_gs_led_down_set(unsigned char is_on)
 {
-    if (is_on == 0)
-    {
+    if (is_on == 0) {
         LzGpioSetVal(GPIO_LED_DOWN, LZGPIO_LEVEL_HIGH);
-    }
-    else
-    {
+    } else {
         LzGpioSetVal(GPIO_LED_DOWN, LZGPIO_LEVEL_LOW);
     }
 }
@@ -666,18 +646,15 @@ void e53_gs_led_down_set(unsigned char is_on)
 /***************************************************************
  * 函数名称: e53_gs_led_left_set
  * 说    明: 手势感应模块向左LED亮起
- * 参    数: 
+ * 参    数:
  *          @is_on：1为开启，0为关闭
  * 返 回 值: 无
  ***************************************************************/
 void e53_gs_led_left_set(unsigned char is_on)
 {
-    if (is_on == 0)
-    {
+    if (is_on == 0) {
         LzGpioSetVal(GPIO_LED_LEFT, LZGPIO_LEVEL_HIGH);
-    }
-    else
-    {
+    } else {
         LzGpioSetVal(GPIO_LED_LEFT, LZGPIO_LEVEL_LOW);
     }
 }
@@ -685,18 +662,15 @@ void e53_gs_led_left_set(unsigned char is_on)
 /***************************************************************
  * 函数名称: e53_gs_led_right_set
  * 说    明: 手势感应模块向右LED亮起
- * 参    数: 
+ * 参    数:
  *          @is_on：1为开启，0为关闭
  * 返 回 值: 无
  ***************************************************************/
 void e53_gs_led_right_set(unsigned char is_on)
 {
-    if (is_on == 0)
-    {
+    if (is_on == 0) {
         LzGpioSetVal(GPIO_LED_RIGHT, LZGPIO_LEVEL_HIGH);
-    }
-    else
-    {
+    } else {
         LzGpioSetVal(GPIO_LED_RIGHT, LZGPIO_LEVEL_LOW);
     }
 }
@@ -704,18 +678,15 @@ void e53_gs_led_right_set(unsigned char is_on)
 /***************************************************************
  * 函数名称: e53_gs_led_forward_set
  * 说    明: 手势感应模块向前LED亮起
- * 参    数: 
+ * 参    数:
  *          @is_on：1为开启，0为关闭
  * 返 回 值: 无
  ***************************************************************/
 void e53_gs_led_forward_set(unsigned char is_on)
 {
-    if (is_on == 0)
-    {
+    if (is_on == 0) {
         LzGpioSetVal(GPIO_LED_FORWARD, LZGPIO_LEVEL_HIGH);
-    }
-    else
-    {
+    } else {
         LzGpioSetVal(GPIO_LED_FORWARD, LZGPIO_LEVEL_LOW);
     }
 }
@@ -723,18 +694,15 @@ void e53_gs_led_forward_set(unsigned char is_on)
 /***************************************************************
  * 函数名称: e53_gs_led_backward_set
  * 说    明: 手势感应模块向后LED亮起
- * 参    数: 
+ * 参    数:
  *          @is_on：1为开启，0为关闭
  * 返 回 值: 无
  ***************************************************************/
 void e53_gs_led_backward_set(unsigned char is_on)
 {
-    if (is_on == 0)
-    {
+    if (is_on == 0) {
         LzGpioSetVal(GPIO_LED_BACKWARD, LZGPIO_LEVEL_HIGH);
-    }
-    else
-    {
+    } else {
         LzGpioSetVal(GPIO_LED_BACKWARD, LZGPIO_LEVEL_LOW);
     }
 }
@@ -742,18 +710,15 @@ void e53_gs_led_backward_set(unsigned char is_on)
 /***************************************************************
  * 函数名称: e53_gs_led_cw_set
  * 说    明: 手势感应模块顺时针转圈LED亮起
- * 参    数: 
+ * 参    数:
  *          @is_on：1为开启，0为关闭
  * 返 回 值: 无
  ***************************************************************/
 void e53_gs_led_cw_set(unsigned char is_on)
 {
-    if (is_on == 0)
-    {
+    if (is_on == 0) {
         LzGpioSetVal(GPIO_LED_CW, LZGPIO_LEVEL_HIGH);
-    }
-    else
-    {
+    } else {
         LzGpioSetVal(GPIO_LED_CW, LZGPIO_LEVEL_LOW);
     }
 }
@@ -761,18 +726,15 @@ void e53_gs_led_cw_set(unsigned char is_on)
 /***************************************************************
  * 函数名称: e53_gs_led_ccw_set
  * 说    明: 手势感应模块逆时针转圈LED亮起
- * 参    数: 
+ * 参    数:
  *          @is_on：1为开启，0为关闭
  * 返 回 值: 无
  ***************************************************************/
 void e53_gs_led_ccw_set(unsigned char is_on)
 {
-    if (is_on == 0)
-    {
+    if (is_on == 0) {
         LzGpioSetVal(GPIO_LED_CCW, LZGPIO_LEVEL_HIGH);
-    }
-    else
-    {
+    } else {
         LzGpioSetVal(GPIO_LED_CCW, LZGPIO_LEVEL_LOW);
     }
 }
@@ -780,18 +742,15 @@ void e53_gs_led_ccw_set(unsigned char is_on)
 /***************************************************************
  * 函数名称: e53_gs_led_wave_set
  * 说    明: 手势感应模块挥手LED亮起
- * 参    数: 
+ * 参    数:
  *          @is_on：1为开启，0为关闭
  * 返 回 值: 无
  ***************************************************************/
 void e53_gs_led_wave_set(unsigned char is_on)
 {
-    if (is_on == 0)
-    {
+    if (is_on == 0) {
         LzGpioSetVal(GPIO_LED_WAVE, LZGPIO_LEVEL_HIGH);
-    }
-    else
-    {
+    } else {
         LzGpioSetVal(GPIO_LED_WAVE, LZGPIO_LEVEL_LOW);
     }
 }
@@ -799,7 +758,7 @@ void e53_gs_led_wave_set(unsigned char is_on)
 /***************************************************************
  * 函数名称: e53_gs_get_gesture_state
  * 说    明: 获取手势感应模块手势
- * 参    数: 
+ * 参    数:
  *      @flag：获取当前手势
  * 返 回 值: 1为成功，0为失败
  ***************************************************************/
@@ -807,14 +766,10 @@ unsigned int e53_gs_get_gesture_state(unsigned short *flag)
 {
     *flag = 0;
 
-    if (FifoGet(&m_fifo_intflags, flag) != 0)
-    {
+    if (FifoGet(&m_fifo_intflags, flag) != 0) {
         return 1;
-    }
-    else 
-    {
+    } else {
         return 0;
     }
 }
-
 

@@ -17,6 +17,17 @@
 #include "los_task.h"
 #include "e53_intelligent_street_lamp.h"
 
+/* 任务的堆栈大小 */
+#define TASK_STACK_SIZE     20480
+/* 任务的优先级 */
+#define TASK_PRIO           24
+
+/* 循环等待时间 */
+#define WAIT_MSEC           2000
+
+/* 光强度报警值 */
+#define LUMN_ALARM          20.0
+
 /***************************************************************
 * 函数名称: e53_isl_thread
 * 说    明: E53智慧路灯线程
@@ -29,24 +40,20 @@ void e53_isl_thread()
 
     e53_isl_init();
 
-    while (1)
-    {
+    while (1) {
         lum = e53_isl_read_data();
 
         printf("luminance value is %.2f\n", lum);
 
-        if (lum < 20)
-        {
+        if (lum < LUMN_ALARM) {
             isl_light_set_status(ON);
             printf("light on\n");
-        }
-        else
-        {
+        } else {
             isl_light_set_status(OFF);
             printf("light off\n");
         }
 
-        LOS_Msleep(2000);
+        LOS_Msleep(WAIT_MSEC);
     }
 }
 
@@ -63,13 +70,12 @@ void e53_isl_example()
     TSK_INIT_PARAM_S task = {0};
 
     task.pfnTaskEntry = (TSK_ENTRY_FUNC)e53_isl_thread;
-    task.uwStackSize = 10240;
+    task.uwStackSize = TASK_STACK_SIZE;
     task.pcName = "e53_isl_thread";
-    task.usTaskPrio = 24;
+    task.usTaskPrio = TASK_PRIO;
     ret = LOS_TaskCreate(&thread_id, &task);
-    if (ret != LOS_OK)
-    {
-        printf("Failed to create e53_isl_thread ret:0x%x\n", ret);
+    if (ret != LOS_OK) {
+        printf("Falied to create e53_isl_thread ret:0x%x\n", ret);
         return;
     }
 }

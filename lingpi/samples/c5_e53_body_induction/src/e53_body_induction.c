@@ -15,7 +15,7 @@
 
 #include "e53_body_induction.h"
 
-#define BI_I2C0                             0 
+#define BI_I2C0                             0
 #define BI_PWM7                             7
 
 static I2cBusIo m_bi_i2c0m2 = {
@@ -40,31 +40,15 @@ static PwmBusIo m_buzzer  = {
 void e53_bi_init()
 {
     uint32_t ret = LZ_HARDWARE_SUCCESS;
-#if 0
-    /*初始化I2C*/
-    ret = I2cIoInit(m_bi_i2c0m2);
-    if (ret != LZ_HARDWARE_SUCCESS)
-    {
-        printf("init I2C I2C0 io fail ret:%d\n", ret);
-        return;
-    }
-    ret = LzI2cInit(BI_I2C0, 400000);
-    if (ret != LZ_HARDWARE_SUCCESS)
-    {
-        printf("init I2C I2C0 fail ret:%d\n", ret);
-        return;
-    }
-#endif
+
     ret = PwmIoInit(m_buzzer);
-    if (ret != LZ_HARDWARE_SUCCESS)
-    {
+    if (ret != LZ_HARDWARE_SUCCESS) {
         printf("PwmIoInit failed ret:%d\n", ret);
         return;
     }
 
     ret = LzPwmInit(BI_PWM7);
-    if (ret != LZ_HARDWARE_SUCCESS)
-    {
+    if (ret != LZ_HARDWARE_SUCCESS) {
         printf("LzPwmInit 7 failed ret:%d\n", ret);
         return;
     }
@@ -86,13 +70,14 @@ void e53_bi_init()
 ***************************************************************/
 void buzzer_set_status(SWITCH_STATUS_ENUM status)
 {
-    if(status == ON)
-    {
-        LzPwmStart(BI_PWM7, 500000, 1000000);
-    }
-    if(status == OFF)
-    {
+#define PWM_DUTY_NS         500000      /* PWM配置，高电平占用时间，单位为纳秒 */
+#define PWM_CYCLE_NS        1000000     /* PWM配置，整个周期占用时间，单位为纳秒 */
+    if (status == ON) {
+        LzPwmStart(BI_PWM7, PWM_DUTY_NS, PWM_CYCLE_NS);
+    } else if (status == OFF) {
         LzPwmStop(BI_PWM7);
+    } else {
+        printf("status(%d) is error!\n", status);
     }
 }
 

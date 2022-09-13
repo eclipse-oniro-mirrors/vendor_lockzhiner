@@ -52,6 +52,11 @@
 #define LCD_LGRAYBLUE       0XA651 //浅灰蓝色(中间层颜色)
 #define LCD_LBBLUE          0X2B12 //浅棕蓝色(选择条目的反色)
 
+/* 字体大小 */
+#define LCD_FONT_SIZE12     12
+#define LCD_FONT_SIZE16     16
+#define LCD_FONT_SIZE24     24
+#define LCD_FONT_SIZE32     32
 
 /***************************************************************
  * 函数名称: lcd_init

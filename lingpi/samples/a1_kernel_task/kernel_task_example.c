@@ -16,6 +16,16 @@
 #include "los_task.h"
 #include "ohos_init.h"
 
+/* 任务的堆栈大小 */
+#define TASK_STACK_SIZE                         2048
+/* 任务的优先级 */
+#define TASK_ONE_PRIO                           24
+#define TASK_TWO_PRIO                           24
+
+/* 等待时间 */
+#define TASK_ONE_WAIT_MSEC              1000
+#define TASK_TWO_WAIT_MSEC              2000
+
 /***************************************************************
 * 函数名称: task_one
 * 说    明: 线程函数1
@@ -24,10 +34,9 @@
 ***************************************************************/
 void task_one()
 {
-    while (1)
-    {
+    while (1) {
         printf("This is %s\n", __func__);
-        LOS_Msleep(1000);
+        LOS_Msleep(TASK_ONE_WAIT_MSEC);
     }
 }
 
@@ -39,10 +48,9 @@ void task_one()
 ***************************************************************/
 void task_two()
 {
-    while (1)
-    {
+    while (1) {
         printf("This is %s\n", __func__);
-        LOS_Msleep(2000);
+        LOS_Msleep(TASK_TWO_WAIT_MSEC);
     }
 }
 
@@ -61,27 +69,24 @@ void task_example()
     unsigned int ret = LOS_OK;
 
     task1.pfnTaskEntry = (TSK_ENTRY_FUNC)task_one;
-    task1.uwStackSize = 2048;
+    task1.uwStackSize = TASK_STACK_SIZE;
     task1.pcName = "Task_One";
-    task1.usTaskPrio = 24;
+    task1.usTaskPrio = TASK_ONE_PRIO;
     ret = LOS_TaskCreate(&thread_id1, &task1);
-    if (ret != LOS_OK)
-    {
-        printf("Failed to create Task_One ret:0x%x\n", ret);
+    if (ret != LOS_OK) {
+        printf("Falied to create Task_One ret:0x%x\n", ret);
         return;
     }
 
     task2.pfnTaskEntry = (TSK_ENTRY_FUNC)task_two;
-    task2.uwStackSize = 2048;
+    task2.uwStackSize = TASK_STACK_SIZE;
     task2.pcName = "Task_Two";
-    task2.usTaskPrio = 25;
+    task2.usTaskPrio = TASK_TWO_PRIO;
     ret = LOS_TaskCreate(&thread_id2, &task2);
-    if (ret != LOS_OK)
-    {
-        printf("Failed to create Task_Two ret:0x%x\n", ret);
+    if (ret != LOS_OK) {
+        printf("Falied to create Task_Two ret:0x%x\n", ret);
         return;
     }
 }
 
 APP_FEATURE_INIT(task_example);
-

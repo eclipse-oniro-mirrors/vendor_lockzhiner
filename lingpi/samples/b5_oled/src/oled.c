@@ -44,10 +44,23 @@
 #define OLED_RST_Set()
 #else
 #define OLED_I2C_BUS        1
-static I2cBusIo m_i2cBus =
-{
-    .scl =  {.gpio = GPIO0_PC2, .func = MUX_FUNC5, .type = PULL_NONE, .drv = DRIVE_KEEP, .dir = LZGPIO_DIR_KEEP, .val = LZGPIO_LEVEL_KEEP},
-    .sda =  {.gpio = GPIO0_PC1, .func = MUX_FUNC5, .type = PULL_NONE, .drv = DRIVE_KEEP, .dir = LZGPIO_DIR_KEEP, .val = LZGPIO_LEVEL_KEEP},
+static I2cBusIo m_i2cBus = {
+    .scl =  {
+        .gpio = GPIO0_PC2,
+        .func = MUX_FUNC5,
+        .type = PULL_NONE,
+        .drv = DRIVE_KEEP,
+        .dir = LZGPIO_DIR_KEEP,
+        .val = LZGPIO_LEVEL_KEEP
+    },
+    .sda =  {
+        .gpio = GPIO0_PC1,
+        .func = MUX_FUNC5,
+        .type = PULL_NONE,
+        .drv = DRIVE_KEEP,
+        .dir = LZGPIO_DIR_KEEP,
+        .val = LZGPIO_LEVEL_KEEP
+    },
     .id = FUNC_ID_I2C1,
     .mode = FUNC_MODE_M1,
 };
@@ -58,26 +71,25 @@ static unsigned int m_i2c_freq = 400000;
 #define OLED_CMD            0 // OLED的命令操作标记
 #define OLED_DATA           1 // OLED的数据操作标记
 
-//////////////////////////////////////////////////////////////
-
+/* 字节的bits数目 */
+#define BYTE_TO_BITS        8
 
 /***************************************************************
  * 函数名称: oled_pow
  * 说    明: 计算m^n
  * 参    数:
- *      @m：
- *      @n：
+ *      @m：计算m^n的m
+ *      @n：计算m^n中的n
  * 返 回 值: 计算结果值
  ***************************************************************/
 static uint32_t oled_pow(uint8_t m, uint8_t n)
 {
     uint32_t result = 1;
-    
-    while (n--)
-    {
+
+    while (n--) {
         result *= m;
     }
-    
+
     return result;
 }
 
@@ -128,7 +140,7 @@ static inline void iic_wait_ack()
 /***************************************************************
  * 函数名称: write_iic_byte
  * 说    明: i2c写单个字节
- * 参    数: 
+ * 参    数:
  *      @IIC_Byte：数值
  * 返 回 值: 无
  ***************************************************************/
@@ -138,17 +150,13 @@ static inline void write_iic_byte(unsigned char iic_byte)
     unsigned char m, da;
     da = iic_byte;
     OLED_SCLK_Clr();
-    for (i = 0; i < 8; i++)
-    {
+    for (i = 0; i < BYTE_TO_BITS; i++) {
         m = da;
         //OLED_SCLK_Clr();
         m = m & 0x80;
-        if (m == 0x80)
-        {
+        if (m == 0x80) {
             OLED_SDIN_Set();
-        }
-        else
-        {
+        } else {
             OLED_SDIN_Clr();
         }
         da = da << 1;
@@ -161,7 +169,7 @@ static inline void write_iic_byte(unsigned char iic_byte)
 /***************************************************************
  * 函数名称: write_iic_command
  * 说    明: 通过i2c通信协议，往芯片写入一个命令
- * 参    数: 
+ * 参    数:
  *      @IIC_Command：命令数值
  * 返 回 值: 无
  ***************************************************************/
@@ -183,7 +191,7 @@ static inline void write_iic_command(unsigned char iic_command)
 /***************************************************************
  * 函数名称: write_iic_data
  * 说    明: 通过i2c通信协议，往芯片写入一个数据
- * 参    数: 
+ * 参    数:
  *      @IIC_Data：数据数值
  * 返 回 值: 无
  ***************************************************************/
@@ -204,7 +212,7 @@ static inline void write_iic_data(unsigned char iic_data)
 /***************************************************************
  * 函数名称: write_iic_command
  * 说    明: 通过i2c通信协议，往芯片写入一个命令
- * 参    数: 
+ * 参    数:
  *      @IIC_Command：命令数值
  * 返 回 值: 无
  ***************************************************************/
@@ -217,8 +225,7 @@ static inline void write_iic_command(unsigned char iic_command)
     buffer[0] = 0x00;
     buffer[1] = iic_command;
     ret = LzI2cWrite(OLED_I2C_BUS, OLED_I2C_ADDRESS, buffer, 2);
-    if (ret != 0)
-    {
+    if (ret != 0) {
         printf("%s, %s, %d: LzI2cWrite failed(%d)!\n", __FILE__, __func__, __LINE__, ret);
     }
 }
@@ -227,7 +234,7 @@ static inline void write_iic_command(unsigned char iic_command)
 /***************************************************************
  * 函数名称: write_iic_data
  * 说    明: 通过i2c通信协议，往芯片写入一个数据
- * 参    数: 
+ * 参    数:
  *      @iic_data：数据数值
  * 返 回 值: 无
  ***************************************************************/
@@ -240,8 +247,7 @@ static inline void write_iic_data(unsigned char iic_data)
     buffer[0] = 0x40;
     buffer[1] = iic_data;
     ret = LzI2cWrite(OLED_I2C_BUS, OLED_I2C_ADDRESS, buffer, 2);
-    if (ret != 0)
-    {
+    if (ret != 0) {
         printf("%s, %s, %d: LzI2cWrite failed(%d)!\n", __FILE__, __func__, __LINE__, ret);
     }
 }
@@ -251,23 +257,18 @@ static inline void write_iic_data(unsigned char iic_data)
 /***************************************************************
  * 函数名称: oled_wr_byte
  * 说    明: 往芯片写数据
- * 参    数: 
+ * 参    数:
  *      @data：数据数值
  *      @cmd：该数据是命令，还是数据
  * 返 回 值: 无
  ***************************************************************/
 static inline void oled_wr_byte(unsigned dat, unsigned cmd)
 {
-    if (cmd == OLED_DATA)
-    {
+    if (cmd == OLED_DATA) {
         write_iic_data(dat);
-    }
-    else if (cmd == OLED_CMD)
-    {
+    } else if (cmd == OLED_CMD) {
         write_iic_command(dat);
-    }
-    else
-    {
+    } else {
         printf("%s, %s, %d: cmd(%d) out of the range!\n", __FILE__, __func__, __LINE__, cmd);
     }
 }
@@ -276,7 +277,7 @@ static inline void oled_wr_byte(unsigned dat, unsigned cmd)
 /***************************************************************
  * 函数名称: oled_set_pos
  * 说    明: 坐标设置
- * 参    数: 
+ * 参    数:
  *      @x：X轴坐标
  *      @y：Y轴坐标
  * 返 回 值: 无
@@ -306,55 +307,53 @@ unsigned int oled_init()
     LzGpioInit(GPIO_I2C_SCL);
     LzGpioSetDir(GPIO_I2C_SCL, LZGPIO_DIR_OUT);
 #else
-    if (I2cIoInit(m_i2cBus) != LZ_HARDWARE_SUCCESS)
-    {
+    if (I2cIoInit(m_i2cBus) != LZ_HARDWARE_SUCCESS) {
         printf("%s, %d: I2cIoInit failed!\n", __FILE__, __LINE__);
         return __FILE__;
     }
-    if (LzI2cInit(OLED_I2C_BUS, m_i2c_freq) != LZ_HARDWARE_SUCCESS)
-    {
+    if (LzI2cInit(OLED_I2C_BUS, m_i2c_freq) != LZ_HARDWARE_SUCCESS) {
         printf("%s, %d: I2cIoInit failed!\n", __FILE__, __LINE__);
         return __FILE__;
     }
 #endif
-    
+
     LOS_Msleep(200);
-    
-    oled_wr_byte(0xAE, OLED_CMD); //--display off
-    oled_wr_byte(0x00, OLED_CMD); //---set low column address
-    oled_wr_byte(0x10, OLED_CMD); //---set high column address
-    oled_wr_byte(0x40, OLED_CMD); //--set start line address
-    oled_wr_byte(0xB0, OLED_CMD); //--set page address
+
+    oled_wr_byte(0xAE, OLED_CMD); // --display off
+    oled_wr_byte(0x00, OLED_CMD); // ---set low column address
+    oled_wr_byte(0x10, OLED_CMD); // ---set high column address
+    oled_wr_byte(0x40, OLED_CMD); // --set start line address
+    oled_wr_byte(0xB0, OLED_CMD); // --set page address
     oled_wr_byte(0x81, OLED_CMD); // contract control
-    oled_wr_byte(0xFF, OLED_CMD); //--128
-    oled_wr_byte(0xA1, OLED_CMD); //set segment remap
-    oled_wr_byte(0xA6, OLED_CMD); //--normal / reverse
-    oled_wr_byte(0xA8, OLED_CMD); //--set multiplex ratio(1 to 64)
-    oled_wr_byte(0x3F, OLED_CMD); //--1/32 duty
-    oled_wr_byte(0xC8, OLED_CMD); //Com scan direction
-    oled_wr_byte(0xD3, OLED_CMD); //-set display offset
-    oled_wr_byte(0x00, OLED_CMD); //
-    
-    oled_wr_byte(0xD5, OLED_CMD); //set osc division
-    oled_wr_byte(0x80, OLED_CMD); //
-    
-    oled_wr_byte(0xD8, OLED_CMD); //set area color mode off
-    oled_wr_byte(0x05, OLED_CMD); //
-    
-    oled_wr_byte(0xD9, OLED_CMD); //Set Pre-Charge Period
-    oled_wr_byte(0xF1, OLED_CMD); //
-    
-    oled_wr_byte(0xDA, OLED_CMD); //set com pin configuartion
-    oled_wr_byte(0x12, OLED_CMD); //
-    
-    oled_wr_byte(0xDB, OLED_CMD); //set Vcomh
-    oled_wr_byte(0x30, OLED_CMD); //
-    
-    oled_wr_byte(0x8D, OLED_CMD); //set charge pump enable
-    oled_wr_byte(0x14, OLED_CMD); //
-    
-    oled_wr_byte(0xAF, OLED_CMD); //--turn on oled panel
-    
+    oled_wr_byte(0xFF, OLED_CMD); // --128
+    oled_wr_byte(0xA1, OLED_CMD); // set segment remap
+    oled_wr_byte(0xA6, OLED_CMD); // --normal / reverse
+    oled_wr_byte(0xA8, OLED_CMD); // --set multiplex ratio(1 to 64)
+    oled_wr_byte(0x3F, OLED_CMD); // --1/32 duty
+    oled_wr_byte(0xC8, OLED_CMD); // Com scan direction
+    oled_wr_byte(0xD3, OLED_CMD); // -set display offset
+    oled_wr_byte(0x00, OLED_CMD);
+
+    oled_wr_byte(0xD5, OLED_CMD); // set osc division
+    oled_wr_byte(0x80, OLED_CMD);
+
+    oled_wr_byte(0xD8, OLED_CMD); // set area color mode off
+    oled_wr_byte(0x05, OLED_CMD);
+
+    oled_wr_byte(0xD9, OLED_CMD); // Set Pre-Charge Period
+    oled_wr_byte(0xF1, OLED_CMD);
+
+    oled_wr_byte(0xDA, OLED_CMD); // set com pin configuartion
+    oled_wr_byte(0x12, OLED_CMD);
+
+    oled_wr_byte(0xDB, OLED_CMD); // set Vcomh
+    oled_wr_byte(0x30, OLED_CMD);
+
+    oled_wr_byte(0x8D, OLED_CMD); // set charge pump enable
+    oled_wr_byte(0x14, OLED_CMD);
+
+    oled_wr_byte(0xAF, OLED_CMD); // --turn on oled panel
+
     return 0;
 }
 
@@ -386,14 +385,12 @@ unsigned int oled_deinit()
 void oled_clear()
 {
     uint8_t i, n;
-    
-    for (i = 0; i < 8; i++)
-    {
-        oled_wr_byte(0xb0 + i, OLED_CMD); //设置页地址（0~7）
-        oled_wr_byte(0x00, OLED_CMD); //设置显示位置—列低地址
-        oled_wr_byte(0x10, OLED_CMD); //设置显示位置—列高地址
-        for (n = 0; n < 128; n++)
-        {
+
+    for (i = 0; i < BYTE_TO_BITS; i++) {
+        oled_wr_byte(0xb0 + i, OLED_CMD);   // 设置页地址（0~7）
+        oled_wr_byte(0x00, OLED_CMD);       // 设置显示位置—列低地址
+        oled_wr_byte(0x10, OLED_CMD);       // 设置显示位置—列高地址
+        for (n = 0; n < OLED_COLUMN_MAX; n++) {
             oled_wr_byte(0, OLED_DATA);
         }
     }
@@ -408,9 +405,9 @@ void oled_clear()
  ***************************************************************/
 void oled_display_on(void)
 {
-    oled_wr_byte(0X8D, OLED_CMD); //SET DCDC命令
-    oled_wr_byte(0X14, OLED_CMD); //DCDC ON
-    oled_wr_byte(0XAF, OLED_CMD); //DISPLAY ON
+    oled_wr_byte(0X8D, OLED_CMD); // SET DCDC命令
+    oled_wr_byte(0X14, OLED_CMD); // DCDC ON
+    oled_wr_byte(0XAF, OLED_CMD); // DISPLAY ON
 }
 
 
@@ -422,16 +419,16 @@ void oled_display_on(void)
  ***************************************************************/
 void oled_display_off(void)
 {
-    oled_wr_byte(0X8D, OLED_CMD); //SET DCDC命令
-    oled_wr_byte(0X10, OLED_CMD); //DCDC OFF
-    oled_wr_byte(0XAE, OLED_CMD); //DISPLAY OFF
+    oled_wr_byte(0X8D, OLED_CMD); // SET DCDC命令
+    oled_wr_byte(0X10, OLED_CMD); // DCDC OFF
+    oled_wr_byte(0XAE, OLED_CMD); // DISPLAY OFF
 }
 
 
 /***************************************************************
  * 函数名称: oled_show_char
  * 说    明: oled显示字符
- * 参    数: 
+ * 参    数:
  *      @x：字符的X轴坐标
  *      @y：字符的Y轴坐标
  *      @chr：字符
@@ -440,37 +437,33 @@ void oled_display_off(void)
  ***************************************************************/
 void oled_show_char(uint8_t x, uint8_t y, uint8_t chr, uint8_t chr_size)
 {
+#define F8X16_LINE_DATA         8
+#define F6X8_LINE_DATA          6
+#define BYTE_BITS               8
+#define CHAR_LEN                16
     unsigned char c = 0, i = 0;
-    
-    c = chr - ' '; //得到偏移后的值
-    
-    if (x > (OLED_COLUMN_MAX - 1))
-    {
+
+    c = chr - ' '; // 得到偏移后的值
+
+    if (x > (OLED_COLUMN_MAX - 1)) {
         x = 0;
         y = y + 2;
     }
-    
-    if (chr_size == 16)
-    {
+
+    if (chr_size == OLED_CHR_SIZE_16) {
         oled_set_pos(x, y);
-        for (i = 0; i < 8; i++)
-        {
+        for (i = 0; i < F8X16_LINE_DATA; i++) {
             oled_wr_byte(F8X16[c * 16 + i], OLED_DATA);
         }
         oled_set_pos(x, y + 1);
-        for (i = 0; i < 8; i++)
-        {
-            oled_wr_byte(F8X16[c * 16 + i + 8], OLED_DATA);
+        for (i = 0; i < F8X16_LINE_DATA; i++) {
+            oled_wr_byte(F8X16[c * CHAR_LEN + i + BYTE_BITS], OLED_DATA);
         }
-    }
-    else
-    {
+    } else {
         oled_set_pos(x, y);
-        for (i = 0; i < 6; i++)
-        {
+        for (i = 0; i < F6X8_LINE_DATA; i++) {
             oled_wr_byte(F6x8[c][i], OLED_DATA);
         }
-        
     }
 }
 
@@ -478,7 +471,7 @@ void oled_show_char(uint8_t x, uint8_t y, uint8_t chr, uint8_t chr_size)
 /***************************************************************
  * 函数名称: oled_show_num
  * 说    明: oled显示数字
- * 参    数: 
+ * 参    数:
  *      @x：数字的X轴坐标
  *      @y：数字的Y轴坐标
  *      @num：数字
@@ -488,26 +481,22 @@ void oled_show_char(uint8_t x, uint8_t y, uint8_t chr, uint8_t chr_size)
  ***************************************************************/
 void oled_show_num(uint8_t x, uint8_t y, uint32_t num, uint8_t len, uint8_t size2)
 {
+    uint8_t div = 2;
     uint8_t t, temp;
     uint8_t enshow = 0;
-    
-    for (t = 0; t < len; t++)
-    {
+
+    for (t = 0; t < len; t++) {
         temp = (num / oled_pow(10, len - t - 1)) % 10;
-        if (enshow == 0 && t < (len - 1))
-        {
-            if (temp == 0)
-            {
-                oled_show_char(x + (size2 / 2)*t, y, ' ', size2);
+        if (enshow == 0 && t < (len - 1)) {
+            if (temp == 0) {
+                oled_show_char(x + (size2 / div)*t, y, ' ', size2);
                 continue;
-            }
-            else
-            {
+            } else {
                 enshow = 1;
             }
-            
+
         }
-        oled_show_char(x + (size2 / 2)*t, y, temp + '0', size2);
+        oled_show_char(x + (size2 / div)*t, y, temp + '0', size2);
     }
 }
 
@@ -515,7 +504,7 @@ void oled_show_num(uint8_t x, uint8_t y, uint32_t num, uint8_t len, uint8_t size
 /***************************************************************
  * 函数名称: oled_show_string
  * 说    明: oled显示字符串
- * 参    数: 
+ * 参    数:
  *      @x：字符串的X轴坐标
  *      @y：字符串的Y轴坐标
  *      @p：字符串
@@ -525,13 +514,11 @@ void oled_show_num(uint8_t x, uint8_t y, uint32_t num, uint8_t len, uint8_t size
 void oled_show_string(uint8_t x, uint8_t y, uint8_t *chr, uint8_t chr_size)
 {
     unsigned char j = 0;
-    
-    while (chr[j] != '\0')
-    {
+
+    while (chr[j] != '\0') {
         oled_show_char(x, y, chr[j], chr_size);
         x += 8;
-        if (x > 120)
-        {
+        if (x > OLED_COLUMN_MAX) {
             x = 0;
             y += 2;
         }
@@ -543,7 +530,7 @@ void oled_show_string(uint8_t x, uint8_t y, uint8_t *chr, uint8_t chr_size)
 /***************************************************************
  * 函数名称: oled_draw_bmp
  * 说    明: oled显示图片
- * 参    数: 
+ * 参    数:
  *      @x0：图片的起始点X轴坐标，取值为0~127
  *      @y0：图片的起始点Y轴坐标，取值为0~63
  *      @x1：图片的结束点X轴坐标，取值为0~127
@@ -553,24 +540,20 @@ void oled_show_string(uint8_t x, uint8_t y, uint8_t *chr, uint8_t chr_size)
  ***************************************************************/
 void oled_draw_bmp(unsigned char x0, unsigned char y0, unsigned char x1, unsigned char y1, unsigned char bmp[])
 {
+    unsigned char xy_points = 8;
     unsigned int j = 0;
     unsigned char x, y;
-    
-    if (y1 % 8 == 0)
-    {
-        y = y1 / 8;
+
+    if (y1 % xy_points == 0) {
+        y = y1 / xy_points;
+    } else {
+        y = y1 / xy_points + 1;
     }
-    else
-    {
-        y = y1 / 8 + 1;
-    }
-    
-    for (y = y0; y < y1; y++)
-    {
+
+    for (y = y0; y < y1; y++) {
         oled_set_pos(x0, y);
 
-        for (x = x0; x < x1; x++)
-        {
+        for (x = x0; x < x1; x++) {
             oled_wr_byte(bmp[j++], OLED_DATA);
         }
     }
