@@ -21,5 +21,5 @@ static const char BUILD_TIME[64];
 const char* HalGetBuildTime(void)
 {
     snprintf(BUILD_TIME, sizeof(BUILD_TIME), "%s", __TIME__);
-    return __TIME__;
+    return const_cast<char*>(__TIME__);
 }
