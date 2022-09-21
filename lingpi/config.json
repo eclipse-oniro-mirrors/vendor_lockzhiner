@@ -20,18 +20,32 @@
           ]
         },
         {
+          "subsystem": "systemabilitymgr",
+          "components": [
+            { "component": "samgr_lite", "features":[] }
+          ]
+        },
+        {
+          "subsystem": "security",
+          "components": [
+            { "component": "huks", "features":
+              [
+                "disable_huks_binary = false",
+                "disable_authenticate = false",
+                "huks_use_lite_storage = true",
+                "huks_use_hardware_root_key = true",
+                "huks_config_file = \"hks_config_lite.h\""
+              ]
+            }
+          ]
+        },
+        {
           "subsystem": "hiviewdfx",
           "components": [
             { "component": "hilog_lite", "features":[] },
             { "component": "hievent_lite", "features":[] },
             { "component": "blackbox", "features":[] },
             { "component": "hidumper_mini", "features":[] }
-          ]
-        },
-        {
-          "subsystem": "distributedschedule",
-          "components": [
-            { "component": "samgr_lite", "features":[] }
           ]
         },
         {
