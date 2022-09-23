@@ -52,40 +52,40 @@ typedef enum {
 } BankId;
 
 /* BANK的寄存器地址和BANK0~1 */
-#define PAJ_REG_BANK_SEL                0xEF //BANK选择寄存器
-#define PAJ_REB_BANK_SEL_BANK0          0x00 //BANK0
-#define PAJ_REB_BANK_SEL_BANK1          0x01 //BANK1
+#define PAJ_REG_BANK_SEL                0xEF // BANK选择寄存器
+#define PAJ_REB_BANK_SEL_BANK0          0x00 // BANK0
+#define PAJ_REB_BANK_SEL_BANK1          0x01 // BANK1
 
 /* BANK0 寄存器组 */
-#define PAJ_REG_SUSPEND_CMD             0x03 //设置设备挂起
-#define PAJ_REG_SET_INT_FLAG1           0x41 //设置手势检测中断寄存器1
-#define PAJ_REG_SET_INT_FLAG2           0x42 //设置手势检测中断寄存器2
-#define PAJ_REG_GET_INT_FLAG1           0x43 //获取手势检测中断标志寄存器1(获取手势结果)
-#define PAJ_REG_GET_INT_FLAG2           0x44 //获取手势检测中断标志寄存器2(获取手势结果)
-#define PAJ_REG_GET_STATE               0x45 //获取手势检测工作状态
-#define PAJ_REG_SET_HIGH_THRESHOLD      0x69 //设置滞后高阀值（仅在接近检测模式下）
-#define PAJ_REG_SET_LOW_THRESEHOLD      0x6A //设置滞后低阀值
-#define PAJ_REG_GET_APPROACH_STATE      0x6B //获取接近状态 （1：PS data>= PS threshold ,0:PS data<= Low threshold）
-#define PAJ_REG_GET_GESTURE_DATA        0x6C //获取接近数据
-#define PAJ_REG_GET_OBJECT_BRIGHTNESS   0xB0 //获取被照物体亮度（最大255）
-#define PAJ_REG_GET_OBJECT_SIZE_1       0xB1 //获取被照物体大小低八位（bit7:0）(最大900)
-#define PAJ_REG_GET_OBJECT_SIZE_2       0xB2 //获取被照物体大小高四位（bit3:0）
+#define PAJ_REG_SUSPEND_CMD             0x03 // 设置设备挂起
+#define PAJ_REG_SET_INT_FLAG1           0x41 // 设置手势检测中断寄存器1
+#define PAJ_REG_SET_INT_FLAG2           0x42 // 设置手势检测中断寄存器2
+#define PAJ_REG_GET_INT_FLAG1           0x43 // 获取手势检测中断标志寄存器1(获取手势结果)
+#define PAJ_REG_GET_INT_FLAG2           0x44 // 获取手势检测中断标志寄存器2(获取手势结果)
+#define PAJ_REG_GET_STATE               0x45 // 获取手势检测工作状态
+#define PAJ_REG_SET_HIGH_THRESHOLD      0x69 // 设置滞后高阀值（仅在接近检测模式下）
+#define PAJ_REG_SET_LOW_THRESEHOLD      0x6A // 设置滞后低阀值
+#define PAJ_REG_GET_APPROACH_STATE      0x6B // 获取接近状态 （1：PS data>= PS threshold ,0:PS data<= Low threshold）
+#define PAJ_REG_GET_GESTURE_DATA        0x6C // 获取接近数据
+#define PAJ_REG_GET_OBJECT_BRIGHTNESS   0xB0 // 获取被照物体亮度（最大255）
+#define PAJ_REG_GET_OBJECT_SIZE_1       0xB1 // 获取被照物体大小低八位（bit7:0）(最大900)
+#define PAJ_REG_GET_OBJECT_SIZE_2       0xB2 // 获取被照物体大小高四位（bit3:0）
 
 /* BANK1 寄存器组 */
-#define PAJ_REG_SET_PS_GAIN             0x44 //设置检测增益大小 (0:1x gain 1:2x gain)
-#define PAJ_REG_SET_IDLE_S1_STEP_0      0x67 //设置S1的响应因子
+#define PAJ_REG_SET_PS_GAIN             0x44 // 设置检测增益大小 (0:1x gain 1:2x gain)
+#define PAJ_REG_SET_IDLE_S1_STEP_0      0x67 // 设置S1的响应因子
 #define PAJ_REG_SET_IDLE_S1_STEP_1      0x68
-#define PAJ_REG_SET_IDLE_S2_STEP_0      0x69 //设置S2的响应因子
+#define PAJ_REG_SET_IDLE_S2_STEP_0      0x69 // 设置S2的响应因子
 #define PAJ_REG_SET_IDLE_S2_STEP_1      0x6A
-#define PAJ_REG_SET_OP_TO_S1_STEP_0     0x6B //设置OP到S1的过度时间
+#define PAJ_REG_SET_OP_TO_S1_STEP_0     0x6B // 设置OP到S1的过度时间
 #define PAJ_REG_SET_OP_TO_S1_STEP_1     0x6C
-#define PAJ_REG_SET_S1_TO_S2_STEP_0     0x6D //设置S1到S2的过度时间
+#define PAJ_REG_SET_S1_TO_S2_STEP_0     0x6D // 设置S1到S2的过度时间
 #define PAJ_REG_SET_S1_TO_S2_STEP_1     0x6E
-#define PAJ_REG_OPERATION_ENABLE        0x72 //设置PAJ7620U2使能寄存器
+#define PAJ_REG_OPERATION_ENABLE        0x72 // 设置PAJ7620U2使能寄存器
 
 static uint8_t m_Paj7620u2_InitRegisterConfig[][2] = {
-    {0xEF, 0x00}, //切换bank0
-    {0x37, 0x07}, //
+    {0xEF, 0x00}, // 切换bank0
+    {0x37, 0x07},
     {0x38, 0x17},
     {0x39, 0x06},
     {0x41, 0x00},
