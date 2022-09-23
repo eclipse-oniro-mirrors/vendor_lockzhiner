@@ -276,8 +276,6 @@ static void e53_iv01_deinit_pwm(void)
  ***************************************************************/
 static void e53_iv01_init_interrupt(void)
 {
-    //LzI2cInit(0, 400000);
-
     /* 创建信号量 */
     LOS_SemCreate(0, &m_task_sem);
 

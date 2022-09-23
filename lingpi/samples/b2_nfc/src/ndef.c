@@ -22,7 +22,6 @@
 typedef uint8_t (*composeRtdPtr)(const NDEFDataStr *ndef, NDEFRecordStr *ndefRecord, uint8_t *I2CMsg);
 static composeRtdPtr composeRtd[] = {composeRtdText, composeRtdUri};
 
-
 static int16_t firstRecord(UncompletePageStr *page, const NDEFDataStr *data, RecordPosEnu rtdPosition)
 {
     NDEFRecordStr record;
@@ -152,7 +151,6 @@ static bool writeUserPayload(int16_t payloadPtr, const NDEFDataStr *data, Uncomp
     // Copy the payload
     memcpy(&nfcPageBuffer[payloadPtr], data->rtdPayload, copyByte);
     addedPayload = copyByte;
-    
     
     // if it is sufficient one send add the NDEF_END_BYTE
     if ((addedPayload >= data->rtdPayloadlength) && ((payloadPtr + copyByte) < NFC_PAGE_SIZE)) {

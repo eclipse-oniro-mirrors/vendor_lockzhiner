@@ -117,7 +117,6 @@ static LzSpiConfig m_spiConf = {
 /* 中文转化为UTF-8的字节数 */
 #define CHINESE_TO_BYTES        2
 
-
 static void lcd_write_bus(uint8_t dat)
 {
 #if LCD_ENABLE_SPI

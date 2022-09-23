@@ -173,8 +173,6 @@ int wifi_udp_server(void* arg)
     }
 }
 
-
-
 void udp_client_msg_handle(int fd, struct sockaddr* dst)
 {
     socklen_t len = sizeof(*dst);

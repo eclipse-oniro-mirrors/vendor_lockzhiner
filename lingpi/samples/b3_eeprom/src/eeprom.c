@@ -173,7 +173,7 @@ unsigned int eeprom_writebyte(unsigned int addr, unsigned char data)
         return 0;
     }
 
-    /* K24C02芯片需要时间完成写操作，在此之前不响应其他操作*/
+    /* K24C02芯片需要时间完成写操作，在此之前不响应其他操作 */
     eeprog_delay_usec(1000);
 
     return 1;
@@ -229,7 +229,7 @@ unsigned int eeprom_writepage(unsigned int addr, unsigned char *data, unsigned i
         return 0;
     }
 
-    /* K24C02芯片需要时间完成写操作，在此之前不响应其他操作*/
+    /* K24C02芯片需要时间完成写操作，在此之前不响应其他操作 */
     eeprog_delay_usec(K24C02_DELAY_USEC);
 
     return data_len;
