@@ -19,13 +19,14 @@
 static inline uint32_t chinese_utf8_to_ascii(uint8_t *src, uint32_t src_len, uint8_t *dst, uint32_t *dst_len)
 {
 #define UTF8_TO_ASCII_BYTES         3
+#define UTF8_OFFSET                 2
     uint32_t i;
     uint32_t offset = 0;
     
     for (i = 0; i < src_len; i += UTF8_TO_ASCII_BYTES) {
         dst[offset] = src[i];
         dst[offset + 1] = src[i + 1];
-        offset += 2;
+        offset += UTF8_OFFSET;
     }
     
     *dst_len = offset;

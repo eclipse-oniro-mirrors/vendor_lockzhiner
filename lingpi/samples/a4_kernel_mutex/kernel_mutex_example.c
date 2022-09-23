@@ -35,7 +35,7 @@ static unsigned int m_data = 0;
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void write_thread()
+void write_thread(void)
 {
     while (1) {
         LOS_MuxPend(m_mutex_id, LOS_WAIT_FOREVER);
@@ -54,7 +54,7 @@ void write_thread()
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void read_thread()
+void read_thread(void)
 {
     /*delay 1s*/
     LOS_Msleep(READ_WAIT_MSEC);
@@ -74,7 +74,7 @@ void read_thread()
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void mutex_example()
+void mutex_example(void)
 {
     unsigned int thread_id1;
     unsigned int thread_id2;

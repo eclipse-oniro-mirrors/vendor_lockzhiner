@@ -46,7 +46,7 @@ static I2cBusIo m_sc_i2c0m2 = {
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void e53_sc_io_init()
+void e53_sc_io_init(void)
 {
     unsigned int ret = LZ_HARDWARE_SUCCESS;
 
@@ -162,7 +162,7 @@ void mpu6050_read_acc(short *acc_data)
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void action_interrupt()
+void action_interrupt(void)
 {
     mpu6050_write_reg(MPU6050_RA_MOT_THR, 0x03); // 运动阈值
     mpu6050_write_reg(MPU6050_RA_MOT_DUR, 0x14); // 检测时间20ms 单位1ms
@@ -174,7 +174,7 @@ void action_interrupt()
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void mpu6050_init()
+void mpu6050_init(void)
 {
 #define DELAY_COUNT         1000000
 #define RESET_DELAY_MSEC    20          /* 复位等待设备重启完毕 */
@@ -205,7 +205,7 @@ void mpu6050_init()
   * 返 回 值: 无
   * 说    明: 无
   ***************************************************************/
-uint8_t mpu6050_read_id()
+uint8_t mpu6050_read_id(void)
 {
     unsigned char buff = 0;
 
@@ -224,7 +224,7 @@ uint8_t mpu6050_read_id()
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void e53_sc_init()
+void e53_sc_init(void)
 {
 #define WAIT_MPU6050_INIT_MSEC      1000
     e53_sc_io_init();
@@ -292,4 +292,3 @@ void led_d2_set(SWITCH_STATUS_ENUM status)
         LzGpioSetVal(GPIO1_PD0, LZGPIO_LEVEL_HIGH);
     }
 }
-

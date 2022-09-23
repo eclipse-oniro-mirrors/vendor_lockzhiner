@@ -101,7 +101,7 @@ static uint32_t oled_pow(uint8_t m, uint8_t n)
  * 参    数: 无
  * 返 回 值: 无
  ***************************************************************/
-static inline void iic_start()
+static inline void iic_start(void)
 {
     OLED_SCLK_Set();
     OLED_SDIN_Set();
@@ -116,7 +116,7 @@ static inline void iic_start()
  * 参    数: 无
  * 返 回 值: 无
  ***************************************************************/
-static inline void iic_stop()
+static inline void iic_stop(void)
 {
     OLED_SCLK_Set() ;
     OLED_SDIN_Clr();
@@ -130,7 +130,7 @@ static inline void iic_stop()
  * 参    数: 无
  * 返 回 值: 无
  ***************************************************************/
-static inline void iic_wait_ack()
+static inline void iic_wait_ack(void)
 {
     OLED_SCLK_Set();
     OLED_SCLK_Clr();
@@ -297,7 +297,7 @@ static inline void oled_set_pos(unsigned char x, unsigned char y)
  * 参    数: 无
  * 返 回 值: 返回0为成功，反之为失败
  ***************************************************************/
-unsigned int oled_init()
+unsigned int oled_init(void)
 {
 #if !OLED_I2C_ENABLE
     /* GPIO0_C1 => I2C1_SDA_M1 */
@@ -364,7 +364,7 @@ unsigned int oled_init()
  * 参    数: 无
  * 返 回 值: 返回0为成功，反之为失败
  ***************************************************************/
-unsigned int oled_deinit()
+unsigned int oled_deinit(void)
 {
 #if !OLED_I2C_ENABLE
     LzGpioDeinit(GPIO_I2C_SDA);
@@ -382,7 +382,7 @@ unsigned int oled_deinit()
  * 参    数: 无
  * 返 回 值: 无
  ***************************************************************/
-void oled_clear()
+void oled_clear(void)
 {
     uint8_t i, n;
 

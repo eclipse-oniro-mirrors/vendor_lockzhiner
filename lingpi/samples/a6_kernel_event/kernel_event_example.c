@@ -39,7 +39,7 @@ static EVENT_CB_S m_event;
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void event_master_thread()
+void event_master_thread(void)
 {
     unsigned int ret = LOS_OK;
 
@@ -64,7 +64,7 @@ void event_master_thread()
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void event_slave_thread()
+void event_slave_thread(void)
 {
     unsigned int event;
 
@@ -82,7 +82,7 @@ void event_slave_thread()
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void event_example()
+void event_example(void)
 {
     unsigned int thread_id1;
     unsigned int thread_id2;

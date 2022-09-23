@@ -81,7 +81,7 @@ void eeprom_proress(void *arg)
     }
 }
 
-void eeprom_example()
+void eeprom_example(void)
 {
     unsigned int thread_id;
     TSK_INIT_PARAM_S task = {0};

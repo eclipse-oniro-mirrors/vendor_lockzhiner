@@ -18,6 +18,11 @@
 #include "los_sem.h"
 #include "lz_hardware.h"
 
+/* 定义任务的堆栈大小 */
+#define TASK_STACK_SIZE     0x400
+/* 定义任务的优先级 */
+#define TASK_PRIO           10
+
 /* LED对应RK2206芯片的GPIO引脚 */
 #define GPIO_LED_UP         GPIO0_PB1
 #define GPIO_LED_DOWN       GPIO0_PB0
@@ -238,7 +243,7 @@ static inline uint16_t FifoGet(fifo_s *fifo, uint16_t *flag)
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-static void e53_gs_led_init()
+static void e53_gs_led_init(void)
 {
     PinctrlSet(GPIO_LED_UP, MUX_FUNC0, PULL_KEEP, DRIVE_KEEP);
     LzGpioInit(GPIO_LED_UP);
@@ -306,7 +311,7 @@ static inline void paj7620u2_delay_usec(uint32_t usec)
 * 参    数: 无
 * 返 回 值: 返回1为成功
 ***************************************************************/
-static uint8_t paj7620U2_write_null()
+static uint8_t paj7620U2_write_null(void)
 {
     unsigned int ret = 0;
 
@@ -402,7 +407,7 @@ static void paj7620u2_select_bank(BankId bank)
  * 参    数: 无
  * 返 回 值: BankId
  ***************************************************************/
-static uint8_t paj7620u2_get_bank_id()
+static uint8_t paj7620u2_get_bank_id(void)
 {
     uint8_t bankId = 0;
 
@@ -416,7 +421,7 @@ static uint8_t paj7620u2_get_bank_id()
 * 参    数: 无
 * 返 回 值: 返回0为成功
 ***************************************************************/
-static uint32_t paj7620u2_wake_up()
+static uint32_t paj7620u2_wake_up(void)
 {
     uint8_t ret = 0;
     uint8_t data = 0;
@@ -449,7 +454,7 @@ static uint32_t paj7620u2_wake_up()
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-static void paj7620u2_suspend()
+static void paj7620u2_suspend(void)
 {
     /* 禁用PAJ7620U2，往bank1     addr 0x72寄存器写0x00 */
     paj7620u2_select_bank(BANK1);
@@ -500,7 +505,7 @@ static VOID paj7620u2_poll_task(VOID *args)
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-static void paj7620u2_i2c_init()
+static void paj7620u2_i2c_init(void)
 {
     if (I2cIoInit(m_i2cBus) != LZ_HARDWARE_SUCCESS) {
         printf("%s, %d: I2cIoInit failed!\n", __FILE__, __LINE__);
@@ -521,7 +526,7 @@ static void paj7620u2_i2c_init()
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-static void paj7620u2_poll_task_init()
+static void paj7620u2_poll_task_init(void)
 {
     TSK_INIT_PARAM_S task;
     uint8_t int_flag1, int_flag2;
@@ -538,8 +543,8 @@ static void paj7620u2_poll_task_init()
     (VOID)memset_s(&task, sizeof(TSK_INIT_PARAM_S), 0, sizeof(TSK_INIT_PARAM_S));
     task.pfnTaskEntry   = (TSK_ENTRY_FUNC)paj7620u2_poll_task;
     task.pcName         = "InterruptSemTask";
-    task.uwStackSize    = 0x400;
-    task.usTaskPrio     = 10;
+    task.uwStackSize    = TASK_STACK_SIZE;
+    task.usTaskPrio     = TASK_PRIO;
     ret = LOS_TaskCreate(&m_pollTaskId, &task);
     if (ret != LOS_OK) {
         printf("%s, %d: LOS_TaskCreate failed(%d)\n", __func__, __LINE__, ret);
@@ -563,7 +568,7 @@ static void paj7620u2_poll_task_init()
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-static void paj7620u2_init_config()
+static void paj7620u2_init_config(void)
 {
     uint8_t ret = 0;
     uint32_t size;
@@ -597,7 +602,7 @@ static void paj7620u2_init_config()
  * 参    数: 无
  * 返 回 值: 返回0为成功，反之为失败
  ***************************************************************/
-unsigned int e53_gs_init()
+unsigned int e53_gs_init(void)
 {
     /* 初始化LED */
     e53_gs_led_init();
@@ -772,4 +777,3 @@ unsigned int e53_gs_get_gesture_state(unsigned short *flag)
         return 0;
     }
 }
-

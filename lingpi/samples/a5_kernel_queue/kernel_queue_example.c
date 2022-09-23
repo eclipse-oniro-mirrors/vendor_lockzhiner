@@ -86,7 +86,7 @@ void msg_read_thread(void *arg)
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void queue_example()
+void queue_example(void)
 {
     unsigned int thread_id1;
     unsigned int thread_id2;

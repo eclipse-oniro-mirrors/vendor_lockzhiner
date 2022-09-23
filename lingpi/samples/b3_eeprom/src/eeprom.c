@@ -54,7 +54,7 @@ static inline void eeprog_delay_usec(unsigned int usec)
 * 参    数: 无
 * 返 回 值: 0为成功，反之为失败
 ***************************************************************/
-unsigned int eeprom_init()
+unsigned int eeprom_init(void)
 {
     if (I2cIoInit(m_i2cBus) != LZ_HARDWARE_SUCCESS) {
         printf("%s, %d: I2cIoInit failed!\n", __FILE__, __LINE__);
@@ -79,7 +79,7 @@ unsigned int eeprom_init()
 * 参    数: 无
 * 返 回 值: 0为成功，反之失败
 ***************************************************************/
-unsigned int eeprom_deinit()
+unsigned int eeprom_deinit(void)
 {
     LzI2cDeinit(EEPROM_I2C_BUS);
     LzGpioDeinit(m_i2cBus.scl.gpio);
@@ -93,7 +93,7 @@ unsigned int eeprom_deinit()
 * 参    数: 无
 * 返 回 值: 返回页大小
 ***************************************************************/
-unsigned int eeprom_get_blocksize()
+unsigned int eeprom_get_blocksize(void)
 {
     return EEPROM_PAGE;
 }

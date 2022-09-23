@@ -61,6 +61,7 @@ inline const uint8_t* get_last_ncf_page(void)
 
 static bool writeTimeout(  uint8_t *data, uint8_t dataSend)
 {
+    uint32_t timeout_usec = 300000;
     uint32_t status = 0;
     
     status = LzI2cWrite(NFC_I2C_PORT, NT3H1X_SLAVE_ADDRESS, data, dataSend);
@@ -68,7 +69,7 @@ static bool writeTimeout(  uint8_t *data, uint8_t dataSend)
         printf("===== Error: I2C write status1 = 0x%x! =====\r\n", status);
         return 0;
     }
-    usleep(300000);
+    usleep(timeout_usec);
     
     return 1;
 }
@@ -93,15 +94,21 @@ static bool readTimeout(uint8_t address, uint8_t *block_data)
     return 1;
 }
 
-unsigned int NT3HI2cInit()
+unsigned int NT3HI2cInit(void)
 {
     uint32_t *pGrf = (uint32_t *)0x41050000U;
+    uint32_t reg_offset = 7;
+    uint32_t reg_bit_i2c = 0x7;
+    uint32_t regbit_offset_h = 8;
+    uint32_t regbit_offset_l = 4;
+    uint32_t regmask = 0xFFFF;
+    uing32_t regmask_offset = 16;
     uint32_t ulValue;
     
-    ulValue = pGrf[7];
-    ulValue &= ~((0x7 << 8) | (0x7 << 4));
-    ulValue |= ((0x1 << 8) | (0x1 << 4));
-    pGrf[7] = ulValue | (0xFFFF << 16);
+    ulValue = pGrf[reg_offset];
+    ulValue &= ~((reg_bit_i2c << regbit_offset_h) | (reg_bit_i2c << regbit_offset_l));
+    ulValue |= ((0x1 << regbit_offset_h) | (0x1 << regbit_offset_l));
+    pGrf[reg_offset] = ulValue | (regmask << regmask_offset);
     
     if (I2cIoInit(m_i2c2m0) != LZ_HARDWARE_SUCCESS) {
         printf("%s, %s, %d: I2cIoInit failed!\n", __FILE__, __func__, __LINE__);
@@ -115,7 +122,7 @@ unsigned int NT3HI2cInit()
     return 0;
 }
 
-unsigned int NT3HI2cDeInit()
+unsigned int NT3HI2cDeInit(void)
 {
     LzI2cDeinit(NFC_I2C_PORT);
 }
@@ -149,13 +156,14 @@ bool NT3HReadHeaderNfc(uint8_t *endRecordsPtr, uint8_t *ndefHeader)
 
 bool NT3HWriteHeaderNfc(uint8_t endRecordsPtr, uint8_t ndefHeader)
 {
-
-    // read the first page to see where is the end of the Records.
+    uint32_t offset_record_ptr = 1;
+    uint32_t offset_header = 2;
+    
+    /* read the first page to see where is the end of the Records. */
     bool ret = NT3HReadUserData(0);
     if (ret == true) {
-    
-        nfcPageBuffer[1] = endRecordsPtr;
-        nfcPageBuffer[2] = ndefHeader;
+        nfcPageBuffer[offset_record_ptr] = endRecordsPtr;
+        nfcPageBuffer[offset_header] = ndefHeader;
         ret = NT3HWriteUserData(0, nfcPageBuffer);
         if (ret == false) {
             errNo = NT3HERROR_WRITE_HEADER;
@@ -166,7 +174,6 @@ bool NT3HWriteHeaderNfc(uint8_t endRecordsPtr, uint8_t ndefHeader)
     
     return ret;
 }
-
 
 
 bool NT3HEraseAllTag(void)
@@ -250,7 +257,6 @@ bool NT3HReadSram(void)
         if (ret == false) {
             return ret;
         }
-        //memcpy(&userData[offset], pageBuffer, sizeof(pageBuffer));
     }
     return ret;
 }

@@ -32,7 +32,7 @@
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void e53_sc_thread()
+void e53_sc_thread(void)
 {
     e53_sc_data_t data;
     int x = 0, y = 0, z = 0;
@@ -81,7 +81,7 @@ void e53_sc_thread()
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void e53_sc_example()
+void e53_sc_example(void)
 {
     unsigned int ret = LOS_OK;
     unsigned int thread_id;

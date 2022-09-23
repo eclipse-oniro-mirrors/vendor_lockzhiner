@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 #include "lz_hardware.h"
-#include "lcd.h"
 #include "lcd_font.h"
+#include "lcd.h"
 
 /* 是否启用SPI通信
  * 0 => 禁用SPI，使用gpio模拟SPI通信
@@ -46,18 +46,50 @@
 
 #if LCD_ENABLE_SPI
 static SpiBusIo m_spiBus = {
-    .cs =   {.gpio = GPIO0_PC0, .func = MUX_FUNC4, .type = PULL_UP, .drv = DRIVE_KEEP, .dir = LZGPIO_DIR_KEEP, .val = LZGPIO_LEVEL_KEEP},
-    .clk =  {.gpio = GPIO0_PC1, .func = MUX_FUNC4, .type = PULL_UP, .drv = DRIVE_KEEP, .dir = LZGPIO_DIR_KEEP, .val = LZGPIO_LEVEL_KEEP},
-    .mosi = {.gpio = GPIO0_PC2, .func = MUX_FUNC4, .type = PULL_UP, .drv = DRIVE_KEEP, .dir = LZGPIO_DIR_KEEP, .val = LZGPIO_LEVEL_KEEP},
-    //.miso = {.gpio = GPIO0_PC3, .func = MUX_FUNC4, .type = PULL_UP, .drv = DRIVE_KEEP, .dir = LZGPIO_DIR_KEEP, .val = LZGPIO_LEVEL_KEEP},
-    .miso = {.gpio = INVALID_GPIO, .func = MUX_FUNC4, .type = PULL_UP, .drv = DRIVE_KEEP, .dir = LZGPIO_DIR_KEEP, .val = LZGPIO_LEVEL_KEEP},
+    .cs =   {
+        .gpio = GPIO0_PC0,
+        .func = MUX_FUNC4,
+        .type = PULL_UP,
+        .drv = DRIVE_KEEP,
+        .dir = LZGPIO_DIR_KEEP,
+        .val = LZGPIO_LEVEL_KEEP
+    },
+    .clk =  {
+        .gpio = GPIO0_PC1,
+        .func = MUX_FUNC4,
+        .type = PULL_UP,
+        .drv = DRIVE_KEEP,
+        .dir = LZGPIO_DIR_KEEP,
+        .val = LZGPIO_LEVEL_KEEP
+    },
+    .mosi = {
+        .gpio = GPIO0_PC2,
+        .func = MUX_FUNC4,
+        .type = PULL_UP,
+        .drv = DRIVE_KEEP,
+        .dir = LZGPIO_DIR_KEEP,
+        .val = LZGPIO_LEVEL_KEEP
+    },
+    .miso = {
+        .gpio = INVALID_GPIO,
+        .func = MUX_FUNC4,
+        .type = PULL_UP,
+        .drv = DRIVE_KEEP,
+        .dir = LZGPIO_DIR_KEEP,
+        .val = LZGPIO_LEVEL_KEEP
+    },
     .id = FUNC_ID_SPI0,
     .mode = FUNC_MODE_M1,
 };
 
-static LzSpiConfig m_spiConf = {.bitsPerWord = SPI_PERWORD_8BITS, .firstBit = SPI_MSB, .mode = SPI_MODE_3,
-                                .csm = SPI_CMS_ONE_CYCLES, .speed = 50000000, .isSlave = false
-                               };
+static LzSpiConfig m_spiConf = {
+    .bitsPerWord = SPI_PERWORD_8BITS,
+    .firstBit = SPI_MSB,
+    .mode = SPI_MODE_3,
+    .csm = SPI_CMS_ONE_CYCLES,
+    .speed = 50000000,
+    .isSlave = false,
+};
 #endif
 
 /* 寄存器定义 */
@@ -169,11 +201,11 @@ static void lcd_show_chinese_12x12(uint16_t x, uint16_t y, uint8_t *s, uint16_t 
 {
     uint8_t i, j, m = 0;
     uint16_t k;
-    uint16_t HZnum;//汉字数目
-    uint16_t TypefaceNum;//一个字符所占字节大小
+    uint16_t HZnum;         // 汉字数目
+    uint16_t TypefaceNum;   // 一个字符所占字节大小
     uint16_t x0 = x;
 
-    TypefaceNum = (sizey / 8 + ((sizey % 8) ? 1 : 0)) * sizey;
+    TypefaceNum = (sizey / BYTE_TO_BITS + ((sizey % biBYTE_TO_BITSts) ? 1 : 0)) * sizey;
 
     /* 统计汉字数目 */
     HZnum = sizeof(tfont12) / sizeof(typFNT_GB12);
@@ -423,8 +455,10 @@ static void lcd_show_chinese_32x32(uint16_t x, uint16_t y, uint8_t *s, uint16_t 
  * 参    数: 无
  * 返 回 值: 返回0为成功，反之为失败
  ***************************************************************/
-unsigned int lcd_init()
+unsigned int lcd_init(void)
 {
+    unsigned int delay_msec = 100;
+    unsigned int long_delay_msec = 500;
 #if LCD_ENABLE_SPI
     LzSpiDeinit(LCD_SPI_BUS);
 
@@ -462,13 +496,13 @@ unsigned int lcd_init()
 
     /* 重启lcd */
     LCD_RES_Clr();
-    LOS_Msleep(100);
+    LOS_Msleep(delay_msec);
     LCD_RES_Set();
-    LOS_Msleep(100);
-    LOS_Msleep(500);
+    LOS_Msleep(delay_msec);
+    LOS_Msleep(long_delay_msec);
     lcd_wr_reg(0x11);
     /* 等待LCD 100ms */
-    LOS_Msleep(100);
+    LOS_Msleep(delay_msec);
     /* 启动LCD配置，设置显示和颜色配置 */
     lcd_wr_reg(0X36);
     if (USE_HORIZONTAL == 0) {
@@ -556,7 +590,7 @@ unsigned int lcd_init()
  * 参    数: 无
  * 返 回 值: 返回0为成功，反之为失败
  ***************************************************************/
-unsigned int lcd_deinit()
+unsigned int lcd_deinit(void)
 {
 #if LCD_ENABLE_SPI
     LzSpiDeinit(LCD_SPI_BUS);
@@ -800,7 +834,7 @@ void lcd_show_char(uint16_t x, uint16_t y, uint8_t num, uint16_t fc, uint16_t bc
     uint16_t x0 = x;
 
     sizex = sizey / 2;
-    TypefaceNum = (sizex / 8 + ((sizex % 8) ? 1 : 0)) * sizey;
+    TypefaceNum = (sizex / BYTE_TO_BITS + ((sizex % BYTE_TO_BITS) ? 1 : 0)) * sizey;
 
     /* 得到偏移后的值 */
     num = num - ' ';
@@ -964,12 +998,13 @@ void lcd_show_picture(uint16_t x, uint16_t y, uint16_t length, uint16_t width, c
 {
     uint16_t i, j;
     uint32_t k = 0;
+    uint32_t unit = 2;
 
     lcd_address_set(x, y, x + length - 1, y + width - 1);
     for (i = 0; i < length; i++) {
         for (j = 0; j < width; j++) {
-            lcd_wr_data8(pic[k * 2]);
-            lcd_wr_data8(pic[k * 2 + 1]);
+            lcd_wr_data8(pic[k * unit]);
+            lcd_wr_data8(pic[k * unit + 1]);
             k++;
         }
     }
