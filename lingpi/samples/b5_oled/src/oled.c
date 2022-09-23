@@ -152,7 +152,6 @@ static inline void write_iic_byte(unsigned char iic_byte)
     OLED_SCLK_Clr();
     for (i = 0; i < BYTE_TO_BITS; i++) {
         m = da;
-        //OLED_SCLK_Clr();
         m = m & 0x80;
         if (m == 0x80) {
             OLED_SDIN_Set();
@@ -288,8 +287,6 @@ static inline void oled_set_pos(unsigned char x, unsigned char y)
     oled_wr_byte(((x & 0xf0) >> 4) | 0x10, OLED_CMD);
     oled_wr_byte((x & 0x0f), OLED_CMD);
 }
-
-///////////////////////////////////////////////////////////////
 
 /***************************************************************
  * 函数名称: oled_init

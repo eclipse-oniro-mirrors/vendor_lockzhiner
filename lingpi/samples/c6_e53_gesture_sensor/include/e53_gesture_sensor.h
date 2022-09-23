@@ -16,15 +16,15 @@
 #define _E53_GESTURE_SENSOR_H_
 
 /* 手势识别效果 */
-#define GES_UP                          (0x1 << 0) //向上
-#define GES_DOWM                        (0x1 << 1) //向下
-#define GES_LEFT                        (0x1 << 2) //向左
-#define GES_RIGHT                       (0x1 << 3) //向右
-#define GES_FORWARD                     (0x1 << 4) //向前
-#define GES_BACKWARD                    (0x1 << 5) //向后
-#define GES_CLOCKWISE                   (0x1 << 6) //顺时针
-#define GES_COUNT_CLOCKWISE             (0x1 << 7) //逆时针
-#define GES_WAVE                        (0x1 << 8) //挥动
+#define GES_UP                          (0x1 << 0) /* 向上 */
+#define GES_DOWM                        (0x1 << 1) /* 向下 */
+#define GES_LEFT                        (0x1 << 2) /* 向左 */
+#define GES_RIGHT                       (0x1 << 3) /* 向右 */
+#define GES_FORWARD                     (0x1 << 4) /* 向前 */
+#define GES_BACKWARD                    (0x1 << 5) /* 向后 */
+#define GES_CLOCKWISE                   (0x1 << 6) /* 顺时针 */
+#define GES_COUNT_CLOCKWISE             (0x1 << 7) /* 逆时针 */
+#define GES_WAVE                        (0x1 << 8) /* 挥动 */
 
 /***************************************************************
  * 函数名称: e53_gs_init

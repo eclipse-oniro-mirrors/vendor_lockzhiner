@@ -98,7 +98,7 @@ connect_done:
 
 void tcp_server_msg_handle(int fd)
 {
-    char buf[BUFF_LEN];  //接收缓冲区
+    char buf[BUFF_LEN];  // 接收缓冲区
     socklen_t client_addr_len;
     int cnt = 0, count;
     int client_fd;

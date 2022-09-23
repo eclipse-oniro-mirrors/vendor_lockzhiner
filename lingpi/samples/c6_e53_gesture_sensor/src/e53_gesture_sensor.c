@@ -213,8 +213,6 @@ static fifo_s m_fifo_intflags;
 /* 轮询方式访问 */
 static UINT32 m_pollTaskId;
 
-////////////////////////////////////////////
-
 static inline void FifoInit(fifo_s *fifo)
 {
     fifo->offset_read = fifo->offset_write = 0;
@@ -593,8 +591,6 @@ static void paj7620u2_init_config(void)
     paj7620u2_select_bank(BANK0);
 }
 
-
-////////////////////////////////////////////
 
 /***************************************************************
  * 函数名称: e53_gs_init

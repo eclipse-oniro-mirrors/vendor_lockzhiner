@@ -191,10 +191,10 @@ void mpu6050_init(void)
     mpu6050_write_reg(MPU6050_RA_INT_ENABLE, 0X00);  // 关闭所有中断
     mpu6050_write_reg(MPU6050_RA_USER_CTRL, 0X00);   // I2C主模式关闭
     mpu6050_write_reg(MPU6050_RA_FIFO_EN, 0X00);     // 关闭FIFO
-    mpu6050_write_reg(MPU6050_RA_INT_PIN_CFG, 0X80); // 中断的逻辑电平模式,设置为0，中断信号为高电；设置为1，中断信号为低电平时。
+    mpu6050_write_reg(MPU6050_RA_INT_PIN_CFG, 0X80); // 中断的逻辑电平模式
     action_interrupt();                              // 运动中断
     mpu6050_write_reg(MPU6050_RA_CONFIG, 0x04);      // 配置外部引脚采样和DLPF数字低通滤波器
-    mpu6050_write_reg(MPU6050_RA_ACCEL_CONFIG, 0x1C);// 加速度传感器量程和高通滤波器配置
+    mpu6050_write_reg(MPU6050_RA_ACCEL_CONFIG, 0x1C); // 加速度传感器量程和高通滤波器配置
     mpu6050_write_reg(MPU6050_RA_INT_PIN_CFG, 0X1C); // INT引脚低电平平时
     mpu6050_write_reg(MPU6050_RA_INT_ENABLE, 0x40);  // 中断使能寄存器
 }

@@ -125,7 +125,7 @@ static int16_t addRecord(UncompletePageStr *pageToUse, const NDEFDataStr *data, 
         // update the info with the new page
         pageToUse->page++;
         pageToUse->usedBytes = recordLength - byteToCopy;
-        //copy the remain part in the pageBuffer because this is what the caller expect
+        // copy the remain part in the pageBuffer because this is what the caller expect
         memcpy(nfcPageBuffer, &tmpBuffer[byteToCopy], pageToUse->usedBytes);
         return pageToUse->usedBytes;
     }
@@ -154,7 +154,7 @@ static bool writeUserPayload(int16_t payloadPtr, const NDEFDataStr *data, Uncomp
     addedPayload = copyByte;
     
     
-    //if it is sufficient one send add the NDEF_END_BYTE
+    // if it is sufficient one send add the NDEF_END_BYTE
     if ((addedPayload >= data->rtdPayloadlength) && ((payloadPtr + copyByte) < NFC_PAGE_SIZE)) {
         nfcPageBuffer[(payloadPtr + copyByte)] = NDEF_END_BYTE;
         endRecord = true;
@@ -166,7 +166,7 @@ static bool writeUserPayload(int16_t payloadPtr, const NDEFDataStr *data, Uncomp
         addPage->page++; // move to a new register
         memset(nfcPageBuffer, 0, NFC_PAGE_SIZE);
         
-        //special case just the NDEF_END_BYTE remain out
+        // special case just the NDEF_END_BYTE remain out
         if (addedPayload == data->rtdPayloadlength) {
             nfcPageBuffer[0] = NDEF_END_BYTE;
             ret = NT3HWriteUserData(addPage->page, nfcPageBuffer);

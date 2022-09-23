@@ -41,16 +41,16 @@
 #define LCD_GREEN           0x07E0
 #define LCD_CYAN            0x7FFF
 #define LCD_YELLOW          0xFFE0
-#define LCD_BROWN           0XBC40 //棕色
-#define LCD_BRRED           0XFC07 //棕红色
-#define LCD_GRAY            0X8430 //灰色
-#define LCD_DARKBLUE        0X01CF //深蓝色
-#define LCD_LIGHTBLUE       0X7D7C //浅蓝色
-#define LCD_GRAYBLUE        0X5458 //灰蓝色
-#define LCD_LIGHTGREEN      0X841F //浅绿色
-#define LCD_LGRAY           0XC618 //浅灰色(PANNEL),窗体背景色
-#define LCD_LGRAYBLUE       0XA651 //浅灰蓝色(中间层颜色)
-#define LCD_LBBLUE          0X2B12 //浅棕蓝色(选择条目的反色)
+#define LCD_BROWN           0XBC40 // 棕色
+#define LCD_BRRED           0XFC07 // 棕红色
+#define LCD_GRAY            0X8430 // 灰色
+#define LCD_DARKBLUE        0X01CF // 深蓝色
+#define LCD_LIGHTBLUE       0X7D7C // 浅蓝色
+#define LCD_GRAYBLUE        0X5458 // 灰蓝色
+#define LCD_LIGHTGREEN      0X841F // 浅绿色
+#define LCD_LGRAY           0XC618 // 浅灰色(PANNEL),窗体背景色
+#define LCD_LGRAYBLUE       0XA651 // 浅灰蓝色(中间层颜色)
+#define LCD_LBBLUE          0X2B12 // 浅棕蓝色(选择条目的反色)
 
 /* 字体大小 */
 #define LCD_FONT_SIZE12     12
