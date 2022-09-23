@@ -196,22 +196,26 @@ unsigned int eeprom_writepage(unsigned int addr, unsigned char *data, unsigned i
 
     /* K24C02的存储地址是0~255 */
     if (addr >= EEPROM_ADDRESS_MAX) {
-        printf("%s, %s, %d: addr(0x%x) >= EEPROM_ADDRESS_MAX(0x%x)\n", __FILE__, __func__, __LINE__, addr, EEPROM_ADDRESS_MAX);
+        printf("%s, %s, %d: addr(0x%x) >= EEPROM_ADDRESS_MAX(0x%x)\n",
+            __FILE__, __func__, __LINE__, addr, EEPROM_ADDRESS_MAX);
         return 0;
     }
 
     if ((addr % EEPROM_PAGE) != 0) {
-        printf("%s, %s, %d: addr(0x%x) is not page addr(0x%x)\n", __FILE__, __func__, __LINE__, addr, EEPROM_PAGE);
+        printf("%s, %s, %d: addr(0x%x) is not page addr(0x%x)\n",
+            __FILE__, __func__, __LINE__, addr, EEPROM_PAGE);
         return 0;
     }
 
     if ((addr + data_len) > EEPROM_ADDRESS_MAX) {
-        printf("%s, %s, %d: addr + data_len(0x%x) > EEPROM_ADDRESS_MAX(0x%x)\n", __FILE__, __func__, __LINE__, addr + data_len, EEPROM_ADDRESS_MAX);
+        printf("%s, %s, %d: addr + data_len(0x%x) > EEPROM_ADDRESS_MAX(0x%x)\n",
+            __FILE__, __func__, __LINE__, addr + data_len, EEPROM_ADDRESS_MAX);
         return 0;
     }
 
     if (data_len > EEPROM_PAGE) {
-        printf("%s, %s, %d: data_len(%d) > EEPROM_PAGE(%d)\n", __FILE__, __func__, __LINE__, data_len, EEPROM_PAGE);
+        printf("%s, %s, %d: data_len(%d) > EEPROM_PAGE(%d)\n",
+            __FILE__, __func__, __LINE__, data_len, EEPROM_PAGE);
         return 0;
     }
 
@@ -249,12 +253,14 @@ unsigned int eeprom_read(unsigned int addr, unsigned char *data, unsigned int da
     unsigned int ret = 0;
 
     if (addr >= EEPROM_ADDRESS_MAX) {
-        printf("%s, %s, %d: addr(0x%x) >= EEPROM_ADDRESS_MAX(0x%x)\n", __FILE__, __func__, __LINE__, addr, EEPROM_ADDRESS_MAX);
+        printf("%s, %s, %d: addr(0x%x) >= EEPROM_ADDRESS_MAX(0x%x)\n",
+            __FILE__, __func__, __LINE__, addr, EEPROM_ADDRESS_MAX);
         return 0;
     }
 
     if ((addr + data_len) > EEPROM_ADDRESS_MAX) {
-        printf("%s, %s, %d: addr + len(0x%x) > EEPROM_ADDRESS_MAX(0x%x)\n", __FILE__, __func__, __LINE__, addr + data_len, EEPROM_ADDRESS_MAX);
+        printf("%s, %s, %d: addr + len(0x%x) > EEPROM_ADDRESS_MAX(0x%x)\n",
+            __FILE__, __func__, __LINE__, addr + data_len, EEPROM_ADDRESS_MAX);
         return 0;
     }
 
@@ -294,12 +300,14 @@ unsigned int eeprom_write(unsigned int addr, unsigned char *data, unsigned int d
     unsigned int len;
 
     if (addr >= EEPROM_ADDRESS_MAX) {
-        printf("%s, %s, %d: addr(0x%x) >= EEPROM_ADDRESS_MAX(0x%x)\n", __FILE__, __func__, __LINE__, addr, EEPROM_ADDRESS_MAX);
+        printf("%s, %s, %d: addr(0x%x) >= EEPROM_ADDRESS_MAX(0x%x)\n",
+            __FILE__, __func__, __LINE__, addr, EEPROM_ADDRESS_MAX);
         return 0;
     }
 
     if ((addr + data_len) > EEPROM_ADDRESS_MAX) {
-        printf("%s, %s, %d: addr + len(0x%x) > EEPROM_ADDRESS_MAX(0x%x)\n", __FILE__, __func__, __LINE__, addr + data_len, EEPROM_ADDRESS_MAX);
+        printf("%s, %s, %d: addr + len(0x%x) > EEPROM_ADDRESS_MAX(0x%x)\n",
+            __FILE__, __func__, __LINE__, addr + data_len, EEPROM_ADDRESS_MAX);
         return 0;
     }
 

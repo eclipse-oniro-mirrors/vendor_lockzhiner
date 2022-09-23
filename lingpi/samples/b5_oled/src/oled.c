@@ -491,7 +491,6 @@ void oled_show_num(uint8_t x, uint8_t y, uint32_t num, uint8_t len, uint8_t size
             } else {
                 enshow = 1;
             }
-
         }
         oled_show_char(x + (size2 / div)*t, y, temp + '0', size2);
     }

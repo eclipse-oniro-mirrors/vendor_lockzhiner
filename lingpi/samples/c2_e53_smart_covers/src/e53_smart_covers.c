@@ -52,7 +52,7 @@ void e53_sc_io_init(void)
 
     /* led1 gpio init */
     LzGpioInit(GPIO0_PA5);
-    /*led2 gpio init*/
+    /* led2 gpio init */
     LzGpioInit(GPIO1_PD0);
 
     /* 设置GPIO0_PA5为输出模式 */
@@ -90,7 +90,6 @@ void e53_sc_io_init(void)
 ***************************************************************/
 uint8_t MPU6050_Read_Buffer(uint8_t reg, uint8_t *p_buffer, uint16_t length)
 {
-
     uint32_t status = 0;
     uint8_t  buffer[1] = {reg};
 
@@ -247,7 +246,9 @@ void e53_sc_read_data(e53_sc_data_t *p_data)
 
     /* 等待读取设备地址正常 */
     if (mpu6050_read_id() == 0) {
-        while (1);
+        while (1) {
+            /* 什么都不做，等待 */
+        }
     }
 
     mpu6050_read_acc(accel);

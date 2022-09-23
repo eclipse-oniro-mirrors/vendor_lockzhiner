@@ -24,7 +24,6 @@
 /* 循环等待时间 */
 #define WAIT_MSEC           2000
 
-
 /* E53模块中
  * UART0_RX_M0 -> GPIO0_B6
  * UART0_TX_M0 -> GPIO0_B7

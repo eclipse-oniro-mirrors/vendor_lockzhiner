@@ -808,7 +808,6 @@ void lcd_show_chinese(uint16_t x, uint16_t y, uint8_t *s, uint16_t fc, uint16_t 
 }
 
 
-
 /***************************************************************
  * 函数名称: lcd_show_char
  * 说    明: 显示一个字符

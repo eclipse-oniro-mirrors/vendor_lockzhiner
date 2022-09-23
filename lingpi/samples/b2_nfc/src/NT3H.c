@@ -175,7 +175,6 @@ bool NT3HWriteHeaderNfc(uint8_t endRecordsPtr, uint8_t ndefHeader)
     return ret;
 }
 
-
 bool NT3HEraseAllTag(void)
 {
     bool ret = true;
@@ -202,7 +201,6 @@ bool getSessionReg(void)
 {
     return readTimeout(SESSION_REG, nfcPageBuffer);
 }
-
 
 bool NT3HReadUserData(uint8_t page)
 {
