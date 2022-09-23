@@ -124,7 +124,7 @@ void adc_process(void)
 
     while (1) {
         printf("***************Adc Example*************\r\n");
-        /*获取电压值*/
+        /* 获取电压值 */
         voltage = adc_get_voltage();
         printf("vlt:%.3fV\n", voltage);
 

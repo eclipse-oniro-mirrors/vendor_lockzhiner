@@ -51,7 +51,7 @@ void msg_write_thread(void *arg)
             printf("%s write Message Queue msg:%u\n", __func__, data);
         }
 
-        /*delay 1s*/
+        /* delay 1s */
         LOS_Msleep(MSG_WRITE_WAIT_MSEC);
     }
 }
@@ -69,7 +69,7 @@ void msg_read_thread(void *arg)
     unsigned int *pData = NULL;
 
     while (1) {
-        /*wait for message*/
+        /* wait for message */
         ret = LOS_QueueRead(m_msg_queue, (void *)&addr, BUFFER_LEN, LOS_WAIT_FOREVER);
         if (ret == LOS_OK) {
             pData = addr;

@@ -56,7 +56,7 @@ void write_thread(void)
 ***************************************************************/
 void read_thread(void)
 {
-    /*delay 1s*/
+    /* delay 1s */
     LOS_Msleep(READ_WAIT_MSEC);
 
     while (1) {

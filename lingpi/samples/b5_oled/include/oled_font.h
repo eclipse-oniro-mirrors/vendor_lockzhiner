@@ -1,7 +1,7 @@
 #ifndef _OLED_FONT_H_
 #define _OLED_FONT_H_
 
-/*  */
+/* F6X8的行长度 */
 #define F6X8_COLUMNS          6
 
 // 常用ASCII表

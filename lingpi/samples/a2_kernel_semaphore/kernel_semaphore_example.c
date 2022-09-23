@@ -68,7 +68,7 @@ void control_thread(void)
 void sem_one_thread(void)
 {
     while (1) {
-        /*申请信号量*/
+        /* 申请信号量 */
         LOS_SemPend(m_sem, LOS_WAIT_FOREVER);
 
         printf("sem_one_thread get Semaphore\n");
@@ -85,7 +85,7 @@ void sem_one_thread(void)
 void sem_two_thread(void)
 {
     while (1) {
-        /*申请信号量*/
+        /* 申请信号量 */
         LOS_SemPend(m_sem, LOS_WAIT_FOREVER);
 
         printf("sem_two_thread get Semaphore\n");

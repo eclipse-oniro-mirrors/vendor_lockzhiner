@@ -52,7 +52,7 @@ void event_master_thread(void)
             printf("%s write event failed ret:0x%x\n", __func__, ret);
         }
 
-        /*delay 1s*/
+        /* delay 1s */
         LOS_Msleep(EVENT_DELAY_MSEC);
         LOS_EventClear(&m_event, ~m_event.uwEventID);
     }
@@ -69,7 +69,7 @@ void event_slave_thread(void)
     unsigned int event;
 
     while (1) {
-        /* 阻塞方式读事件，等待事件到达*/
+        /* 阻塞方式读事件，等待事件到达 */
         event = LOS_EventRead(&m_event, EVENT_WAIT, LOS_WAITMODE_AND, LOS_WAIT_FOREVER);
         printf("%s read event:0x%x\n", __func__, event);
         LOS_Msleep(SLAVE_EVENT_DELAY_MSEC);

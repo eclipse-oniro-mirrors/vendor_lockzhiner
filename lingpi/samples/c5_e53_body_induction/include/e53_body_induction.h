@@ -26,4 +26,4 @@ typedef enum {
 void e53_bi_init(void);
 void buzzer_set_status(SWITCH_STATUS_ENUM status);
 
-#endif/*__E53_BODY_INDUCTION_H__*/
+#endif /* __E53_BODY_INDUCTION_H__ */

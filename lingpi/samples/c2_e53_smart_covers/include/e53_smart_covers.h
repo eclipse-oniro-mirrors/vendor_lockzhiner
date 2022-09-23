@@ -62,5 +62,4 @@ void e53_sc_read_data(e53_sc_data_t *p_data);
 void led_d1_set(SWITCH_STATUS_ENUM status);
 void led_d2_set(SWITCH_STATUS_ENUM status);
 
-#endif/*__E53_SMART_CITY_H__*/
-
+#endif /* __E53_SMART_CITY_H__ */

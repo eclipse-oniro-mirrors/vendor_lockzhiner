@@ -59,7 +59,7 @@ void e53_sc_thread(void)
                 || (y - DELTA) > data.accel[EACCEL_Y]
                 || (z + DELTA) < data.accel[EACCEL_Z]
                 || (z - DELTA) > data.accel[EACCEL_Z]) {
-                /*倾斜告警*/
+                /* 倾斜告警 */
                 led_d1_set(OFF);
                 led_d2_set(ON);
                 data.tilt_status = 1;

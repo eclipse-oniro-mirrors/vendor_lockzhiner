@@ -26,4 +26,4 @@ void e53_isl_init(void);
 float e53_isl_read_data(void);
 void isl_light_set_status(SWITCH_STATUS_ENUM status);
 
-#endif/*__E53_INTELLIGENT_STREET_LAMP_H__*/
+#endif /* __E53_INTELLIGENT_STREET_LAMP_H__ */

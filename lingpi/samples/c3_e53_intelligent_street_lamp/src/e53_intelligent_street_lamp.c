@@ -125,11 +125,11 @@ float e53_isl_read_data(void)
 void isl_light_set_status(SWITCH_STATUS_ENUM status)
 {
     if (status == ON) {
-        /*设置GPIO0_PA5输出高电平点亮灯*/
+        /* 设置GPIO0_PA5输出高电平点亮灯 */
         LzGpioSetVal(GPIO0_PA5, LZGPIO_LEVEL_HIGH);
     }
     if (status == OFF) {
-        /*设置GPIO0_PA5输出低电平关闭灯*/
+        /* 设置GPIO0_PA5输出低电平关闭灯 */
         LzGpioSetVal(GPIO0_PA5, LZGPIO_LEVEL_LOW);
     }
 }
