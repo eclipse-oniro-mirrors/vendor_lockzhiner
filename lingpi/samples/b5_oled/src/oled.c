@@ -511,13 +511,14 @@ void oled_show_num(uint8_t x, uint8_t y, uint32_t num, uint8_t len, uint8_t size
 void oled_show_string(uint8_t x, uint8_t y, uint8_t *chr, uint8_t chr_size)
 {
     unsigned char j = 0;
+    uint8_t offset = 2;
 
     while (chr[j] != '\0') {
         oled_show_char(x, y, chr[j], chr_size);
         x += 8;
         if (x > OLED_COLUMN_MAX) {
             x = 0;
-            y += 2;
+            y += offset;
         }
         j++;
     }
