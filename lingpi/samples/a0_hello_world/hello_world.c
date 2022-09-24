@@ -31,7 +31,7 @@
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void task_helloworld()
+void task_helloworld(void)
 {
     while (1) {
         printf("Hello World\n");
@@ -46,7 +46,7 @@ void task_helloworld()
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void task_openharmony()
+void task_openharmony(void)
 {
     while (1) {
         printf("Hello OpenHarmony\n");
@@ -61,7 +61,7 @@ void task_openharmony()
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void helloworld_example()
+void helloworld_example(void)
 {
     /* 任务id */
     unsigned int thread_id1;

@@ -22,9 +22,9 @@
 
 /* 信息标记 */
 typedef enum {
-    NDEFFirstPos, /* 起始信息标记 */
-    NDEFMiddlePos, /* 中间信息标记 */
-    NDEFLastPos /* 结束信息标记 */
+    NDEFFirstPos,   /* 起始信息标记 */
+    NDEFMiddlePos,  /* 中间信息标记 */
+    NDEFLastPos     /* 结束信息标记 */
 } RecordPosEnu;
 
 /***************************************************************

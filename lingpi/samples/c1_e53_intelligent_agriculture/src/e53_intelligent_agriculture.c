@@ -49,7 +49,7 @@ enum enum_offset_sht30_reg {
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void init_sht30()
+void init_sht30(void)
 {
     uint8_t send_data[2] = {0x22, 0x36};
     uint32_t send_len = 2;
@@ -63,7 +63,7 @@ void init_sht30()
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void init_bh1750()
+void init_bh1750(void)
 {
     uint8_t send_data[1] = {0x01};
     uint32_t send_len = 1;
@@ -77,7 +77,7 @@ void init_bh1750()
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void start_bh1750()
+void start_bh1750(void)
 {
     uint8_t send_data[1] = {0x10};
     uint32_t send_len = 1;
@@ -93,13 +93,15 @@ void start_bh1750()
 ***************************************************************/
 float sht30_calc_RH(uint16_t u16sRH)
 {
+    float threshold = 100.0;
+    float range = 65535.0;
     float humidityRH = 0;
 
     /* clear bits [1..0] (status bits) */
     u16sRH &= ~0x0003;
     /* calculate relative humidity [%RH] */
     /* RH = rawValue / (2^16-1) * 10 */
-    humidityRH = (100 * (float)u16sRH / 65535);
+    humidityRH = (threshold * (float)u16sRH / range);
 
     return humidityRH;
 }
@@ -112,13 +114,16 @@ float sht30_calc_RH(uint16_t u16sRH)
 ***************************************************************/
 float sht30_calc_temperature(uint16_t u16sT)
 {
+    float threshold = 175.0;
+    float range = 65535.0;
+    float adjust = 45.0;
     float temperature = 0;
 
     /* clear bits [1..0] (status bits) */
     u16sT &= ~0x0003;
     /* calculate temperature [℃] */
     /* T = -45 + 175 * rawValue / (2^16-1) */
-    temperature = (175 * (float)u16sT / 65535 - 45);
+    temperature = (threshold * (float)u16sT / range - adjust);
 
     return temperature;
 }
@@ -165,7 +170,7 @@ uint8_t sht30_check_crc(uint8_t *data, uint8_t nbrOfBytes, uint8_t checksum)
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void e53_ia_io_init()
+void e53_ia_io_init(void)
 {
     uint32_t ret = LZ_HARDWARE_FAILURE;
 
@@ -202,7 +207,7 @@ void e53_ia_io_init()
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void e53_ia_init()
+void e53_ia_init(void)
 {
     e53_ia_io_init();
     init_bh1750();
@@ -217,30 +222,30 @@ void e53_ia_init()
 ***************************************************************/
 void e53_ia_read_data(e53_ia_data_t *pData)
 {
+    uint32_t wait_start_hb1750 = 180;
+    float luminance_rate = 1.2;
     uint16_t high_byte_bit = 8;
     uint8_t recv_data[2] = {0};
     uint32_t receive_len = 2;
     uint8_t rc;
 
     start_bh1750();
-    LOS_Msleep(180);
+    LOS_Msleep(wait_start_hb1750);
 
     LzI2cRead(IA_I2C0, BH1750_ADDR, recv_data, receive_len);
-    pData->luminance = (float)(((recv_data[0] << 8) + recv_data[1]) / 1.2);
-    // printf("BH1750 data:0x%x%x", recv_data[0], recv_data[1]);
+    pData->luminance = (float)(((recv_data[0] << high_byte_bit) + recv_data[1]) / luminance_rate);
 
     /* checksum verification */
     uint8_t data[3];
     uint16_t tmp;
     /* byte 0,1 is temperature byte 4,5 is humidity */
     uint8_t SHT30_Data_Buffer[EOFFSET_SHT30_REG_MAX];
-    memset(SHT30_Data_Buffer, 0, 6);
+    memset(SHT30_Data_Buffer, 0, EOFFSET_SHT30_REG_MAX);
     uint8_t send_data[2] = {0xE0, 0x00};
     uint32_t send_len = 2;
     LzI2cWrite(IA_I2C0, SHT30_ADDR, send_data, send_len);
-    receive_len = 6;
+    receive_len = EOFFSET_SHT30_REG_MAX;
     LzI2cRead(IA_I2C0, SHT30_ADDR, SHT30_Data_Buffer, receive_len);
-    // printf("SHT30 data:0x%x%x%x)", SHT30_Data_Buffer[0], SHT30_Data_Buffer[1], SHT30_Data_Buffer[2]);
 
     /* check temperature */
     data[0] = SHT30_Data_Buffer[EOFFSET_SHT30_REG_TEMP_H];
@@ -302,4 +307,3 @@ void motor_set_status(SWITCH_STATUS_ENUM status)
         LzGpioSetVal(GPIO1_PD0, LZGPIO_LEVEL_LOW);
     }
 }
-

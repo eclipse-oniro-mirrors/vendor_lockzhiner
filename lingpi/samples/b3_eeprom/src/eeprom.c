@@ -54,7 +54,7 @@ static inline void eeprog_delay_usec(unsigned int usec)
 * 参    数: 无
 * 返 回 值: 0为成功，反之为失败
 ***************************************************************/
-unsigned int eeprom_init()
+unsigned int eeprom_init(void)
 {
     if (I2cIoInit(m_i2cBus) != LZ_HARDWARE_SUCCESS) {
         printf("%s, %d: I2cIoInit failed!\n", __FILE__, __LINE__);
@@ -79,7 +79,7 @@ unsigned int eeprom_init()
 * 参    数: 无
 * 返 回 值: 0为成功，反之失败
 ***************************************************************/
-unsigned int eeprom_deinit()
+unsigned int eeprom_deinit(void)
 {
     LzI2cDeinit(EEPROM_I2C_BUS);
     LzGpioDeinit(m_i2cBus.scl.gpio);
@@ -93,7 +93,7 @@ unsigned int eeprom_deinit()
 * 参    数: 无
 * 返 回 值: 返回页大小
 ***************************************************************/
-unsigned int eeprom_get_blocksize()
+unsigned int eeprom_get_blocksize(void)
 {
     return EEPROM_PAGE;
 }
@@ -173,7 +173,7 @@ unsigned int eeprom_writebyte(unsigned int addr, unsigned char data)
         return 0;
     }
 
-    /* K24C02芯片需要时间完成写操作，在此之前不响应其他操作*/
+    /* K24C02芯片需要时间完成写操作，在此之前不响应其他操作 */
     eeprog_delay_usec(1000);
 
     return 1;
@@ -196,22 +196,26 @@ unsigned int eeprom_writepage(unsigned int addr, unsigned char *data, unsigned i
 
     /* K24C02的存储地址是0~255 */
     if (addr >= EEPROM_ADDRESS_MAX) {
-        printf("%s, %s, %d: addr(0x%x) >= EEPROM_ADDRESS_MAX(0x%x)\n", __FILE__, __func__, __LINE__, addr, EEPROM_ADDRESS_MAX);
+        printf("%s, %s, %d: addr(0x%x) >= EEPROM_ADDRESS_MAX(0x%x)\n",
+            __FILE__, __func__, __LINE__, addr, EEPROM_ADDRESS_MAX);
         return 0;
     }
 
     if ((addr % EEPROM_PAGE) != 0) {
-        printf("%s, %s, %d: addr(0x%x) is not page addr(0x%x)\n", __FILE__, __func__, __LINE__, addr, EEPROM_PAGE);
+        printf("%s, %s, %d: addr(0x%x) is not page addr(0x%x)\n",
+            __FILE__, __func__, __LINE__, addr, EEPROM_PAGE);
         return 0;
     }
 
     if ((addr + data_len) > EEPROM_ADDRESS_MAX) {
-        printf("%s, %s, %d: addr + data_len(0x%x) > EEPROM_ADDRESS_MAX(0x%x)\n", __FILE__, __func__, __LINE__, addr + data_len, EEPROM_ADDRESS_MAX);
+        printf("%s, %s, %d: addr + data_len(0x%x) > EEPROM_ADDRESS_MAX(0x%x)\n",
+            __FILE__, __func__, __LINE__, addr + data_len, EEPROM_ADDRESS_MAX);
         return 0;
     }
 
     if (data_len > EEPROM_PAGE) {
-        printf("%s, %s, %d: data_len(%d) > EEPROM_PAGE(%d)\n", __FILE__, __func__, __LINE__, data_len, EEPROM_PAGE);
+        printf("%s, %s, %d: data_len(%d) > EEPROM_PAGE(%d)\n",
+            __FILE__, __func__, __LINE__, data_len, EEPROM_PAGE);
         return 0;
     }
 
@@ -229,7 +233,7 @@ unsigned int eeprom_writepage(unsigned int addr, unsigned char *data, unsigned i
         return 0;
     }
 
-    /* K24C02芯片需要时间完成写操作，在此之前不响应其他操作*/
+    /* K24C02芯片需要时间完成写操作，在此之前不响应其他操作 */
     eeprog_delay_usec(K24C02_DELAY_USEC);
 
     return data_len;
@@ -249,12 +253,14 @@ unsigned int eeprom_read(unsigned int addr, unsigned char *data, unsigned int da
     unsigned int ret = 0;
 
     if (addr >= EEPROM_ADDRESS_MAX) {
-        printf("%s, %s, %d: addr(0x%x) >= EEPROM_ADDRESS_MAX(0x%x)\n", __FILE__, __func__, __LINE__, addr, EEPROM_ADDRESS_MAX);
+        printf("%s, %s, %d: addr(0x%x) >= EEPROM_ADDRESS_MAX(0x%x)\n",
+            __FILE__, __func__, __LINE__, addr, EEPROM_ADDRESS_MAX);
         return 0;
     }
 
     if ((addr + data_len) > EEPROM_ADDRESS_MAX) {
-        printf("%s, %s, %d: addr + len(0x%x) > EEPROM_ADDRESS_MAX(0x%x)\n", __FILE__, __func__, __LINE__, addr + data_len, EEPROM_ADDRESS_MAX);
+        printf("%s, %s, %d: addr + len(0x%x) > EEPROM_ADDRESS_MAX(0x%x)\n",
+            __FILE__, __func__, __LINE__, addr + data_len, EEPROM_ADDRESS_MAX);
         return 0;
     }
 
@@ -294,12 +300,14 @@ unsigned int eeprom_write(unsigned int addr, unsigned char *data, unsigned int d
     unsigned int len;
 
     if (addr >= EEPROM_ADDRESS_MAX) {
-        printf("%s, %s, %d: addr(0x%x) >= EEPROM_ADDRESS_MAX(0x%x)\n", __FILE__, __func__, __LINE__, addr, EEPROM_ADDRESS_MAX);
+        printf("%s, %s, %d: addr(0x%x) >= EEPROM_ADDRESS_MAX(0x%x)\n",
+            __FILE__, __func__, __LINE__, addr, EEPROM_ADDRESS_MAX);
         return 0;
     }
 
     if ((addr + data_len) > EEPROM_ADDRESS_MAX) {
-        printf("%s, %s, %d: addr + len(0x%x) > EEPROM_ADDRESS_MAX(0x%x)\n", __FILE__, __func__, __LINE__, addr + data_len, EEPROM_ADDRESS_MAX);
+        printf("%s, %s, %d: addr + len(0x%x) > EEPROM_ADDRESS_MAX(0x%x)\n",
+            __FILE__, __func__, __LINE__, addr + data_len, EEPROM_ADDRESS_MAX);
         return 0;
     }
 

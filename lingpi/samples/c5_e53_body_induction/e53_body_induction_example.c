@@ -25,14 +25,13 @@
 /* 循环等待时间 */
 #define WAIT_MSEC           1000
 
-
 /***************************************************************
 * 函数名称: e53_bi_thread
 * 说    明: 人体感应模块线程
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void e53_bi_thread()
+void e53_bi_thread(void)
 {
     unsigned int ret;
     LzGpioValue val = LZGPIO_LEVEL_LOW, val_last = LZGPIO_LEVEL_LOW;
@@ -66,7 +65,7 @@ void e53_bi_thread()
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void e53_bi_example()
+void e53_bi_example(void)
 {
     unsigned int ret = LOS_OK;
     unsigned int thread_id;

@@ -39,7 +39,7 @@ static EVENT_CB_S m_event;
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void event_master_thread()
+void event_master_thread(void)
 {
     unsigned int ret = LOS_OK;
 
@@ -52,7 +52,7 @@ void event_master_thread()
             printf("%s write event failed ret:0x%x\n", __func__, ret);
         }
 
-        /*delay 1s*/
+        /* delay 1s */
         LOS_Msleep(EVENT_DELAY_MSEC);
         LOS_EventClear(&m_event, ~m_event.uwEventID);
     }
@@ -64,12 +64,12 @@ void event_master_thread()
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void event_slave_thread()
+void event_slave_thread(void)
 {
     unsigned int event;
 
     while (1) {
-        /* 阻塞方式读事件，等待事件到达*/
+        /* 阻塞方式读事件，等待事件到达 */
         event = LOS_EventRead(&m_event, EVENT_WAIT, LOS_WAITMODE_AND, LOS_WAIT_FOREVER);
         printf("%s read event:0x%x\n", __func__, event);
         LOS_Msleep(SLAVE_EVENT_DELAY_MSEC);
@@ -82,7 +82,7 @@ void event_slave_thread()
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void event_example()
+void event_example(void)
 {
     unsigned int thread_id1;
     unsigned int thread_id2;

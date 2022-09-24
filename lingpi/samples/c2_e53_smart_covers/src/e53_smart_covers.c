@@ -46,13 +46,13 @@ static I2cBusIo m_sc_i2c0m2 = {
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void e53_sc_io_init()
+void e53_sc_io_init(void)
 {
     unsigned int ret = LZ_HARDWARE_SUCCESS;
 
     /* led1 gpio init */
     LzGpioInit(GPIO0_PA5);
-    /*led2 gpio init*/
+    /* led2 gpio init */
     LzGpioInit(GPIO1_PD0);
 
     /* 设置GPIO0_PA5为输出模式 */
@@ -90,7 +90,6 @@ void e53_sc_io_init()
 ***************************************************************/
 uint8_t MPU6050_Read_Buffer(uint8_t reg, uint8_t *p_buffer, uint16_t length)
 {
-
     uint32_t status = 0;
     uint8_t  buffer[1] = {reg};
 
@@ -162,7 +161,7 @@ void mpu6050_read_acc(short *acc_data)
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void action_interrupt()
+void action_interrupt(void)
 {
     mpu6050_write_reg(MPU6050_RA_MOT_THR, 0x03); // 运动阈值
     mpu6050_write_reg(MPU6050_RA_MOT_DUR, 0x14); // 检测时间20ms 单位1ms
@@ -174,7 +173,7 @@ void action_interrupt()
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void mpu6050_init()
+void mpu6050_init(void)
 {
 #define DELAY_COUNT         1000000
 #define RESET_DELAY_MSEC    20          /* 复位等待设备重启完毕 */
@@ -191,10 +190,10 @@ void mpu6050_init()
     mpu6050_write_reg(MPU6050_RA_INT_ENABLE, 0X00);  // 关闭所有中断
     mpu6050_write_reg(MPU6050_RA_USER_CTRL, 0X00);   // I2C主模式关闭
     mpu6050_write_reg(MPU6050_RA_FIFO_EN, 0X00);     // 关闭FIFO
-    mpu6050_write_reg(MPU6050_RA_INT_PIN_CFG, 0X80); // 中断的逻辑电平模式,设置为0，中断信号为高电；设置为1，中断信号为低电平时。
+    mpu6050_write_reg(MPU6050_RA_INT_PIN_CFG, 0X80); // 中断的逻辑电平模式
     action_interrupt();                              // 运动中断
     mpu6050_write_reg(MPU6050_RA_CONFIG, 0x04);      // 配置外部引脚采样和DLPF数字低通滤波器
-    mpu6050_write_reg(MPU6050_RA_ACCEL_CONFIG, 0x1C);// 加速度传感器量程和高通滤波器配置
+    mpu6050_write_reg(MPU6050_RA_ACCEL_CONFIG, 0x1C); // 加速度传感器量程和高通滤波器配置
     mpu6050_write_reg(MPU6050_RA_INT_PIN_CFG, 0X1C); // INT引脚低电平平时
     mpu6050_write_reg(MPU6050_RA_INT_ENABLE, 0x40);  // 中断使能寄存器
 }
@@ -205,7 +204,7 @@ void mpu6050_init()
   * 返 回 值: 无
   * 说    明: 无
   ***************************************************************/
-uint8_t mpu6050_read_id()
+uint8_t mpu6050_read_id(void)
 {
     unsigned char buff = 0;
 
@@ -224,7 +223,7 @@ uint8_t mpu6050_read_id()
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void e53_sc_init()
+void e53_sc_init(void)
 {
 #define WAIT_MPU6050_INIT_MSEC      1000
     e53_sc_io_init();
@@ -247,7 +246,9 @@ void e53_sc_read_data(e53_sc_data_t *p_data)
 
     /* 等待读取设备地址正常 */
     if (mpu6050_read_id() == 0) {
-        while (1);
+        while (1) {
+            /* 什么都不做，等待 */
+        }
     }
 
     mpu6050_read_acc(accel);
@@ -292,4 +293,3 @@ void led_d2_set(SWITCH_STATUS_ENUM status)
         LzGpioSetVal(GPIO1_PD0, LZGPIO_LEVEL_HIGH);
     }
 }
-

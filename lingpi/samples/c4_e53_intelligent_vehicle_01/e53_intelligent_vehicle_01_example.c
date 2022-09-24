@@ -84,7 +84,7 @@ void e53_iv01_process(void *arg)
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void e53_iv01_example()
+void e53_iv01_example(void)
 {
     unsigned int ret = 0;
     unsigned int thread_id;

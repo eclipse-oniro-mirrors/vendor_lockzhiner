@@ -36,7 +36,7 @@ static unsigned int m_sem;
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void control_thread()
+void control_thread(void)
 {
 #define CYCLES          3
     unsigned int count = 0;
@@ -65,10 +65,10 @@ void control_thread()
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void sem_one_thread()
+void sem_one_thread(void)
 {
     while (1) {
-        /*申请信号量*/
+        /* 申请信号量 */
         LOS_SemPend(m_sem, LOS_WAIT_FOREVER);
 
         printf("sem_one_thread get Semaphore\n");
@@ -82,10 +82,10 @@ void sem_one_thread()
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void sem_two_thread()
+void sem_two_thread(void)
 {
     while (1) {
-        /*申请信号量*/
+        /* 申请信号量 */
         LOS_SemPend(m_sem, LOS_WAIT_FOREVER);
 
         printf("sem_two_thread get Semaphore\n");
@@ -99,7 +99,7 @@ void sem_two_thread()
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void semaphore_example()
+void semaphore_example(void)
 {
     unsigned int thread_crtl;
     unsigned int thread_id1;

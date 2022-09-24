@@ -101,7 +101,7 @@ static uint32_t oled_pow(uint8_t m, uint8_t n)
  * 参    数: 无
  * 返 回 值: 无
  ***************************************************************/
-static inline void iic_start()
+static inline void iic_start(void)
 {
     OLED_SCLK_Set();
     OLED_SDIN_Set();
@@ -116,7 +116,7 @@ static inline void iic_start()
  * 参    数: 无
  * 返 回 值: 无
  ***************************************************************/
-static inline void iic_stop()
+static inline void iic_stop(void)
 {
     OLED_SCLK_Set() ;
     OLED_SDIN_Clr();
@@ -130,7 +130,7 @@ static inline void iic_stop()
  * 参    数: 无
  * 返 回 值: 无
  ***************************************************************/
-static inline void iic_wait_ack()
+static inline void iic_wait_ack(void)
 {
     OLED_SCLK_Set();
     OLED_SCLK_Clr();
@@ -152,7 +152,6 @@ static inline void write_iic_byte(unsigned char iic_byte)
     OLED_SCLK_Clr();
     for (i = 0; i < BYTE_TO_BITS; i++) {
         m = da;
-        //OLED_SCLK_Clr();
         m = m & 0x80;
         if (m == 0x80) {
             OLED_SDIN_Set();
@@ -289,15 +288,13 @@ static inline void oled_set_pos(unsigned char x, unsigned char y)
     oled_wr_byte((x & 0x0f), OLED_CMD);
 }
 
-///////////////////////////////////////////////////////////////
-
 /***************************************************************
  * 函数名称: oled_init
  * 说    明: oled初始化
  * 参    数: 无
  * 返 回 值: 返回0为成功，反之为失败
  ***************************************************************/
-unsigned int oled_init()
+unsigned int oled_init(void)
 {
 #if !OLED_I2C_ENABLE
     /* GPIO0_C1 => I2C1_SDA_M1 */
@@ -364,7 +361,7 @@ unsigned int oled_init()
  * 参    数: 无
  * 返 回 值: 返回0为成功，反之为失败
  ***************************************************************/
-unsigned int oled_deinit()
+unsigned int oled_deinit(void)
 {
 #if !OLED_I2C_ENABLE
     LzGpioDeinit(GPIO_I2C_SDA);
@@ -382,7 +379,7 @@ unsigned int oled_deinit()
  * 参    数: 无
  * 返 回 值: 无
  ***************************************************************/
-void oled_clear()
+void oled_clear(void)
 {
     uint8_t i, n;
 
@@ -494,7 +491,6 @@ void oled_show_num(uint8_t x, uint8_t y, uint32_t num, uint8_t len, uint8_t size
             } else {
                 enshow = 1;
             }
-
         }
         oled_show_char(x + (size2 / div)*t, y, temp + '0', size2);
     }
@@ -514,13 +510,14 @@ void oled_show_num(uint8_t x, uint8_t y, uint32_t num, uint8_t len, uint8_t size
 void oled_show_string(uint8_t x, uint8_t y, uint8_t *chr, uint8_t chr_size)
 {
     unsigned char j = 0;
+    uint8_t offset = 2;
 
     while (chr[j] != '\0') {
         oled_show_char(x, y, chr[j], chr_size);
         x += 8;
         if (x > OLED_COLUMN_MAX) {
             x = 0;
-            y += 2;
+            y += offset;
         }
         j++;
     }

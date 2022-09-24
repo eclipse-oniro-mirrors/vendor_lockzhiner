@@ -33,44 +33,41 @@ static void rtdHeader(uint8_t type, NDEFRecordStr *ndefRecord, uint8_t *I2CMsg)
 uint8_t composeRtdText(const NDEFDataStr *ndef, NDEFRecordStr *ndefRecord, uint8_t *I2CMsg)
 {
     uint8_t retLen;
+    uint32_t offset_text = 4;
+    uint8_t sizeof_header = 3;
+    uint8_t sizeof_str = 3;
+    uint8_t sizeof_type = 1;
+    uint8_t offset_i2cmsg = 2;
     
     rtdHeader(RTD_TEXT, ndefRecord, I2CMsg);
     
     uint8_t payLoadLen = addRtdText(&ndefRecord->type.typePayload.text);
-    memcpy(&I2CMsg[4], &ndefRecord->type.typePayload.text, payLoadLen);
+    memcpy(&I2CMsg[offset_text], &ndefRecord->type.typePayload.text, payLoadLen);
     
     ndefRecord->payloadLength = ndef->rtdPayloadlength + payLoadLen; // added the typePayload
-    I2CMsg[2] = ndefRecord->payloadLength;
+    I2CMsg[offset_i2cmsg] = ndefRecord->payloadLength;
     
-    retLen = 3 + /*sizeof(ndefRecord->header) +
-                   sizeof(ndefRecord->typeLength) +
-                   sizeof(ndefRecord->payloadLength) +*/
-             3 + //sizeof(RTDTextTypeStr)-sizeof(TextExtraDataStr)
-             1   /*sizeof(ndefRecord->type.typeCode)*/;
-             
+    retLen = sizeof_header + sizeof_str + sizeof_type;
+
     return retLen;
 }
 
 
 uint8_t composeRtdUri(const NDEFDataStr *ndef, NDEFRecordStr *ndefRecord, uint8_t *I2CMsg)
 {
-
+    uint32_t offset_text = 4;
+    uint32_t offset_length = 2;
+    uint8_t length = 5;
+    
     rtdHeader(RTD_URI, ndefRecord, I2CMsg);
     
     uint8_t payLoadLen = addRtdUriRecord(ndef, &ndefRecord->type.typePayload.uri);
-    memcpy(&I2CMsg[4], &ndefRecord->type.typePayload.uri, payLoadLen);
+    memcpy(&I2CMsg[offset_text], &ndefRecord->type.typePayload.uri, payLoadLen);
     
     ndefRecord->payloadLength = ndef->rtdPayloadlength + payLoadLen; // added the typePayload
-    I2CMsg[2] = ndefRecord->payloadLength;
+    I2CMsg[offset_length] = ndefRecord->payloadLength;
     
-    return 5;
-    /* retLen = sizeof(ndefRecord->header) +
-                sizeof(ndefRecord->typeLength) +
-                sizeof(ndefRecord->payloadLength) +
-                sizeof(1) + //ndefRecord->type.typePayload.uri.type
-                sizeof(ndefRecord->type.typeCode);
-     */
-    
+    return length;
 }
 
 void composeNDEFMBME(bool isFirstRecord, bool isLastRecord, NDEFRecordStr *ndefRecord)

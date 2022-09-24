@@ -56,7 +56,7 @@ Note:If the text contains special characters, please escape them according to th
 -->
 <configuration>
     <oatconfig>
-		<licensefile>build/LICENSE|third_party/LICENSE</licensefile>
+		<LICENSE>build/LICENSE|third_party/LICENSE</LICENSE>
         <policylist>
             <policy name="projectPolicy" desc="">
 				<policyitem type="copyright" name="FuZhou Lockzhiner Electronic Co., Ltd." path=".*" rule="may" group="defaultGroup" filefilter="copyrightPolicyFilter" desc=""/>

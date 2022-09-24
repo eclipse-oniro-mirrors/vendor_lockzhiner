@@ -32,7 +32,7 @@
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void task_one()
+void task_one(void *arg)
 {
     while (1) {
         printf("This is %s\n", __func__);
@@ -46,7 +46,7 @@ void task_one()
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void task_two()
+void task_two(void *arg)
 {
     while (1) {
         printf("This is %s\n", __func__);
@@ -60,7 +60,7 @@ void task_two()
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void task_example()
+void task_example(void)
 {
     unsigned int thread_id1;
     unsigned int thread_id2;

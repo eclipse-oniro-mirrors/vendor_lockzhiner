@@ -35,7 +35,14 @@
 static DevIo m_adcKey = {
     .isr =   {.gpio = INVALID_GPIO},
     .rst =   {.gpio = INVALID_GPIO},
-    .ctrl1 = {.gpio = GPIO0_PC5, .func = MUX_FUNC1, .type = PULL_NONE, .drv = DRIVE_KEEP, .dir = LZGPIO_DIR_IN, .val = LZGPIO_LEVEL_KEEP},
+    .ctrl1 = {
+        .gpio = GPIO0_PC5,
+        .func = MUX_FUNC1,
+        .type = PULL_NONE,
+        .drv = DRIVE_KEEP,
+        .dir = LZGPIO_DIR_IN,
+        .val = LZGPIO_LEVEL_KEEP
+    },
     .ctrl2 = {.gpio = INVALID_GPIO},
 };
 
@@ -45,17 +52,13 @@ static DevIo m_adcKey = {
 #define BITS_SELECT_AVDD(value)         ((value) & (~(0x1 << 4)))
 #define BITS_ENABLE_AVDD(value)         ((value) | ((0x1 << 4) << 16))
 
-/* ADC最大电压量程 */
-#define
-/* ADC最大档位 */
-
 /***************************************************************
 * 函数名称: adc_dev_init
 * 说    明: 初始化ADC
 * 参    数: 无
 * 返 回 值: 0为成功，反之为失败
 ***************************************************************/
-static unsigned int adc_dev_init()
+static unsigned int adc_dev_init(void)
 {
     unsigned int ret = 0;
     uint32_t *pGrfSocCon29 = (uint32_t *)(GRF_SOC_CON29_REG_ADDRESS);
@@ -90,10 +93,12 @@ static unsigned int adc_dev_init()
 * 参    数: 无
 * 返 回 值: 电压值
 ***************************************************************/
-static float adc_get_voltage()
+static float adc_get_voltage(void)
 {
     unsigned int ret = LZ_HARDWARE_SUCCESS;
     unsigned int data = 0;
+    float voltage = 3.3;
+    float range = 1024.0;
 
     ret = LzSaradcReadValue(ADC_CHANNEL, &data);
     if (ret != LZ_HARDWARE_SUCCESS) {
@@ -101,7 +106,7 @@ static float adc_get_voltage()
         return 0.0;
     }
 
-    return (float)(data * 3.3 / 1024.0);
+    return (float)(data * voltage / range);
 }
 
 /***************************************************************
@@ -110,7 +115,7 @@ static float adc_get_voltage()
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void adc_process()
+void adc_process(void)
 {
     float voltage;
 
@@ -119,7 +124,7 @@ void adc_process()
 
     while (1) {
         printf("***************Adc Example*************\r\n");
-        /*获取电压值*/
+        /* 获取电压值 */
         voltage = adc_get_voltage();
         printf("vlt:%.3fV\n", voltage);
 
@@ -128,14 +133,13 @@ void adc_process()
     }
 }
 
-
 /***************************************************************
 * 函数名称: adc_example
 * 说    明: 开机自启动调用函数
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void adc_example()
+void adc_example(void)
 {
     unsigned int thread_id;
     TSK_INIT_PARAM_S task = {0};
