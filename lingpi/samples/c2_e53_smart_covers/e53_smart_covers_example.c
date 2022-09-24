@@ -25,14 +25,13 @@
 /* 循环等待时间 */
 #define WAIT_MSEC           2000
 
-
 /***************************************************************
 * 函数名称: e53_sc_thread
 * 说    明: E53智慧井盖线程
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void e53_sc_thread()
+void e53_sc_thread(void)
 {
     e53_sc_data_t data;
     int x = 0, y = 0, z = 0;
@@ -59,7 +58,7 @@ void e53_sc_thread()
                 || (y - DELTA) > data.accel[EACCEL_Y]
                 || (z + DELTA) < data.accel[EACCEL_Z]
                 || (z - DELTA) > data.accel[EACCEL_Z]) {
-                /*倾斜告警*/
+                /* 倾斜告警 */
                 led_d1_set(OFF);
                 led_d2_set(ON);
                 data.tilt_status = 1;
@@ -81,7 +80,7 @@ void e53_sc_thread()
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void e53_sc_example()
+void e53_sc_example(void)
 {
     unsigned int ret = LOS_OK;
     unsigned int thread_id;

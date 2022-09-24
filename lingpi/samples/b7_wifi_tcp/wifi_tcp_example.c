@@ -98,7 +98,7 @@ connect_done:
 
 void tcp_server_msg_handle(int fd)
 {
-    char buf[BUFF_LEN];  //接收缓冲区
+    char buf[BUFF_LEN];  // 接收缓冲区
     socklen_t client_addr_len;
     int cnt = 0, count;
     int client_fd;
@@ -107,14 +107,12 @@ void tcp_server_msg_handle(int fd)
     printf("waitting for client connect...\n");
     /* 监听socket 此处会阻塞 */
     client_fd = accept(fd, (struct sockaddr*)&client_addr, &client_addr_len);
-    // client_fd = lwip_accept(fd, (struct sockaddr*)&client_addr, &client_addr_len);
     printf("[tcp server] accept <%s:%d>\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
     while (1) {
         memset(buf, 0, BUFF_LEN);
         printf("-------------------------------------------------------\n");
         printf("[tcp server] waitting client msg\n");
         count = recv(client_fd, buf, BUFF_LEN, 0);       // read是阻塞函数，没有数据就一直阻塞
-        // count = lwip_read(client_fd, buf, BUFF_LEN);  // read是阻塞函数，没有数据就一直阻塞
         if (count == -1) {
             printf("[tcp server] recieve data fail!\n");
             LOS_Msleep(SERVER_WAIT_MSEC);
@@ -125,7 +123,6 @@ void tcp_server_msg_handle(int fd)
         sprintf(buf, "I have recieved %d bytes data! recieved cnt:%d", count, ++cnt);
         printf("[tcp server] send msg:%s\n", buf);
         send(client_fd, buf, strlen(buf), 0);           // 发送信息给client
-        // lwip_write(client_fd, buf, strlen(buf));     // 发送信息给client
     }
     lwip_close(client_fd);
     lwip_close(fd);
@@ -137,7 +134,6 @@ int wifi_server(void* arg)
 
     while (1) {
         server_fd = socket(AF_INET, SOCK_STREAM, 0);         // AF_INET:IPV4;SOCK_STREAM:TCP
-        // server_fd = lwip_socket(AF_INET, SOCK_STREAM, 0); // AF_INET:IPV4;SOCK_STREAM:TCP
         if (server_fd < 0) {
             printf("create socket fail!\n");
             return -1;
@@ -156,12 +152,10 @@ int wifi_server(void* arg)
         serv_addr.sin_family = AF_INET;
         /* IP地址，需要进行网络序转换，INADDR_ANY：本地地址 */
         serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
-        // serv_addr.sin_addr.s_addr = inet_addr(OC_SERVER_IP);
         /* 端口号，需要网络序转换 */
         serv_addr.sin_port = htons(SERVER_PORT);
         /* 绑定服务器地址结构 */
         ret = bind(server_fd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
-        // ret = lwip_bind(server_fd, (struct sockaddr*)&serv_addr, sizeof(serv_addr));
         if (ret < 0) {
             printf("socket bind fail!\n");
             lwip_close(server_fd);
@@ -169,7 +163,6 @@ int wifi_server(void* arg)
         }
         /* 监听socket 此处不阻塞 */
         ret = listen(server_fd, SERVER_LISTEN_MAX);
-        // ret = lwip_listen(server_fd, 64);
         if (ret != 0) {
             printf("socket listen fail!\n");
             lwip_close(server_fd);
@@ -204,7 +197,6 @@ void tcp_client_msg_handle(int fd, struct sockaddr* dst)
         printf("[tcp client] client sendto msg to server %d,waitting server respond msg!!!\n", count);
         memset(buf, 0, BUFF_LEN);
         count = recv(fd, buf, BUFF_LEN, 0);                             // 接收来自server的信息
-        // count = lwip_read(fd, buf, BUFF_LEN);                        // 接收来自server的信息
         if (count == -1) {
             printf("[tcp client] recieve data fail!\n");
             LOS_Msleep(CLIENT_WAIT_MSEC);

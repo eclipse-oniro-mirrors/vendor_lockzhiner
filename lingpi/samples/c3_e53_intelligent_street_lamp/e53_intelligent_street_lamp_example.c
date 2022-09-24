@@ -34,7 +34,7 @@
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void e53_isl_thread()
+void e53_isl_thread(void *args)
 {
     float lum = 0;
 
@@ -63,7 +63,7 @@ void e53_isl_thread()
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void e53_isl_example()
+void e53_isl_example(void)
 {
     unsigned int ret = LOS_OK;
     unsigned int thread_id;

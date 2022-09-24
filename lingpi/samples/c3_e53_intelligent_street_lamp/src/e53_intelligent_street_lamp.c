@@ -56,7 +56,7 @@ void e53_isl_io_init(void)
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void init_bh1750()
+void init_bh1750(void)
 {
     uint8_t send_data[1] = {0x01};
     uint32_t send_len = 1;
@@ -70,7 +70,7 @@ void init_bh1750()
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void start_bh1750()
+void start_bh1750(void)
 {
     uint8_t send_data[1] = {0x10};
     uint32_t send_len = 1;
@@ -96,7 +96,7 @@ void e53_isl_init(void)
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-float e53_isl_read_data()
+float e53_isl_read_data(void)
 {
     /* 等待从设备准备完毕 */
 #define WAIT_SLAVE_DEVICE_START_MSEC        180
@@ -125,12 +125,11 @@ float e53_isl_read_data()
 void isl_light_set_status(SWITCH_STATUS_ENUM status)
 {
     if (status == ON) {
-        /*设置GPIO0_PA5输出高电平点亮灯*/
+        /* 设置GPIO0_PA5输出高电平点亮灯 */
         LzGpioSetVal(GPIO0_PA5, LZGPIO_LEVEL_HIGH);
     }
     if (status == OFF) {
-        /*设置GPIO0_PA5输出低电平关闭灯*/
+        /* 设置GPIO0_PA5输出低电平关闭灯 */
         LzGpioSetVal(GPIO0_PA5, LZGPIO_LEVEL_LOW);
     }
 }
-

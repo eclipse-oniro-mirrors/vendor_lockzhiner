@@ -236,7 +236,7 @@ static void paj7620u2_poll_task_init()
     (VOID)memset_s(&task, sizeof(TSK_INIT_PARAM_S), 0, sizeof(TSK_INIT_PARAM_S));
     task.pfnTaskEntry   = (TSK_ENTRY_FUNC)paj7620u2_poll_task;
     task.pcName         = "InterruptSemTask";
-    task.uwStackSize    = 0x400;
+    task.uwStackSize    = TASK_STACK_SIZE;
     task.usTaskPrio     = 10;
     ret = LOS_TaskCreate(&m_pollTaskId, &task);
     if (ret != LOS_OK)

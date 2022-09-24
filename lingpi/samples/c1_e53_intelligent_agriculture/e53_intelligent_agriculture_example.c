@@ -38,7 +38,7 @@
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void e53_ia_thread()
+void e53_ia_thread(void)
 {
     e53_ia_data_t data;
 
@@ -77,7 +77,7 @@ void e53_ia_thread()
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void e53_ia_example()
+void e53_ia_example(void)
 {
     unsigned int ret = LOS_OK;
     unsigned int thread_id;

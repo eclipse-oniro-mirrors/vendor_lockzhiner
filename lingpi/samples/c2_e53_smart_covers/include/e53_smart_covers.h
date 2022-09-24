@@ -57,10 +57,9 @@ typedef enum {
 #define MPU6050_RA_PWR_MGMT_1       0x6B
 #define MPU6050_RA_WHO_AM_I         0x75
 
-void e53_sc_init();
+void e53_sc_init(void);
 void e53_sc_read_data(e53_sc_data_t *p_data);
 void led_d1_set(SWITCH_STATUS_ENUM status);
 void led_d2_set(SWITCH_STATUS_ENUM status);
 
-#endif/*__E53_SMART_CITY_H__*/
-
+#endif /* __E53_SMART_CITY_H__ */

@@ -19,11 +19,12 @@
 
 uint8_t addRtdText(RtdTextTypeStr *typeStr)
 {
+    uint8_t retrun_value = 3;
     typeStr->status = 0x2;
     typeStr->language[0] = 'e';
     typeStr->language[1] = 'n';
     
-    return 3;
+    return retrun_value;
 }
 
 void prepareText(NDEFDataStr *data, RecordPosEnu position, uint8_t *text)
