@@ -66,7 +66,7 @@ void nfc_process(void)
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void nfc_example()
+void nfc_example(void)
 {
     unsigned int thread_id;
     TSK_INIT_PARAM_S task = {0};

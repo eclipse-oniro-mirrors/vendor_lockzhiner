@@ -29,7 +29,7 @@ typedef enum {
     ON
 } SWITCH_STATUS_ENUM;
 
-void e53_ia_init();
+void e53_ia_init(void);
 void e53_ia_read_data(e53_ia_data_t *p_data);
 void light_set(SWITCH_STATUS_ENUM status);
 void motor_status_set(SWITCH_STATUS_ENUM status);

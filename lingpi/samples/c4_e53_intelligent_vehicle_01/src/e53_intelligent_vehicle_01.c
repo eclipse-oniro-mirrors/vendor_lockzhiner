@@ -50,6 +50,10 @@ static e53_iv01_echo_info_s m_echo_info = {
 static UINT32 m_task_sem;
 /* 定义轮询任务id */
 static UINT32 m_task_id = 0;
+/* 定义轮训任务的堆栈大小 */
+#define ECHO_TASK_STACK_SIZE            0x400
+/* 定义轮训任务的优先级 */
+#define ECHO_TASK_PRIO                  30
 /* 定时器5的CURRENT_VALUE_LOW的基地址 */
 #define TIMER5_ADDRESS                  (0x400000A0U + 0x8U)
 static uint32_t *m_ptimer5_current_value_low = (uint32_t *)(TIMER5_ADDRESS);
@@ -69,8 +73,6 @@ static PwmBusIo m_buzzer_config  = {
     .id = FUNC_ID_PWM7,
     .mode = FUNC_MODE_NONE,
 };
-
-//////////////////////////////////////////////////
 
 /***************************************************************
  * 函数名称: e53_iv01_delay_usec
@@ -147,7 +149,7 @@ static VOID e53_iv01_task_echo_func(VOID *arg)
  * 参    数: 无
  * 返 回 值: 无
  ***************************************************************/
-static void e53_iv01_task_create_echo()
+static void e53_iv01_task_create_echo(void)
 {
     uint32_t ret = 0;
     TSK_INIT_PARAM_S task;
@@ -158,9 +160,9 @@ static void e53_iv01_task_create_echo()
     (VOID)memset_s(&task, sizeof(TSK_INIT_PARAM_S), 0, sizeof(TSK_INIT_PARAM_S));
     task.pfnTaskEntry   = (TSK_ENTRY_FUNC)e53_iv01_task_echo_func;
     task.pcName         = "Cs100aTaskEcho";
-    task.uwStackSize    = 0x400;
+    task.uwStackSize    = ECHO_TASK_STACK_SIZE;
     /* 优先级比当前线程低 */
-    task.usTaskPrio     = 30;
+    task.usTaskPrio     = ECHO_TASK_PRIO;
     ret = LOS_TaskCreate(&m_task_id, &task);
     if (ret != LOS_OK) {
         printf("%s, %d: LOS_TaskCreate failed(%d)\n", __func__, __LINE__, ret);
@@ -180,7 +182,7 @@ static void e53_iv01_task_create_echo()
  * 参    数: 无
  * 返 回 值: 无
  ***************************************************************/
-static void e53_iv01_task_delete_echo()
+static void e53_iv01_task_delete_echo(void)
 {
     /* 锁任务调度 */
     LOS_TaskLock();
@@ -197,11 +199,13 @@ static void e53_iv01_task_delete_echo()
  * 参    数: 无
  * 返 回 值: 无
  ***************************************************************/
-static void e53_iv01_send_trig()
+static void e53_iv01_send_trig(void)
 {
+    uint32_t delay_usec = 20;
+    
     /* 发送至少10usec的高电平给智慧车载，触发其工作 */
     E53_IV01_TRIG_Set();
-    e53_iv01_delay_usec(20);
+    e53_iv01_delay_usec(delay_usec);
     E53_IV01_TRIG_Clr();
 }
 
@@ -211,7 +215,7 @@ static void e53_iv01_send_trig()
  * 参    数: 无
  * 返 回 值: 无
  ***************************************************************/
-static void e53_iv01_init_gpio()
+static void e53_iv01_init_gpio(void)
 {
     /* Trig引脚设置为GPIO输出模式 */
     PinctrlSet(E53_IV01_TRIG_GPIO, MUX_FUNC0, PULL_KEEP, DRIVE_KEEP);
@@ -232,7 +236,7 @@ static void e53_iv01_init_gpio()
  * 参    数: 无
  * 返 回 值: 无
  ***************************************************************/
-static void e53_iv01_deinit_gpio()
+static void e53_iv01_deinit_gpio(void)
 {
     LzGpioDeinit(E53_IV01_TRIG_GPIO);
 }
@@ -243,7 +247,7 @@ static void e53_iv01_deinit_gpio()
  * 参    数: 无
  * 返 回 值: 无
  ***************************************************************/
-static unsigned int e53_iv01_init_pwm()
+static unsigned int e53_iv01_init_pwm(void)
 {
     /* 初始化pwm */
     PinctrlSet(E53_IV01_BUZZER_GPIO, MUX_FUNC2, PULL_DOWN, DRIVE_KEEP);
@@ -259,7 +263,7 @@ static unsigned int e53_iv01_init_pwm()
  * 参    数: 无
  * 返 回 值: 无
  ***************************************************************/
-static void e53_iv01_deinit_pwm()
+static void e53_iv01_deinit_pwm(void)
 {
     LzPwmDeinit(E53_IV01_PWM_IO);
 }
@@ -270,10 +274,8 @@ static void e53_iv01_deinit_pwm()
  * 参    数: 无
  * 返 回 值: 无
  ***************************************************************/
-static void e53_iv01_init_interrupt()
+static void e53_iv01_init_interrupt(void)
 {
-    //LzI2cInit(0, 400000);
-
     /* 创建信号量 */
     LOS_SemCreate(0, &m_task_sem);
 
@@ -290,11 +292,11 @@ static void e53_iv01_init_interrupt()
  * 参    数: 无
  * 返 回 值: 无
  ***************************************************************/
-static void e53_iv01_deinit_interrupt()
+static void e53_iv01_deinit_interrupt(void)
 {
     LzGpioDeinit(E53_IV01_ECHO0_GPIO);
 }
-//////////////////////////////////////////////////////////////////////
+
 
 /***************************************************************
  * 函数名称: e53_iv01_init
@@ -302,7 +304,7 @@ static void e53_iv01_deinit_interrupt()
  * 参    数: 无
  * 返 回 值: 返回0为成功，反之为失败
  ***************************************************************/
-unsigned int e53_iv01_init()
+unsigned int e53_iv01_init(void)
 {
     unsigned int ret = 0;
 
@@ -325,7 +327,7 @@ unsigned int e53_iv01_init()
  * 参    数: 无
  * 返 回 值: 无
  ***************************************************************/
-void e53_iv01_deinit()
+void e53_iv01_deinit(void)
 {
     e53_iv01_deinit_interrupt();
     e53_iv01_deinit_pwm();

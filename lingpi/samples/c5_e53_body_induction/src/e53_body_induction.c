@@ -37,7 +37,7 @@ static PwmBusIo m_buzzer  = {
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void e53_bi_init()
+void e53_bi_init(void)
 {
     uint32_t ret = LZ_HARDWARE_SUCCESS;
 

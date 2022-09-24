@@ -97,7 +97,7 @@ connect_done:
 
 void udp_server_msg_handle(int fd)
 {
-    char buf[BUFF_LEN];  //接收缓冲区
+    char buf[BUFF_LEN];  // 接收缓冲区
     socklen_t len;
     int cnt = 0, count;
     struct sockaddr_in client_addr = {0};
@@ -172,8 +172,6 @@ int wifi_udp_server(void* arg)
         LOS_Msleep(SERVER_WAIT_MSEC);
     }
 }
-
-
 
 void udp_client_msg_handle(int fd, struct sockaddr* dst)
 {

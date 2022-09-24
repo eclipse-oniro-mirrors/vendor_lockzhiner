@@ -17,10 +17,16 @@
 #include "ohos_init.h"
 #include "e53_gesture_sensor.h"
 
+/* 定义任务的堆栈大小 */
+#define TASK_STACK_SIZE     2048
+/* 定义任务的优先级 */
+#define TASK_PRIO           24
+
 void e53_gs_process(void *arg)
 {
     unsigned int ret = 0;
     unsigned short flag = 0;
+    unsigned int sleep_msec = 100;
 
     e53_gs_init();
 
@@ -67,21 +73,21 @@ void e53_gs_process(void *arg)
             e53_gs_led_wave_set((flag & GES_WAVE) ? (1) : (0));
         } else {
             /* 如果没有数据，则多等待 */
-            LOS_Msleep(100);
+            LOS_Msleep(sleep_msec);
         }
     }
 }
 
-void e53_gs_example()
+void e53_gs_example(void)
 {
     unsigned int thread_id;
     TSK_INIT_PARAM_S task = {0};
     unsigned int ret = LOS_OK;
 
     task.pfnTaskEntry = (TSK_ENTRY_FUNC)e53_gs_process;
-    task.uwStackSize = 2048;
+    task.uwStackSize = TASK_STACK_SIZE;
     task.pcName = "e53 getsture sensor process";
-    task.usTaskPrio = 24;
+    task.usTaskPrio = TASK_PRIO;
     ret = LOS_TaskCreate(&thread_id, &task);
     if (ret != LOS_OK) {
         printf("Falied to create Task_One ret:0x%x\n", ret);

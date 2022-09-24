@@ -48,7 +48,7 @@ void timer2_timeout(void *arg)
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void timer_example()
+void timer_example(void)
 {
     unsigned int timer_id1, timer_id2;
     unsigned int ret;

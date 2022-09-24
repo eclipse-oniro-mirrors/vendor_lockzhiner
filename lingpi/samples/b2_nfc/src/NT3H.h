@@ -72,8 +72,8 @@ typedef struct {
 } NDEFDataStr;
 
 
-unsigned int NT3HI2cInit();
-unsigned int NT3HI2cDeInit();
+unsigned int NT3HI2cInit(void);
+unsigned int NT3HI2cDeInit(void);
 
 
 void NT3HGetNxpSerialNumber(char* buffer);

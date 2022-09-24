@@ -21,7 +21,7 @@
 * 参    数: 无
 * 返 回 值: 0为成功，反之失败
 ***************************************************************/
-unsigned int eeprom_init();
+unsigned int eeprom_init(void);
 
 /***************************************************************
 * 函数名称: eeprom_deinit
@@ -29,7 +29,7 @@ unsigned int eeprom_init();
 * 参    数: 无
 * 返 回 值: 0为成功，反之失败
 ***************************************************************/
-unsigned int eeprom_deinit();
+unsigned int eeprom_deinit(void);
 
 /***************************************************************
 * 函数名称: eeprom_get_blocksize
@@ -37,7 +37,7 @@ unsigned int eeprom_deinit();
 * 参    数: 无
 * 返 回 值: 返回页大小
 ***************************************************************/
-unsigned int eeprom_get_blocksize();
+unsigned int eeprom_get_blocksize(void);
 
 /***************************************************************
 * 函数名称: eeprom_readbyte
@@ -94,4 +94,3 @@ unsigned int eeprom_write(unsigned int addr, unsigned char *data, unsigned int d
 
 
 #endif /* _EEPROM_H_ */
-/** @} */

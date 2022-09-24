@@ -76,7 +76,7 @@ void oled_process(void *arg)
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void oled_example()
+void oled_example(void)
 {
     unsigned int thread_id;
     TSK_INIT_PARAM_S task = {0};
