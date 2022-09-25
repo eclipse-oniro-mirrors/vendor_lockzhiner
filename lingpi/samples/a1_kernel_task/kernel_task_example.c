@@ -32,7 +32,7 @@
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void task_one(void *arg)
+void task_one(void)
 {
     while (1) {
         printf("This is %s\n", __func__);
@@ -46,7 +46,7 @@ void task_one(void *arg)
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void task_two(void *arg)
+void task_two(void)
 {
     while (1) {
         printf("This is %s\n", __func__);

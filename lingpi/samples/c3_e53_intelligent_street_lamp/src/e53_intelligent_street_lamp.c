@@ -24,8 +24,22 @@
 #define BH1750_ADDR             0x23
 
 static I2cBusIo m_isl_i2c0m2 = {
-    .scl =  {.gpio = GPIO0_PA1, .func = MUX_FUNC3, .type = PULL_NONE, .drv = DRIVE_KEEP, .dir = LZGPIO_DIR_KEEP, .val = LZGPIO_LEVEL_KEEP},
-    .sda =  {.gpio = GPIO0_PA0, .func = MUX_FUNC3, .type = PULL_NONE, .drv = DRIVE_KEEP, .dir = LZGPIO_DIR_KEEP, .val = LZGPIO_LEVEL_KEEP},
+    .scl =  {
+        .gpio = GPIO0_PA1,
+        .func = MUX_FUNC3,
+        .type = PULL_NONE,
+        .drv = DRIVE_KEEP,
+        .dir = LZGPIO_DIR_KEEP,
+        .val = LZGPIO_LEVEL_KEEP
+    },
+    .sda =  {
+        .gpio = GPIO0_PA0,
+        .func = MUX_FUNC3,
+        .type = PULL_NONE,
+        .drv = DRIVE_KEEP,
+        .dir = LZGPIO_DIR_KEEP,
+        .val = LZGPIO_LEVEL_KEEP
+    },
     .id = FUNC_ID_I2C0,
     .mode = FUNC_MODE_M2,
 };

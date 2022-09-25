@@ -25,7 +25,7 @@
 /* 循环等待时间 */
 #define WAIT_MSEC           5000
 
-void eeprom_proress(void *arg)
+void eeprom_proress(void)
 {
 #define FOR_CHAR            30
 #define FOR_ADDRESS         32

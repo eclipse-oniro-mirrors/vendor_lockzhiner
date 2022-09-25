@@ -98,7 +98,7 @@ extern const unsigned char gImage_lingzhi[IMAGE_MAXSIZE_LINGZHI];
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void lcd_process(void *arg)
+void lcd_process(void)
 {
     uint32_t ret = 0;
     float t = 0;

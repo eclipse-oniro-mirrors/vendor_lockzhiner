@@ -82,7 +82,8 @@ int udp_get_wifi_info(WifiLinkedInfo *info)
                         LZ_HARDWARE_LOGD(LOG_TAG, "network NETMASK (%s)", inet_ntoa(addr));
                     }
                     ret = 0;
-                    goto connect_done;
+                    retry = 0;
+                    continue;
                 }
             }
         }
@@ -90,7 +91,6 @@ int udp_get_wifi_info(WifiLinkedInfo *info)
         retry--;
     }
 
-connect_done:
     return ret;
 }
 
@@ -127,7 +127,7 @@ void udp_server_msg_handle(int fd)
     lwip_close(fd);
 }
 
-int wifi_udp_server(void* arg)
+int wifi_udp_server(void)
 {
     int server_fd, ret;
     struct in_addr addr;
@@ -216,7 +216,7 @@ void udp_client_msg_handle(int fd, struct sockaddr* dst)
 }
 
 
-int wifi_udp_client(void* arg)
+int wifi_udp_client(void)
 {
     int client_fd, ret;
     struct sockaddr_in serv_addr, local_addr;
@@ -266,7 +266,7 @@ int wifi_udp_client(void* arg)
 }
 
 
-void wifi_udp_process(void *args)
+void wifi_udp_process(void)
 {
     unsigned int threadID_client, threadID_server;
     unsigned int ret = LOS_OK;
