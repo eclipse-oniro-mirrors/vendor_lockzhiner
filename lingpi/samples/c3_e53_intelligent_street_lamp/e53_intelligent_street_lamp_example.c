@@ -34,7 +34,7 @@
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void e53_isl_thread(void *args)
+void e53_isl_thread(void)
 {
     float lum = 0;
 

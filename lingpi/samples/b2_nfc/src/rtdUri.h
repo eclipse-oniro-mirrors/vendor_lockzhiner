@@ -12,11 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-#include "NT3H.h"
-
 #ifndef RTDURI_H_
 #define RTDURI_H_
+
+#include "NT3H.h"
 
 typedef enum {
     freeForm,       // 0x00     No prepending is done ... the entire URI is contained in the URI Field

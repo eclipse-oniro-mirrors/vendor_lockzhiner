@@ -26,7 +26,7 @@
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void timer1_timeout(void *arg)
+void timer1_timeout(void)
 {
     printf("This is Timer1 Timeout function\n");
 }
@@ -37,7 +37,7 @@ void timer1_timeout(void *arg)
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void timer2_timeout(void *arg)
+void timer2_timeout(void)
 {
     printf("This is Timer2 Timeout function\n");
 }
