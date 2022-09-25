@@ -22,7 +22,7 @@
 /* 定义任务的优先级 */
 #define TASK_PRIO           24
 
-void e53_gs_process(void *arg)
+void e53_gs_process(void)
 {
     unsigned int ret = 0;
     unsigned short flag = 0;

@@ -48,7 +48,7 @@
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void e53_iv01_process(void *arg)
+void e53_iv01_process(void)
 {
     unsigned int ret = 0;
     /* 每个周期为200usec，占空比为100usec */

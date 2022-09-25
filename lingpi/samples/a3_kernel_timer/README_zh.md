@@ -163,12 +163,12 @@ void timer_example()
     }
 }
 
-void timer1_timeout(void *arg)
+void timer1_timeout(void)
 {
     printf("This is Timer1 Timeout function\n");
 }
 
-void timer2_timeout(void *arg)
+void timer2_timeout(void)
 {
     printf("This is Timer2 Timeout function\n");
 }

@@ -172,7 +172,7 @@ static bool writeUserPayload(int16_t payloadPtr, const NDEFDataStr *data, Uncomp
             if (ret == false) {
                 errNo = NT3HERROR_WRITE_NDEF_TEXT;
             }
-            goto end;
+            return ret;
         }
         
         if (addedPayload < data->rtdPayloadlength) {
@@ -188,14 +188,13 @@ static bool writeUserPayload(int16_t payloadPtr, const NDEFDataStr *data, Uncomp
             ret = NT3HWriteUserData(addPage->page, nfcPageBuffer);
             if (ret == false) {
                 errNo = NT3HERROR_WRITE_NDEF_TEXT;
-                goto end;
+                return ret;
             }
         } else {
             endRecord = true;
         }
     }
-    
-end:
+
     return ret;
 }
 

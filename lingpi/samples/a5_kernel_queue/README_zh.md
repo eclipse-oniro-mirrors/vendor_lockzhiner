@@ -148,7 +148,7 @@ void queue_example()
 msg_write_thread函数每隔1s，通过LOS_QueueWrite函数向队列中发送消息。
 
 ```c
-void msg_write_thread(void *arg)
+void msg_write_thread(void)
 {
     unsigned int data = 0;
     unsigned int ret = LOS_OK;
@@ -175,7 +175,7 @@ void msg_write_thread(void *arg)
 msg_read_thread函数通过LOS_QueueRead函数读取队列中的消息，当队列中没有消息的时候，msg_read_thread函数阻塞等待消息。
 
 ```c
-void msg_read_thread(void *arg)
+void msg_read_thread(void)
 {
     unsigned int addr;
     unsigned int ret = LOS_OK;

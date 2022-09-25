@@ -83,7 +83,8 @@ int get_wifi_info(WifiLinkedInfo *info)
                         LZ_HARDWARE_LOGD(LOG_TAG, "network NETMASK (%s)", inet_ntoa(addr));
                     }
                     ret = 0;
-                    goto connect_done;
+                    retry = 0;
+                    continue;
                 }
             }
         }
@@ -91,7 +92,6 @@ int get_wifi_info(WifiLinkedInfo *info)
         retry--;
     }
 
-connect_done:
     return ret;
 }
 
@@ -128,7 +128,7 @@ void tcp_server_msg_handle(int fd)
     lwip_close(fd);
 }
 
-int wifi_server(void* arg)
+int wifi_server(void)
 {
     int server_fd, ret;
 
@@ -175,8 +175,9 @@ int wifi_server(void* arg)
     }
 }
 
-void tcp_client_msg_handle(int fd, struct sockaddr* dst)
+void tcp_client_msg_handle(int fd_src, struct sockaddr* dst)
 {
+    int fd = fd_src;
     socklen_t len = sizeof(*dst);
 
     int cnt = 0, count = 0;
@@ -207,7 +208,7 @@ void tcp_client_msg_handle(int fd, struct sockaddr* dst)
     lwip_close(fd);
 }
 
-int wifi_client(void* arg)
+int wifi_client(void)
 {
     int client_fd, ret;
     struct sockaddr_in serv_addr;
@@ -245,7 +246,7 @@ int wifi_client(void* arg)
 }
 
 
-void wifi_process(void *args)
+void wifi_process(void)
 {
     unsigned int threadID_client, threadID_server;
     unsigned int ret = LOS_OK;
