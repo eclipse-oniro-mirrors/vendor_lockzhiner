@@ -37,7 +37,7 @@ static unsigned int m_msg_queue;
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void msg_write_thread(void *arg)
+void msg_write_thread(void)
 {
     unsigned int data = 0;
     unsigned int ret = LOS_OK;
@@ -62,7 +62,7 @@ void msg_write_thread(void *arg)
 * 参    数: 无
 * 返 回 值: 无
 ***************************************************************/
-void msg_read_thread(void *arg)
+void msg_read_thread(void)
 {
     unsigned int addr;
     unsigned int ret = LOS_OK;

@@ -13,9 +13,9 @@
  * limitations under the License.
  */
 
-#include "rtdText.h"
-#include "rtdTypes.h"
 #include <string.h>
+#include "rtdTypes.h"
+#include "rtdText.h"
 
 uint8_t addRtdText(RtdTextTypeStr *typeStr)
 {

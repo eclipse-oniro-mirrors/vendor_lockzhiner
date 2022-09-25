@@ -245,7 +245,7 @@ int lwip_close(int sockfd)；
 创建客户端任务 socket-->connect-->send-->recv-->lwip_close
 
 ```c
-int wifi_client(void* arg)
+int wifi_client(void)
 {
     int client_fd, ret;
     struct sockaddr_in serv_addr;
@@ -321,7 +321,7 @@ void tcp_client_msg_handle(int fd, struct sockaddr* dst)
 创建服务端任务 socket-->bind-->listen-->accept-->recv-->send-->close
 
 ```c
-int wifi_server(void* arg)
+int wifi_server(void)
 {
     int server_fd, ret;
 

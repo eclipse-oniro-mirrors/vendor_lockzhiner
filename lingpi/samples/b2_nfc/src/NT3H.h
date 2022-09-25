@@ -16,8 +16,8 @@
 #ifndef NT3H_H_
 #define NT3H_H_
 
-#include "stdbool.h"
 #include <stdint.h>
+#include "stdbool.h"
 #include "nfc.h"
 #include "lz_hardware.h"
 

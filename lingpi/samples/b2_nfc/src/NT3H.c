@@ -18,9 +18,9 @@
 #include <unistd.h>
 
 #include "lz_hardware.h"
-#include "NT3H.h"
 #include "ndef.h"
 #include "nfcForum.h"
+#include "NT3H.h"
 
 /* NFC使用i2c的总线ID */
 static unsigned int NFC_I2C_PORT = 2;
@@ -227,11 +227,11 @@ bool NT3HWriteUserData(uint8_t page, const uint8_t* data)
     uint8_t dataSend[NFC_PAGE_SIZE + 1]; // data plus register
     uint8_t reg = USER_START_REG + page;
     
-    // if the requested page is out of the register exit with error
+    /* if the requested page is out of the register exit with error */
     if (reg > USER_END_REG) {
         errNo = NT3HERROR_INVALID_USER_MEMORY_PAGE;
         ret = false;
-        goto end;
+        return ret;
     }
     
     dataSend[0] = reg; // store the register
@@ -239,10 +239,9 @@ bool NT3HWriteUserData(uint8_t page, const uint8_t* data)
     ret = writeTimeout(dataSend, sizeof(dataSend));
     if (ret == false) {
         errNo = NT3HERROR_WRITE_USER_MEMORY_PAGE;
-        goto end;
+        return ret;
     }
-    
-end:
+
     return ret;
 }
 

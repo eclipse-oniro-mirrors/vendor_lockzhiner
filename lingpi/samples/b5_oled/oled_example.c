@@ -47,7 +47,7 @@
 #define OLED_STRING4_Y          6
 #define OLED_STRING4_SIZE       16
 
-void oled_process(void *arg)
+void oled_process(void)
 {
     unsigned char buffer[STRING_MAXSIZE];
     int i = 0;
