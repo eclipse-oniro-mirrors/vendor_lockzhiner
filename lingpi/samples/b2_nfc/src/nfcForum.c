@@ -18,15 +18,18 @@
 
 static void rtdHeader(uint8_t type, NDEFRecordStr *ndefRecord, uint8_t *I2CMsg)
 {
+#define I2CMSG_OFFSET_HEADER        0
+#define I2CMSG_OFFSET_TYPE_LENGTH   1
+#define I2CMSG_OFFSET_TYPE_CODE     3
     ndefRecord->header |= 1;
     ndefRecord->header |= BIT_SR;
-    I2CMsg[0] = ndefRecord->header;
+    I2CMsg[I2CMSG_OFFSET_HEADER] = ndefRecord->header;
     
     ndefRecord->typeLength = 1;
-    I2CMsg[1] = ndefRecord->typeLength;
+    I2CMsg[I2CMSG_OFFSET_TYPE_LENGTH] = ndefRecord->typeLength;
     
     ndefRecord->type.typeCode = type;
-    I2CMsg[3] = ndefRecord->type.typeCode;
+    I2CMsg[I2CMSG_OFFSET_TYPE_CODE] = ndefRecord->type.typeCode;
 }
 
 

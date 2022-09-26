@@ -217,13 +217,14 @@ static inline void write_iic_data(unsigned char iic_data)
  ***************************************************************/
 static inline void write_iic_command(unsigned char iic_command)
 {
-    unsigned char buffer[2];
+#define BUFFER_MAXSIZE      2 /* 字符串长度 */
+    unsigned char buffer[BUFFER_MAXSIZE];
     unsigned int ret;
 
     /* 填充数据，第一个字节是通知OLED芯片，下一个字节是命令 */
     buffer[0] = 0x00;
     buffer[1] = iic_command;
-    ret = LzI2cWrite(OLED_I2C_BUS, OLED_I2C_ADDRESS, buffer, 2);
+    ret = LzI2cWrite(OLED_I2C_BUS, OLED_I2C_ADDRESS, buffer, BUFFER_MAXSIZE);
     if (ret != 0) {
         printf("%s, %s, %d: LzI2cWrite failed(%d)!\n", __FILE__, __func__, __LINE__, ret);
     }
@@ -283,8 +284,9 @@ static inline void oled_wr_byte(unsigned dat, unsigned cmd)
  ***************************************************************/
 static inline void oled_set_pos(unsigned char x, unsigned char y)
 {
+#define BYTE_DIV        4 /* 截取字节部分 */
     oled_wr_byte(0xb0 + y, OLED_CMD);
-    oled_wr_byte(((x & 0xf0) >> 4) | 0x10, OLED_CMD);
+    oled_wr_byte(((x & 0xf0) >> BYTE_DIV) | 0x10, OLED_CMD);
     oled_wr_byte((x & 0x0f), OLED_CMD);
 }
 
@@ -296,6 +298,7 @@ static inline void oled_set_pos(unsigned char x, unsigned char y)
  ***************************************************************/
 unsigned int oled_init(void)
 {
+    uint32_t sleep_msec = 200;
 #if !OLED_I2C_ENABLE
     /* GPIO0_C1 => I2C1_SDA_M1 */
     LzGpioInit(GPIO_I2C_SDA);
@@ -314,7 +317,7 @@ unsigned int oled_init(void)
     }
 #endif
 
-    LOS_Msleep(200);
+    LOS_Msleep(sleep_msec);
 
     oled_wr_byte(0xAE, OLED_CMD); // --display off
     oled_wr_byte(0x00, OLED_CMD); // ---set low column address
@@ -438,13 +441,14 @@ void oled_show_char(uint8_t x, uint8_t y, uint8_t chr, uint8_t chr_size)
 #define F6X8_LINE_DATA          6
 #define BYTE_BITS               8
 #define CHAR_LEN                16
+#define Y_OFFSET                2
     unsigned char c = 0, i = 0;
 
     c = chr - ' '; // 得到偏移后的值
 
     if (x > (OLED_COLUMN_MAX - 1)) {
         x = 0;
-        y = y + 2;
+        y = y + Y_OFFSET;
     }
 
     if (chr_size == OLED_CHR_SIZE_16) {
@@ -478,12 +482,14 @@ void oled_show_char(uint8_t x, uint8_t y, uint8_t chr, uint8_t chr_size)
  ***************************************************************/
 void oled_show_num(uint8_t x, uint8_t y, uint32_t num, uint8_t len, uint8_t size2)
 {
+#define POWER_BASE          10  /* oled_power的基数 */
+#define POWER_REMINDER      10  /* oled_power的取余 */
     uint8_t div = 2;
     uint8_t t, temp;
     uint8_t enshow = 0;
 
     for (t = 0; t < len; t++) {
-        temp = (num / oled_pow(10, len - t - 1)) % 10;
+        temp = (num / oled_pow(POWER_BASE, len - t - 1)) % POWER_REMINDER;
         if (enshow == 0 && t < (len - 1)) {
             if (temp == 0) {
                 oled_show_char(x + (size2 / div)*t, y, ' ', size2);
@@ -509,12 +515,13 @@ void oled_show_num(uint8_t x, uint8_t y, uint32_t num, uint8_t len, uint8_t size
  ***************************************************************/
 void oled_show_string(uint8_t x, uint8_t y, uint8_t *chr, uint8_t chr_size)
 {
+    uint8_t x_offset = 8;
     unsigned char j = 0;
     uint8_t offset = 2;
 
     while (chr[j] != '\0') {
         oled_show_char(x, y, chr[j], chr_size);
-        x += 8;
+        x += x_offset;
         if (x > OLED_COLUMN_MAX) {
             x = 0;
             y += offset;

@@ -69,7 +69,14 @@ static uint32_t *m_ptimer5_current_value_low = (uint32_t *)(TIMER5_ADDRESS);
 /* Buzzer定义 */
 #define E53_IV01_PWM_IO                 7
 static PwmBusIo m_buzzer_config  = {
-    .pwm = {.gpio = E53_IV01_BUZZER_GPIO, .func = MUX_FUNC2, .type = PULL_DOWN, .drv = DRIVE_KEEP, .dir = LZGPIO_DIR_KEEP, .val = LZGPIO_LEVEL_KEEP},
+    .pwm = {
+        .gpio = E53_IV01_BUZZER_GPIO,
+        .func = MUX_FUNC2,
+        .type = PULL_DOWN,
+        .drv = DRIVE_KEEP,
+        .dir = LZGPIO_DIR_KEEP,
+        .val = LZGPIO_LEVEL_KEEP
+    },
     .id = FUNC_ID_PWM7,
     .mode = FUNC_MODE_NONE,
 };
