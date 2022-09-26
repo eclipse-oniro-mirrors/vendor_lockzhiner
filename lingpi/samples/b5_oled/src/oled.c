@@ -240,13 +240,14 @@ static inline void write_iic_command(unsigned char iic_command)
  ***************************************************************/
 static inline void write_iic_data(unsigned char iic_data)
 {
-    unsigned char buffer[2];
+#define BUFFER_MAXSIZE      2   /* 字符串长度 */
+    unsigned char buffer[BUFFER_MAXSIZE];
     unsigned int ret;
 
     /* 填充数据，第一个字节是通知OLED芯片，下一个字节是数据 */
     buffer[0] = 0x40;
     buffer[1] = iic_data;
-    ret = LzI2cWrite(OLED_I2C_BUS, OLED_I2C_ADDRESS, buffer, 2);
+    ret = LzI2cWrite(OLED_I2C_BUS, OLED_I2C_ADDRESS, buffer, BUFFER_MAXSIZE);
     if (ret != 0) {
         printf("%s, %s, %d: LzI2cWrite failed(%d)!\n", __FILE__, __func__, __LINE__, ret);
     }

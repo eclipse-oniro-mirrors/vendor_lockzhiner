@@ -278,7 +278,7 @@ void e53_ia_read_data(e53_ia_data_t *pData)
     data[0] = SHT30_Data_Buffer[EOFFSET_SHT30_REG_HUMIDITY_H];
     data[1] = SHT30_Data_Buffer[EOFFSET_SHT30_REG_HUMIDITY_L];
     data[2] = SHT30_Data_Buffer[EOFFSET_SHT30_REG_HUMIDITY_CRC];
-    rc = sht30_check_crc(data, 2, data[2]);
+    rc = sht30_check_crc(data, SHT30_CRC_DATA_MAXSIZE, data[SHT30_CRC_OFFSET]);
     if (!rc) {
         tmp = ((uint16_t)data[0] << high_byte_bit) | data[1];
         pData->humidity = sht30_calc_RH(tmp);
