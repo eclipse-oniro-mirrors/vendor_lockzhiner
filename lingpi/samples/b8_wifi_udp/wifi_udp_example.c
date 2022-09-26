@@ -120,7 +120,7 @@ void udp_server_msg_handle(int fd)
         printf("[udp server] remote addr:%s port:%u\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
         printf("[udp server] rev:%s\n", buf);
         memset(buf, 0, BUFF_LEN);
-        sprintf(buf, "I have recieved %d bytes data! recieved cnt:%d", count, ++cnt);
+        snprintf(buf, sizeof(buf), "I have recieved %d bytes data! recieved cnt:%d", count, ++cnt);
         printf("[udp server] send:%s\n", buf);
         sendto(fd, buf, strlen(buf), 0, (struct sockaddr*)&client_addr, len);   // 发送信息给client
     }
@@ -200,11 +200,13 @@ void udp_client_msg_handle(int fd, struct sockaddr* dst)
         if (count == -1) {
             printf("[udp client] No server message!!!\n");
         } else {
-            printf("[udp client] remote addr:%s port:%u\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
+            printf("[udp client] remote addr:%s port:%u\n",
+                inet_ntoa(client_addr.sin_addr),
+                ntohs(client_addr.sin_port));
             printf("[udp client] rev:%s\n", buf);
         }
         memset(buf, 0, BUFF_LEN);
-        sprintf(buf, "UDP TEST cilent send:%d", ++cnt);
+        snprintf(buf, sizeof(buf), "UDP TEST cilent send:%d", ++cnt);
         /* 发送数据给server */
         count = sendto(fd, buf, strlen(buf), 0, (struct sockaddr*)&client_addr, len);
         printf("[udp client] send:%s\n", buf);

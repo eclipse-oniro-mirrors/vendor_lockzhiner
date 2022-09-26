@@ -103,6 +103,9 @@ static LzSpiConfig m_spiConf = {
 /* 寄存器最高位 */
 #define REG_BITS_HIGH           (0x80)
 
+/* sizey的字体单位大小 */
+#define SIZEY_UNIT              8
+
 /* uint16取值 */
 #define UINT16_TO_H(val)        (((val) & 0xFF00) >> 8)
 #define UINT16_TO_L(val)        ((val) & 0x00FF)
@@ -196,7 +199,13 @@ static uint32_t mypow(uint8_t m, uint8_t n)
  *       @mode: 0为非叠加模式；1为叠加模式
  * 返 回 值: 无
  ***************************************************************/
-static void lcd_show_chinese_12x12(uint16_t x, uint16_t y, uint8_t *s, uint16_t fc, uint16_t bc, uint8_t sizey, uint8_t mode)
+static void lcd_show_chinese_12x12(uint16_t x,
+    uint16_t y,
+    uint8_t *s,
+    uint16_t fc,
+    uint16_t bc,
+    uint8_t sizey,
+    uint8_t mode)
 {
     uint8_t i, j, m = 0;
     uint16_t k;
@@ -262,7 +271,13 @@ static void lcd_show_chinese_12x12(uint16_t x, uint16_t y, uint8_t *s, uint16_t 
  *       @mode: 0为非叠加模式；1为叠加模式
  * 返 回 值: 无
  ***************************************************************/
-static void lcd_show_chinese_16x16(uint16_t x, uint16_t y, uint8_t *s, uint16_t fc, uint16_t bc, uint8_t sizey, uint8_t mode)
+static void lcd_show_chinese_16x16(uint16_t x,
+    uint16_t y,
+    uint8_t *s,
+    uint16_t fc,
+    uint16_t bc,
+    uint8_t sizey,
+    uint8_t mode)
 {
     uint8_t i, j, m = 0;
     uint16_t k;
@@ -270,7 +285,7 @@ static void lcd_show_chinese_16x16(uint16_t x, uint16_t y, uint8_t *s, uint16_t 
     uint16_t TypefaceNum;   /* 一个字符所占字节大小 */
     uint16_t x0 = x;
     
-    TypefaceNum = (sizey / 8 + ((sizey % 8) ? 1 : 0)) * sizey;
+    TypefaceNum = (sizey / SIZEY_UNIT + ((sizey % SIZEY_UNIT) ? 1 : 0)) * sizey;
     /* 统计汉字数目 */
     HZnum = sizeof(tfont16) / sizeof(typFNT_GB16);
     
@@ -309,7 +324,7 @@ static void lcd_show_chinese_16x16(uint16_t x, uint16_t y, uint8_t *s, uint16_t 
                 }
             }
             
-            break; //查找到对应点阵字库立即退出，防止多个汉字重复取模带来影响
+            break; /* 查找到对应点阵字库立即退出，防止多个汉字重复取模带来影响 */
         }
     }
 }
@@ -328,7 +343,13 @@ static void lcd_show_chinese_16x16(uint16_t x, uint16_t y, uint8_t *s, uint16_t 
  *       @mode: 0为非叠加模式；1为叠加模式
  * 返 回 值: 无
  ***************************************************************/
-static void lcd_show_chinese_24x24(uint16_t x, uint16_t y, uint8_t *s, uint16_t fc, uint16_t bc, uint8_t sizey, uint8_t mode)
+static void lcd_show_chinese_24x24(uint16_t x,
+    uint16_t y,
+    uint8_t *s,
+    uint16_t fc,
+    uint16_t bc,
+    uint8_t sizey,
+    uint8_t mode)
 {
     uint8_t i, j, m = 0;
     uint16_t k;
@@ -375,7 +396,7 @@ static void lcd_show_chinese_24x24(uint16_t x, uint16_t y, uint8_t *s, uint16_t 
                 }
             }
             
-            break; //查找到对应点阵字库立即退出，防止多个汉字重复取模带来影响
+            break; /* 查找到对应点阵字库立即退出，防止多个汉字重复取模带来影响 */
         }
     }
 }
@@ -394,15 +415,21 @@ static void lcd_show_chinese_24x24(uint16_t x, uint16_t y, uint8_t *s, uint16_t 
  *       @mode: 0为非叠加模式；1为叠加模式
  * 返 回 值: 无
  ***************************************************************/
-static void lcd_show_chinese_32x32(uint16_t x, uint16_t y, uint8_t *s, uint16_t fc, uint16_t bc, uint8_t sizey, uint8_t mode)
+static void lcd_show_chinese_32x32(uint16_t x,
+    uint16_t y,
+    uint8_t *s,
+    uint16_t fc,
+    uint16_t bc,
+    uint8_t sizey,
+    uint8_t mode)
 {
     uint8_t i, j, m = 0;
     uint16_t k;
-    uint16_t HZnum;//汉字数目
-    uint16_t TypefaceNum;//一个字符所占字节大小
+    uint16_t HZnum;         /* 汉字数目 */
+    uint16_t TypefaceNum;   /* 一个字符所占字节大小 */
     uint16_t x0 = x;
     
-    TypefaceNum = (sizey / 8 + ((sizey % 8) ? 1 : 0)) * sizey;
+    TypefaceNum = (sizey / SIZEY_UNIT + ((sizey % SIZEY_UNIT) ? 1 : 0)) * sizey;
     /* 统计汉字数目 */
     HZnum = sizeof(tfont32) / sizeof(typFNT_GB32);
     
@@ -827,8 +854,9 @@ void lcd_show_char(uint16_t x, uint16_t y, uint8_t num, uint16_t fc, uint16_t bc
     uint16_t i;
     uint16_t TypefaceNum; /* 一个字符所占字节大小 */
     uint16_t x0 = x;
+    uint16_t size_y2x = 2;
     
-    sizex = sizey / 2;
+    sizex = sizey / size_y2x;
     TypefaceNum = (sizex / BYTE_TO_BITS + ((sizex % BYTE_TO_BITS) ? 1 : 0)) * sizey;
     
     /* 得到偏移后的值 */
@@ -925,12 +953,14 @@ void lcd_show_string(uint16_t x, uint16_t y, const uint8_t *p, uint16_t fc, uint
 void lcd_show_int_num(uint16_t x, uint16_t y, uint16_t num, uint8_t len, uint16_t fc, uint16_t bc, uint8_t sizey)
 {
     uint8_t base = 48; /* ASCII字符'0' */
+    uint8_t power_base = 10;
+    uint8_t power_remainder = 10;
     uint8_t t, temp;
     uint8_t enshow = 0;
     uint8_t sizex = sizey / 2;
     
     for (t = 0; t < len; t++) {
-        temp = (num / mypow(10, len - t - 1)) % 10;
+        temp = (num / mypow(power_base, len - t - 1)) % power_remainder;
         if (enshow == 0 && t < (len - 1)) {
             if (temp == 0) {
                 lcd_show_char(x + t * sizex, y, ' ', fc, bc, sizey, 0);

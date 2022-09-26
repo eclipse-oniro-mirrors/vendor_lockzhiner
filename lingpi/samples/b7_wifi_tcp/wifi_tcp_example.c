@@ -120,7 +120,7 @@ void tcp_server_msg_handle(int fd)
         }
         printf("[tcp server] rev client msg:%s\n", buf);
         memset(buf, 0, BUFF_LEN);
-        sprintf(buf, "I have recieved %d bytes data! recieved cnt:%d", count, ++cnt);
+        snprintf(buf, sizeof(buf), "I have recieved %d bytes data! recieved cnt:%d", count, ++cnt);
         printf("[tcp server] send msg:%s\n", buf);
         send(client_fd, buf, strlen(buf), 0);           // 发送信息给client
     }
@@ -190,7 +190,8 @@ void tcp_client_msg_handle(int fd_src, struct sockaddr* dst)
 
     while (1) {
         char buf[BUFF_LEN];
-        sprintf(buf, "TCP TEST cilent send:%d", ++cnt);
+        
+        snprintf(buf, sizeof(buf), "TCP TEST cilent send:%d", ++cnt);
         count = send(fd, buf, strlen(buf), 0);                          // 发送数据给server
         // count = lwip_write(fd, buf, strlen(buf));                    // 发送数据给server
         printf("------------------------------------------------------------\n");

@@ -346,13 +346,14 @@ static uint8_t paj7620U2_write_null(void)
 ***************************************************************/
 static uint8_t paj7620u2_write_data(uint8_t addr, uint8_t data)
 {
+#define BUFFER_MAXSIZE      2 /* 字符串长度 */
     unsigned int ret = 0;
-    unsigned char buffer[2];
+    unsigned char buffer[BUFFER_MAXSIZE];
 
     /* write value to reg */
     buffer[0] = addr;
     buffer[1] = data;
-    ret = LzI2cWrite(E53_I2C_BUS, PAJ7620U2_I2C_SLAVE_ADDRESS, buffer, 2);
+    ret = LzI2cWrite(E53_I2C_BUS, PAJ7620U2_I2C_SLAVE_ADDRESS, buffer, BUFFER_MAXSIZE);
     if (ret != LZ_HARDWARE_SUCCESS) {
         printf("%s, %s, %d: LzI2cWrite failed(%d)\n", __FILE__, __func__, __LINE__, ret);
         return 0;
@@ -435,15 +436,16 @@ static uint8_t paj7620u2_get_bank_id(void)
 ***************************************************************/
 static uint32_t paj7620u2_wake_up(void)
 {
+#define PAJ7620U2_WRITE_WAIT_USEC       1000 /* PAJ7620U2等待唤醒时间 */
     uint8_t ret = 0;
     uint8_t data = 0;
 
     /* 查询PAJ7620U2，用于唤醒它 */
     paj7620U2_write_null();
-    paj7620u2_delay_usec(1000);
+    paj7620u2_delay_usec(PAJ7620U2_WRITE_WAIT_USEC);
     /* 多唤醒1次 */
     paj7620U2_write_null();
-    paj7620u2_delay_usec(1000);
+    paj7620u2_delay_usec(PAJ7620U2_WRITE_WAIT_USEC);
 
     /* 读取bank0 addr 0x0，返回一定是0x20 */
     paj7620u2_select_bank(BANK0);
@@ -485,6 +487,8 @@ static void paj7620u2_suspend(void)
 ***************************************************************/
 static VOID paj7620u2_poll_task(VOID *args)
 {
+#define BYTE_BITS           8       /* 字节移位 */
+#define POLL_WAIT_MSEC      100     /* Poll操作等待时间 */
     uint8_t int_flag1 = 0;
     uint8_t int_flag2 = 0;
     uint16_t value = 0;
@@ -500,14 +504,14 @@ static VOID paj7620u2_poll_task(VOID *args)
             value |= (uint16_t)(int_flag1);
         }
         if (int_flag2 != 0) {
-            value |= (uint16_t)(int_flag2 << 8);
+            value |= (uint16_t)(int_flag2 << BYTE_BITS);
         }
 
         if (value != 0) {
             FifoPut(&m_fifo_intflags, value);
         }
 
-        LOS_Msleep(100);
+        LOS_Msleep(POLL_WAIT_MSEC);
     }
 }
 
@@ -582,6 +586,7 @@ static void paj7620u2_poll_task_init(void)
 ***************************************************************/
 static void paj7620u2_init_config(void)
 {
+#define UINT16_TO_UINT8         2   /* uint16_t转化2个uint8_t */
     uint8_t ret = 0;
     uint32_t size;
 
@@ -591,13 +596,13 @@ static void paj7620u2_init_config(void)
     }
 
     /* 初始化PAJ7620U2 */
-    size = sizeof(m_Paj7620u2_InitRegisterConfig) / (sizeof(uint8_t) * 2);
+    size = sizeof(m_Paj7620u2_InitRegisterConfig) / (sizeof(uint8_t) * UINT16_TO_UINT8);
     for (uint32_t i = 0; i < size; i++) {
         paj7620u2_write_data(m_Paj7620u2_InitRegisterConfig[i][0], m_Paj7620u2_InitRegisterConfig[i][1]);
     }
 
     /* 设置为手势识别模式 */
-    size = sizeof(m_Paj7620u2_SetGestureModeConfig) / (sizeof(uint8_t) * 2);
+    size = sizeof(m_Paj7620u2_SetGestureModeConfig) / (sizeof(uint8_t) * UINT16_TO_UINT8);
     for (uint32_t i = 0; i < size; i++) {
         paj7620u2_write_data(m_Paj7620u2_SetGestureModeConfig[i][0], m_Paj7620u2_SetGestureModeConfig[i][1]);
     }
@@ -614,10 +619,11 @@ static void paj7620u2_init_config(void)
  ***************************************************************/
 unsigned int e53_gs_init(void)
 {
+#define PAJ7620U2_READY_WAIT_USEC       700     /* 等待PAJ7620U2准备时间 */
     /* 初始化LED */
     e53_gs_led_init();
     /* 上电后，等待PAJ7620U2 700usec */
-    paj7620u2_delay_usec(700);
+    paj7620u2_delay_usec(PAJ7620U2_READY_WAIT_USEC);
     /* 初始化i2c */
     paj7620u2_i2c_init();
     /* 初始化寄存器配置和工作模式 */

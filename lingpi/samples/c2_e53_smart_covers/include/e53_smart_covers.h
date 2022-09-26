@@ -13,8 +13,8 @@
  * limitations under the License.
  */
 
-#ifndef __E53_SMART_CITY_H__
-#define __E53_SMART_CITY_H__
+#ifndef _E53_SMART_CITY_H_
+#define _E53_SMART_CITY_H_
 
 #include "lz_hardware.h"
 
@@ -62,4 +62,4 @@ void e53_sc_read_data(e53_sc_data_t *p_data);
 void led_d1_set(SWITCH_STATUS_ENUM status);
 void led_d2_set(SWITCH_STATUS_ENUM status);
 
-#endif /* __E53_SMART_CITY_H__ */
+#endif /* _E53_SMART_CITY_H_ */

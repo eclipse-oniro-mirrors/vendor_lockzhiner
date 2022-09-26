@@ -236,6 +236,9 @@ void e53_ia_init(void)
 ***************************************************************/
 void e53_ia_read_data(e53_ia_data_t *pData)
 {
+#define SHT30_CRC_STRING_MAXSIZE    3   /* SHT30的CRC字符串长度 */
+#define SHT30_CRC_DATA_MAXSIZE      2   /* CRC校验的数据长度 */
+#define SHT30_CRC_OFFSET            2   /* CRC校验的数组偏移量 */
     uint32_t wait_start_hb1750 = 180;
     float luminance_rate = 1.2;
     uint16_t high_byte_bit = 8;
@@ -250,7 +253,7 @@ void e53_ia_read_data(e53_ia_data_t *pData)
     pData->luminance = (float)(((recv_data[0] << high_byte_bit) + recv_data[1]) / luminance_rate);
 
     /* checksum verification */
-    uint8_t data[3];
+    uint8_t data[SHT30_CRC_STRING_MAXSIZE];
     uint16_t tmp;
     /* byte 0,1 is temperature byte 4,5 is humidity */
     uint8_t SHT30_Data_Buffer[EOFFSET_SHT30_REG_MAX];
@@ -265,7 +268,7 @@ void e53_ia_read_data(e53_ia_data_t *pData)
     data[0] = SHT30_Data_Buffer[EOFFSET_SHT30_REG_TEMP_H];
     data[1] = SHT30_Data_Buffer[EOFFSET_SHT30_REG_TEMP_L];
     data[2] = SHT30_Data_Buffer[EOFFSET_SHT30_REG_TEMP_CRC];
-    rc = sht30_check_crc(data, 2, data[2]);
+    rc = sht30_check_crc(data, SHT30_CRC_DATA_MAXSIZE, data[SHT30_CRC_OFFSET]);
     if (!rc) {
         tmp = ((uint16_t)data[0] << high_byte_bit) | data[1];
         pData->temperature = sht30_calc_temperature(tmp);
