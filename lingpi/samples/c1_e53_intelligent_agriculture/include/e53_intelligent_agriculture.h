@@ -34,4 +34,4 @@ void e53_ia_read_data(e53_ia_data_t *p_data);
 void light_set(SWITCH_STATUS_ENUM status);
 void motor_status_set(SWITCH_STATUS_ENUM status);
 
-#endif /*__E53_INTELLIGENT_AGRICULTURE_H__*/
+#endif /* __E53_INTELLIGENT_AGRICULTURE_H__ */
