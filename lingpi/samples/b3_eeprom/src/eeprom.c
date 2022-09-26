@@ -122,13 +122,15 @@ unsigned int eeprom_get_blocksize(void)
 ***************************************************************/
 unsigned int eeprom_readbyte(unsigned int addr, unsigned char *data)
 {
+#define LZ_I2C_MSG_MAXSIZE      2
     unsigned int ret = 0;
     unsigned char buffer[1];
-    LzI2cMsg msgs[2];
+    LzI2cMsg msgs[LZ_I2C_MSG_MAXSIZE];
 
     /* K24C02的存储地址是0~255 */
     if (addr >= EEPROM_ADDRESS_MAX) {
-        printf("%s, %s, %d: addr(0x%x) >= EEPROM_ADDRESS_MAX(0x%x)\n", __FILE__, __func__, __LINE__, addr, EEPROM_ADDRESS_MAX);
+        printf("%s, %s, %d: addr(0x%x) >= EEPROM_ADDRESS_MAX(0x%x)\n",
+            __FILE__, __func__, __LINE__, addr, EEPROM_ADDRESS_MAX);
         return 0;
     }
 
@@ -144,7 +146,7 @@ unsigned int eeprom_readbyte(unsigned int addr, unsigned char *data)
     msgs[1].buf = data;
     msgs[1].len = 1;
 
-    ret = LzI2cTransfer(EEPROM_I2C_BUS, msgs, 2);
+    ret = LzI2cTransfer(EEPROM_I2C_BUS, msgs, LZ_I2C_MSG_MAXSIZE);
     if (ret != LZ_HARDWARE_SUCCESS) {
         printf("%s, %s, %d: LzI2cTransfer failed(%d)!\n", __FILE__, __func__, __LINE__, ret);
         return 0;
@@ -163,13 +165,16 @@ unsigned int eeprom_readbyte(unsigned int addr, unsigned char *data)
 ***************************************************************/
 unsigned int eeprom_writebyte(unsigned int addr, unsigned char data)
 {
+#define BUFFER_MAXSIZE              2       /* 字符串长度 */
+#define K24C02_WRITE_WAIT_USEC      1000    /* K24C02芯片写完成的等待时间 */
     unsigned int ret = 0;
     LzI2cMsg msgs[1];
-    unsigned char buffer[2];
+    unsigned char buffer[BUFFER_MAXSIZE];
 
     /* K24C02的存储地址是0~255 */
     if (addr >= EEPROM_ADDRESS_MAX) {
-        printf("%s, %s, %d: addr(0x%x) >= EEPROM_ADDRESS_MAX(0x%x)\n", __FILE__, __func__, __LINE__, addr, EEPROM_ADDRESS_MAX);
+        printf("%s, %s, %d: addr(0x%x) >= EEPROM_ADDRESS_MAX(0x%x)\n",
+            __FILE__, __func__, __LINE__, addr, EEPROM_ADDRESS_MAX);
         return 0;
     }
 
@@ -179,7 +184,7 @@ unsigned int eeprom_writebyte(unsigned int addr, unsigned char data)
     msgs[0].addr = EEPROM_I2C_ADDRESS;
     msgs[0].flags = 0;
     msgs[0].buf = &buffer[0];
-    msgs[0].len = 2;
+    msgs[0].len = BUFFER_MAXSIZE;
 
     ret = LzI2cTransfer(EEPROM_I2C_BUS, msgs, 1);
     if (ret != LZ_HARDWARE_SUCCESS) {
@@ -188,7 +193,7 @@ unsigned int eeprom_writebyte(unsigned int addr, unsigned char data)
     }
 
     /* K24C02芯片需要时间完成写操作，在此之前不响应其他操作 */
-    eeprog_delay_usec(1000);
+    eeprog_delay_usec(K24C02_WRITE_WAIT_USEC);
 
     return 1;
 }

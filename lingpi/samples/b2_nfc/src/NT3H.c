@@ -132,10 +132,9 @@ bool NT3HReadHeaderNfc(uint8_t *endRecordsPtr, uint8_t *ndefHeader)
 #define STRING_OFFSET_NDEF_START        0
 #define STRING_OFFSET_NEND_RECORD       1
 #define STRING_OFFSET_NTAG_ERASED       2
-
-    *endRecordsPtr = 0;
     bool ret = NT3HReadUserData(0);
-    
+    *endRecordsPtr = 0;
+
     // read the first page to see where is the end of the Records.
     if (ret == true) {
         // if the first byte is equals to NDEF_START_BYTE there are some records
@@ -179,8 +178,8 @@ bool NT3HEraseAllTag(void)
 {
     bool ret = true;
     uint8_t erase[NFC_PAGE_SIZE + 1] = {USER_START_REG, 0x03, 0x03, 0xD0, 0x00, 0x00, 0xFE};
-    ret = writeTimeout(erase, sizeof(erase));
     
+    ret = writeTimeout(erase, sizeof(erase));
     if (ret == false) {
         errNo = NT3HERROR_ERASE_USER_MEMORY_PAGE;
     }
@@ -205,14 +204,15 @@ bool getSessionReg(void)
 bool NT3HReadUserData(uint8_t page)
 {
     uint8_t reg = USER_START_REG + page;
+    bool ret;
+    
     // if the requested page is out of the register exit with error
     if (reg > USER_END_REG) {
         errNo = NT3HERROR_INVALID_USER_MEMORY_PAGE;
         return false;
     }
     
-    bool ret = readTimeout(reg, nfcPageBuffer);
-    
+    ret = readTimeout(reg, nfcPageBuffer);
     if (ret == false) {
         errNo = NT3HERROR_READ_USER_MEMORY_PAGE;
     }

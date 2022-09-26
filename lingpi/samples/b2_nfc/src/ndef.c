@@ -212,7 +212,7 @@ bool NT3HwriteRecord(const NDEFDataStr *data)
         NT3HReadHeaderNfc(&recordLength, &mbMe);
         addPage.page  = (recordLength + sizeof(NDEFHeaderStr) + 1) / NFC_PAGE_SIZE;
         
-        //remove the NDEF_END_BYTE byte because it will overwrite by the new Record
+        // remove the NDEF_END_BYTE byte because it will overwrite by the new Record
         addPage.usedBytes = (recordLength + sizeof(NDEFHeaderStr) + 1) % NFC_PAGE_SIZE - 1;
     }
     
