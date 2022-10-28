@@ -19,7 +19,6 @@ executable("liteos.elf") {
     "//base/update/ota_lite/frameworks/source:hota",
     "//build/lite:ohos",
     "//build/lite/config/component/cJSON:cjson_static",
-    "//vendor/lockzhiner/lingpi/hals/utils/sys_param:hal_sysparam",
     "//vendor/lockzhiner/lingpi/hals/utils/token:hal_token_static",
 
     # xts
