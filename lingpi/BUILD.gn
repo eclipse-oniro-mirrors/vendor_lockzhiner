@@ -16,7 +16,7 @@ import("//build/lite/config/subsystem/lite_subsystem.gni")
 
 executable("liteos.elf") {
   deps = [
-    "//base/update/ota_lite/frameworks/source:hota",
+    "//base/update/sys_installer_lite/frameworks/source:hota",
     "//build/lite:ohos",
     "//build/lite/config/component/cJSON:cjson_static",
     "//vendor/lockzhiner/lingpi/hals/utils/token:hal_token_static",
