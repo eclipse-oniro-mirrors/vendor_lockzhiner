@@ -19,11 +19,11 @@
 
 ## 一、小凌派-RK2206开发板介绍
 
-[小凌派-RK2206](https://item.taobao.com/item.htm?id=664707670233)是一款由福州市凌睿智捷电子有限公司专为HarmonyOS系统打造的HarmonyOS开发板。
+[小凌派-RK2206](https://item.taobao.com/item.htm?id=664707670233)是一款由福州市凌睿智捷电子有限公司专为OpenHarmonyOS系统打造的OpenHarmonyOS开发板。
 
 * 采用IoTCluB的E53接口标准，可接入所有的E53案例扩展板。
 * 主控为瑞芯微RK2206芯片，200MHz主频，RAM 256KB、ROM 16KB、PSRAM 8M、FLASH 8M。
-* 板载NFC Forum Type 2 Tag芯片及天线，可实现HarmonyOS“碰一碰”功能。
+* 载NFC Forum Type 2 Tag芯片及天线，可实现OpenHarmonyOS“碰一碰”功能。
 * 支持 IEEE 802.11b/g/n 制式，AP 模式。
 * USB 2.0 、SD card /SPI/I2C 接口、麦克风接口、E53 接口（包含 UART、 I2C、ADC、DAC、PWM、5 个 GPIO）。
 * 一根TypeC USB线，即可实现供电、下载等功能。
@@ -31,7 +31,7 @@
 
 ## 二、快速上手（十分钟上手）
 
-如果您想快速的体验一下HarmonyOS的源码 `[获取]`、`[编译]`、`[烧录]`过程，强烈建议您学习以下教程，这能让您在环境安装环节省下不少时间。
+如果您想快速的体验一下OpenHarmonyOS的源码 `[获取]`、`[编译]`、`[烧录]`过程，强烈建议您学习以下教程，这能让您在环境安装环节省下不少时间。
 
 1、文档（Gitee）
 
@@ -39,8 +39,8 @@
 
 ## 三、手把手教程系列
 
-如果您想学习HarmonyOS系统的环境搭建，并想了解整个从0到1的过程，建议您跟着我们一步一步的学习。
-需要告诉您的是，HarmonyOS系统的环境搭建所涉及的领域及组件会比较多，您需要严格按照我们的教程执行每一步，否则可能会出现不能预知的错误。
+如果您想学习OpenHarmonyOS系统的环境搭建，并想了解整个从0到1的过程，建议您跟着我们一步一步的学习。
+需要告诉您的是，OpenHarmonyOS系统的环境搭建所涉及的领域及组件会比较多，您需要严格按照我们的教程执行每一步，否则可能会出现不能预知的错误。
 
 1、[文档系列（Gitee）](/vendor/lockzhiner/rk2206/docs/board/课程配套课件)
 
