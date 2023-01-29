@@ -10,7 +10,7 @@
 
 * 采用IoTCluB的E53接口标准，可接入所有的E53案例扩展板。
 * 主控为瑞芯微RK2206芯片，200MHz主频，RAM 256KB、ROM 16KB、PSRAM 8M、FLASH 8M。
-* 板载NFC Forum Type 2 Tag芯片及天线，可实现HarmonyOS“碰一碰”功能。
+* 板载NFC Forum Type 2 Tag芯片及天线，可实现OpenHarmonyOS“碰一碰”功能。
 * 支持 IEEE 802.11b/g/n 制式，AP 模式。
 * USB 2.0 、SD card /SPI/I2C 接口、麦克风接口、E53 接口（包含 UART、 I2C、ADC、DAC、PWM、5 个 GPIO）。
 * 一根TypeC USB线，即可实现供电、下载等功能。
