@@ -104,15 +104,15 @@ void lcd_process(void)
     float t = 0;
     uint8_t chinese_string[] = "小凌派";
     uint8_t cur_sizey = SIZEY_12;
-    
+
     ret = lcd_init();
     if (ret != 0) {
-        printf("lcd_init failed(%d)\n", ret);
+        printf("lcd_init failed(%ld)\n", ret);
         return;
     }
-    
+
     lcd_fill(LCD_FILL_X, LCD_FILL_Y, LCD_W, LCD_H, LCD_WHITE);
-    
+
     while (1) {
         printf("************Lcd Example***********\n");
         lcd_show_picture(LCD_PICTURE_X, LCD_PICTURE_Y, LCD_PICTURE_LENGTH,
@@ -136,7 +136,7 @@ void lcd_process(void)
         lcd_show_float_num1(LCD_FLOAT1_X, LCD_FLOAT1_Y, t,
                             LCD_FLOAT1_NUM, LCD_BLACK, LCD_WHITE, LCD_FLOAT1_SIZE);
         t += LCD_FLOAT1_INCREASE;
-        
+
         lcd_fill(LCD_CHINESE_X, LCD_CHINESE_Y, LCD_W, LCD_H, LCD_WHITE);
         lcd_show_chinese(LCD_CHINESE_X, LCD_CHINESE_Y, chinese_string,
                          LCD_RED, LCD_WHITE, cur_sizey, LCD_CHINESE_MODE);
@@ -149,7 +149,7 @@ void lcd_process(void)
         } else {
             cur_sizey = LCD_FONT_SIZE12;
         }
-        
+
         printf("\n");
         LOS_Msleep(WAIT_MSEC);
     }
@@ -167,7 +167,7 @@ void lcd_example(void)
     unsigned int thread_id;
     TSK_INIT_PARAM_S task = {0};
     unsigned int ret = LOS_OK;
-    
+
     task.pfnTaskEntry = (TSK_ENTRY_FUNC)lcd_process;
     task.uwStackSize = TASK_STACK_SIZE;
     task.pcName = "lcd process";

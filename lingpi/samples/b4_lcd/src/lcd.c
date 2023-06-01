@@ -126,7 +126,7 @@ static void lcd_write_bus(uint8_t dat)
     LzSpiWrite(LCD_SPI_BUS, 0, &dat, 1);
 #else
     uint8_t i;
-    
+
     LCD_CS_Clr();
     for (i = 0; i < REG_BITS_MAXSIZE; i++) {
         LCD_CLK_Clr();
@@ -177,11 +177,11 @@ static void lcd_address_set(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2)
 static uint32_t mypow(uint8_t m, uint8_t n)
 {
     uint32_t result = 1;
-    
+
     while (n--) {
         result *= m;
     }
-    
+
     return result;
 }
 
@@ -200,24 +200,24 @@ static uint32_t mypow(uint8_t m, uint8_t n)
  * 返 回 值: 无
  ***************************************************************/
 static void lcd_show_chinese_12x12(uint16_t x,
-    uint16_t y,
-    uint8_t *s,
-    uint16_t fc,
-    uint16_t bc,
-    uint8_t sizey,
-    uint8_t mode)
+                                   uint16_t y,
+                                   uint8_t *s,
+                                   uint16_t fc,
+                                   uint16_t bc,
+                                   uint8_t sizey,
+                                   uint8_t mode)
 {
     uint8_t i, j, m = 0;
     uint16_t k;
     uint16_t HZnum;         // 汉字数目
     uint16_t TypefaceNum;   // 一个字符所占字节大小
     uint16_t x0 = x;
-    
+
     TypefaceNum = (sizey / BYTE_TO_BITS + ((sizey % biBYTE_TO_BITSts) ? 1 : 0)) * sizey;
-    
+
     /* 统计汉字数目 */
     HZnum = sizeof(tfont12) / sizeof(typFNT_GB12);
-    
+
     for (k = 0; k < HZnum; k++) {
         if ((tfont12[k].Index[0] == *(s)) && (tfont12[k].Index[1] == *(s + 1))) {
             lcd_address_set(x, y, x + sizey - 1, y + sizey - 1);
@@ -230,9 +230,9 @@ static void lcd_show_chinese_12x12(uint16_t x,
                         } else {
                             lcd_wr_data(bc);
                         }
-                        
+
                         m++;
-                        if ((m % sizey) == 0) {
+                        if ((sizey != 0) && ((m % sizey) == 0)) {
                             m = 0;
                             break;
                         }
@@ -242,7 +242,7 @@ static void lcd_show_chinese_12x12(uint16_t x,
                             /* 画一个点 */
                             lcd_draw_point(x, y, fc);
                         }
-                        
+
                         x++;
                         if ((x - x0) == sizey) {
                             x = x0;
@@ -252,7 +252,7 @@ static void lcd_show_chinese_12x12(uint16_t x,
                     }
                 }
             }
-            
+
             break; /* 查找到对应点阵字库立即退出，防止多个汉字重复取模带来影响 */
         }
     }
@@ -272,23 +272,23 @@ static void lcd_show_chinese_12x12(uint16_t x,
  * 返 回 值: 无
  ***************************************************************/
 static void lcd_show_chinese_16x16(uint16_t x,
-    uint16_t y,
-    uint8_t *s,
-    uint16_t fc,
-    uint16_t bc,
-    uint8_t sizey,
-    uint8_t mode)
+                                   uint16_t y,
+                                   uint8_t *s,
+                                   uint16_t fc,
+                                   uint16_t bc,
+                                   uint8_t sizey,
+                                   uint8_t mode)
 {
     uint8_t i, j, m = 0;
     uint16_t k;
     uint16_t HZnum;         /* 汉字数目 */
     uint16_t TypefaceNum;   /* 一个字符所占字节大小 */
     uint16_t x0 = x;
-    
+
     TypefaceNum = (sizey / SIZEY_UNIT + ((sizey % SIZEY_UNIT) ? 1 : 0)) * sizey;
     /* 统计汉字数目 */
     HZnum = sizeof(tfont16) / sizeof(typFNT_GB16);
-    
+
     for (k = 0; k < HZnum; k++) {
         if ((tfont16[k].Index[0] == *(s)) && (tfont16[k].Index[1] == *(s + 1))) {
             lcd_address_set(x, y, x + sizey - 1, y + sizey - 1);
@@ -301,9 +301,9 @@ static void lcd_show_chinese_16x16(uint16_t x,
                         } else {
                             lcd_wr_data(bc);
                         }
-                        
+
                         m++;
-                        if (m % sizey == 0) {
+                        if ((sizey != 0) && (m % sizey == 0) {
                             m = 0;
                             break;
                         }
@@ -313,7 +313,7 @@ static void lcd_show_chinese_16x16(uint16_t x,
                             /* 画一个点 */
                             lcd_draw_point(x, y, fc);
                         }
-                        
+
                         x++;
                         if ((x - x0) == sizey) {
                             x = x0;
@@ -323,7 +323,7 @@ static void lcd_show_chinese_16x16(uint16_t x,
                     }
                 }
             }
-            
+
             break; /* 查找到对应点阵字库立即退出，防止多个汉字重复取模带来影响 */
         }
     }
@@ -344,23 +344,23 @@ static void lcd_show_chinese_16x16(uint16_t x,
  * 返 回 值: 无
  ***************************************************************/
 static void lcd_show_chinese_24x24(uint16_t x,
-    uint16_t y,
-    uint8_t *s,
-    uint16_t fc,
-    uint16_t bc,
-    uint8_t sizey,
-    uint8_t mode)
+                                   uint16_t y,
+                                   uint8_t *s,
+                                   uint16_t fc,
+                                   uint16_t bc,
+                                   uint8_t sizey,
+                                   uint8_t mode)
 {
     uint8_t i, j, m = 0;
     uint16_t k;
     uint16_t HZnum;         /* 汉字数目 */
     uint16_t TypefaceNum;   /* 一个字符所占字节大小 */
     uint16_t x0 = x;
-    
+
     TypefaceNum = (sizey / BYTE_TO_BITS + ((sizey % BYTE_TO_BITS) ? 1 : 0)) * sizey;
     /* 统计汉字数目 */
     HZnum = sizeof(tfont24) / sizeof(typFNT_GB24);
-    
+
     for (k = 0; k < HZnum; k++) {
         if ((tfont24[k].Index[0] == *(s)) && (tfont24[k].Index[1] == *(s + 1))) {
             lcd_address_set(x, y, x + sizey - 1, y + sizey - 1);
@@ -373,9 +373,9 @@ static void lcd_show_chinese_24x24(uint16_t x,
                         } else {
                             lcd_wr_data(bc);
                         }
-                        
+
                         m++;
-                        if (m % sizey == 0) {
+                        if ((sizey != 0) && (m % sizey == 0) {
                             m = 0;
                             break;
                         }
@@ -385,7 +385,7 @@ static void lcd_show_chinese_24x24(uint16_t x,
                             /* 画一个点 */
                             lcd_draw_point(x, y, fc);
                         }
-                        
+
                         x++;
                         if ((x - x0) == sizey) {
                             x = x0;
@@ -395,7 +395,7 @@ static void lcd_show_chinese_24x24(uint16_t x,
                     }
                 }
             }
-            
+
             break; /* 查找到对应点阵字库立即退出，防止多个汉字重复取模带来影响 */
         }
     }
@@ -416,23 +416,23 @@ static void lcd_show_chinese_24x24(uint16_t x,
  * 返 回 值: 无
  ***************************************************************/
 static void lcd_show_chinese_32x32(uint16_t x,
-    uint16_t y,
-    uint8_t *s,
-    uint16_t fc,
-    uint16_t bc,
-    uint8_t sizey,
-    uint8_t mode)
+                                   uint16_t y,
+                                   uint8_t *s,
+                                   uint16_t fc,
+                                   uint16_t bc,
+                                   uint8_t sizey,
+                                   uint8_t mode)
 {
     uint8_t i, j, m = 0;
     uint16_t k;
     uint16_t HZnum;         /* 汉字数目 */
     uint16_t TypefaceNum;   /* 一个字符所占字节大小 */
     uint16_t x0 = x;
-    
+
     TypefaceNum = (sizey / SIZEY_UNIT + ((sizey % SIZEY_UNIT) ? 1 : 0)) * sizey;
     /* 统计汉字数目 */
     HZnum = sizeof(tfont32) / sizeof(typFNT_GB32);
-    
+
     for (k = 0; k < HZnum; k++) {
         if ((tfont32[k].Index[0] == *(s)) && (tfont32[k].Index[1] == *(s + 1))) {
             lcd_address_set(x, y, x + sizey - 1, y + sizey - 1);
@@ -445,9 +445,9 @@ static void lcd_show_chinese_32x32(uint16_t x,
                         } else {
                             lcd_wr_data(bc);
                         }
-                        
+
                         m++;
-                        if (m % sizey == 0) {
+                        if ((sizey != 0) && (m % sizey == 0)) {
                             m = 0;
                             break;
                         }
@@ -456,7 +456,7 @@ static void lcd_show_chinese_32x32(uint16_t x,
                         if (tfont32[k].Msk[i] & (0x01 << j)) {
                             lcd_draw_point(x, y, fc); /* 画一个点 */
                         }
-                        
+
                         x++;
                         if ((x - x0) == sizey) {
                             x = x0;
@@ -466,7 +466,7 @@ static void lcd_show_chinese_32x32(uint16_t x,
                     }
                 }
             }
-            
+
             break; /* 查找到对应点阵字库立即退出，防止多个汉字重复取模带来影响 */
         }
     }
@@ -484,7 +484,7 @@ unsigned int lcd_init(void)
     unsigned int long_delay_msec = 500;
 #if LCD_ENABLE_SPI
     LzSpiDeinit(LCD_SPI_BUS);
-    
+
     if (SpiIoInit(m_spiBus) != LZ_HARDWARE_SUCCESS) {
         printf("%s, %d: SpiIoInit failed!\n", __FILE__, __LINE__);
         return __LINE__;
@@ -511,12 +511,12 @@ unsigned int lcd_init(void)
     LzGpioInit(LCD_PIN_RES);
     LzGpioSetDir(LCD_PIN_RES, LZGPIO_DIR_OUT);
     LzGpioSetVal(LCD_PIN_RES, LZGPIO_LEVEL_HIGH);
-    
+
     /* 初始化GPIO0_C6 */
     LzGpioInit(LCD_PIN_DC);
     LzGpioSetDir(LCD_PIN_DC, LZGPIO_DIR_OUT);
     LzGpioSetVal(LCD_PIN_DC, LZGPIO_LEVEL_LOW);
-    
+
     /* 重启lcd */
     LCD_RES_Clr();
     LOS_Msleep(delay_msec);
@@ -602,7 +602,7 @@ unsigned int lcd_init(void)
     lcd_wr_data8(0x21);
     lcd_wr_data8(0x20);
     lcd_wr_reg(0x29);
-    
+
     return 0;
 }
 
@@ -624,7 +624,7 @@ unsigned int lcd_deinit(void)
 #endif
     LzGpioDeinit(LCD_PIN_RES);
     LzGpioDeinit(LCD_PIN_DC);
-    
+
     return 0;
 }
 
@@ -643,7 +643,7 @@ unsigned int lcd_deinit(void)
 void lcd_fill(uint16_t xsta, uint16_t ysta, uint16_t xend, uint16_t yend, uint16_t color)
 {
     uint16_t i, j;
-    
+
     /* 设置显示范围 */
     lcd_address_set(xsta, ysta, xend - 1, yend - 1);
     /* 填充颜色 */
@@ -688,14 +688,14 @@ void lcd_draw_line(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t 
     uint16_t t;
     int xerr = 0, yerr = 0, delta_x, delta_y, distance;
     int incx, incy, uRow, uCol;
-    
+
     /* 计算坐标增量 */
     delta_x = x2 - x1;
     delta_y = y2 - y1;
     /* 画线起点坐标 */
     uRow = x1;
     uCol = y1;
-    
+
     if (delta_x > 0) {
         /* 设置单步方向 */
         incx = 1;
@@ -706,7 +706,7 @@ void lcd_draw_line(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t 
         incx = -1;
         delta_x = -delta_x;
     }
-    
+
     if (delta_y > 0) {
         incy = 1;
     } else if (delta_y == 0) {
@@ -716,14 +716,14 @@ void lcd_draw_line(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint16_t 
         incy = -1;
         delta_y = -delta_y;
     }
-    
+
     if (delta_x > delta_y) {
         /* 选取基本增量坐标轴 */
         distance = delta_x;
     } else {
         distance = delta_y;
     }
-    
+
     for (t = 0; t < distance + 1; t++) {
         /* 画点 */
         lcd_draw_point(uRow, uCol, color);
@@ -774,10 +774,10 @@ void lcd_draw_rectangle(uint16_t x1, uint16_t y1, uint16_t x2, uint16_t y2, uint
 void lcd_draw_circle(uint16_t x0, uint16_t y0, uint8_t r, uint16_t color)
 {
     int a, b;
-    
+
     a = 0;
     b = r;
-    
+
     while (a <= b) {
         lcd_draw_point(x0 - b, y0 - a, color);
         lcd_draw_point(x0 + b, y0 - a, color);
@@ -814,11 +814,11 @@ void lcd_show_chinese(uint16_t x, uint16_t y, uint8_t *s, uint16_t fc, uint16_t 
     uint8_t buffer[128];
     uint32_t buffer_len = 0;
     uint32_t len = strlen(s);
-    
-    memset(buffer, 0, sizeof(buffer));
+
+    memset_s(buffer, sizeof(buffer), 0, sizeof(buffer));
     /* utf8格式汉字转化为ascii格式 */
     chinese_utf8_to_ascii(s, strlen(s), buffer, &buffer_len);
-    
+
     for (uint32_t i = 0; i < buffer_len; i += CHINESE_TO_BYTES, x += sizey) {
         if (sizey == LCD_FONT_SIZE12) {
             lcd_show_chinese_12x12(x, y, &buffer[i], fc, bc, sizey, mode);
@@ -855,15 +855,15 @@ void lcd_show_char(uint16_t x, uint16_t y, uint8_t num, uint16_t fc, uint16_t bc
     uint16_t TypefaceNum; /* 一个字符所占字节大小 */
     uint16_t x0 = x;
     uint16_t size_y2x = 2;
-    
+
     sizex = sizey / size_y2x;
     TypefaceNum = (sizex / BYTE_TO_BITS + ((sizex % BYTE_TO_BITS) ? 1 : 0)) * sizey;
-    
+
     /* 得到偏移后的值 */
     num = num - ' ';
     /* 设置光标位置 */
     lcd_address_set(x, y, x + sizex - 1, y + sizey - 1);
-    
+
     for (i = 0; i < TypefaceNum; i++) {
         if (sizey == LCD_FONT_SIZE12) {
             /* 调用6x12字体 */
@@ -880,7 +880,7 @@ void lcd_show_char(uint16_t x, uint16_t y, uint8_t num, uint16_t fc, uint16_t bc
         } else {
             return;
         }
-        
+
         for (t = 0; t < BYTE_TO_BITS; t++) {
             if (!mode) {
                 /* 非叠加模式 */
@@ -889,7 +889,7 @@ void lcd_show_char(uint16_t x, uint16_t y, uint8_t num, uint16_t fc, uint16_t bc
                 } else {
                     lcd_wr_data(bc);
                 }
-                
+
                 m++;
                 if (m % sizex == 0) {
                     m = 0;
@@ -901,7 +901,7 @@ void lcd_show_char(uint16_t x, uint16_t y, uint8_t num, uint16_t fc, uint16_t bc
                     /* 画一个点 */
                     lcd_draw_point(x, y, fc);
                 }
-                
+
                 x++;
                 if ((x - x0) == sizex) {
                     x = x0;
@@ -958,7 +958,7 @@ void lcd_show_int_num(uint16_t x, uint16_t y, uint16_t num, uint8_t len, uint16_
     uint8_t t, temp;
     uint8_t enshow = 0;
     uint8_t sizex = sizey / 2;
-    
+
     for (t = 0; t < len; t++) {
         temp = (num / mypow(power_base, len - t - 1)) % power_remainder;
         if (enshow == 0 && t < (len - 1)) {
@@ -994,7 +994,7 @@ void lcd_show_float_num1(uint16_t x, uint16_t y, float num, uint8_t len, uint16_
 #define CHAR_0                  ((uint8_t)('0'))
     uint8_t t, temp, sizex;
     uint16_t num1;
-    
+
     sizex = X_OFFSET(sizey);
     num1 = FLOAT_TO_INT(num);
     for (t = 0; t < len; t++) {
@@ -1024,7 +1024,7 @@ void lcd_show_picture(uint16_t x, uint16_t y, uint16_t length, uint16_t width, c
     uint16_t i, j;
     uint32_t k = 0;
     uint32_t unit = 2;
-    
+
     lcd_address_set(x, y, x + length - 1, y + width - 1);
     for (i = 0; i < length; i++) {
         for (j = 0; j < width; j++) {

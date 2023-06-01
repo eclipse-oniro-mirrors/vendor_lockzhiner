@@ -14,7 +14,6 @@
  */
 
 #include "nfcForum.h"
-#include <string.h>
 
 static void rtdHeader(uint8_t type, NDEFRecordStr *ndefRecord, uint8_t *I2CMsg)
 {
@@ -24,10 +23,10 @@ static void rtdHeader(uint8_t type, NDEFRecordStr *ndefRecord, uint8_t *I2CMsg)
     ndefRecord->header |= 1;
     ndefRecord->header |= BIT_SR;
     I2CMsg[I2CMSG_OFFSET_HEADER] = ndefRecord->header;
-    
+
     ndefRecord->typeLength = 1;
     I2CMsg[I2CMSG_OFFSET_TYPE_LENGTH] = ndefRecord->typeLength;
-    
+
     ndefRecord->type.typeCode = type;
     I2CMsg[I2CMSG_OFFSET_TYPE_CODE] = ndefRecord->type.typeCode;
 }
@@ -41,15 +40,16 @@ uint8_t composeRtdText(const NDEFDataStr *ndef, NDEFRecordStr *ndefRecord, uint8
     uint8_t sizeof_str = 3;
     uint8_t sizeof_type = 1;
     uint8_t offset_i2cmsg = 2;
-    
+    size_t sizeof_text = 1024; 
+
     rtdHeader(RTD_TEXT, ndefRecord, I2CMsg);
-    
+
     uint8_t payLoadLen = addRtdText(&ndefRecord->type.typePayload.text);
-    memcpy(&I2CMsg[offset_text], &ndefRecord->type.typePayload.text, payLoadLen);
-    
+    memcpy_s(&I2CMsg[offset_text], sizeof_text, &ndefRecord->type.typePayload.text, payLoadLen);
+
     ndefRecord->payloadLength = ndef->rtdPayloadlength + payLoadLen; // added the typePayload
     I2CMsg[offset_i2cmsg] = ndefRecord->payloadLength;
-    
+
     retLen = sizeof_header + sizeof_str + sizeof_type;
 
     return retLen;
@@ -61,15 +61,15 @@ uint8_t composeRtdUri(const NDEFDataStr *ndef, NDEFRecordStr *ndefRecord, uint8_
     uint32_t offset_text = 4;
     uint32_t offset_length = 2;
     uint8_t length = 5;
-    
+
     rtdHeader(RTD_URI, ndefRecord, I2CMsg);
-    
+
     uint8_t payLoadLen = addRtdUriRecord(ndef, &ndefRecord->type.typePayload.uri);
-    memcpy(&I2CMsg[offset_text], &ndefRecord->type.typePayload.uri, payLoadLen);
-    
+    memcpy_s(&I2CMsg[offset_text], sizeof(I2CMsg[offset_text]), &ndefRecord->type.typePayload.uri, payLoadLen);
+
     ndefRecord->payloadLength = ndef->rtdPayloadlength + payLoadLen; // added the typePayload
     I2CMsg[offset_length] = ndefRecord->payloadLength;
-    
+
     return length;
 }
 
@@ -80,7 +80,7 @@ void composeNDEFMBME(bool isFirstRecord, bool isLastRecord, NDEFRecordStr *ndefR
     } else {
         ndefRecord->header &= ~MASK_MB;
     }
-    
+
     if (isLastRecord) {
         ndefRecord->header |= BIT_ME;
     } else {

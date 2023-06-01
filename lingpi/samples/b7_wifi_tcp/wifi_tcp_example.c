@@ -52,7 +52,8 @@ int get_wifi_info(WifiLinkedInfo *info)
 {
     int ret = -1;
     int gw, netmask;
-    memset(info, 0, sizeof(WifiLinkedInfo));
+    
+    memset_s(info, sizeof(WifiLinkedInfo), 0, sizeof(WifiLinkedInfo));
     unsigned int retry = 15;
     struct in_addr addr;
 
@@ -109,7 +110,7 @@ void tcp_server_msg_handle(int fd)
     client_fd = accept(fd, (struct sockaddr*)&client_addr, &client_addr_len);
     printf("[tcp server] accept <%s:%d>\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
     while (1) {
-        memset(buf, 0, BUFF_LEN);
+        memset_s(buf, sizeof(buf), 0, BUFF_LEN);
         printf("-------------------------------------------------------\n");
         printf("[tcp server] waitting client msg\n");
         count = recv(client_fd, buf, BUFF_LEN, 0);       // read是阻塞函数，没有数据就一直阻塞
@@ -119,8 +120,8 @@ void tcp_server_msg_handle(int fd)
             break;
         }
         printf("[tcp server] rev client msg:%s\n", buf);
-        memset(buf, 0, BUFF_LEN);
-        snprintf(buf, sizeof(buf), "I have recieved %d bytes data! recieved cnt:%d", count, ++cnt);
+        memset_s(buf, sizeof(buf), 0, BUFF_LEN);
+        snprintf_s(buf, sizeof(buf), sizeof(buf), "I have recieved %d bytes data! recieved cnt:%d", count, ++cnt);
         printf("[tcp server] send msg:%s\n", buf);
         send(client_fd, buf, strlen(buf), 0);           // 发送信息给client
     }
@@ -145,7 +146,7 @@ int wifi_server(void)
         int flag = 1;
         ret = setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &flag, sizeof(int));
         if (ret != 0) {
-            printf("[CommInitTcpServer]setsockopt fail, ret[%d]!\n", ret);
+            printf("[CommInitTcpServer]setsockopt fail, ret[%ld]!\n", ret);
         }
 
         struct sockaddr_in serv_addr = {0};
@@ -190,14 +191,14 @@ void tcp_client_msg_handle(int fd_src, struct sockaddr* dst)
 
     while (1) {
         char buf[BUFF_LEN];
-        
-        snprintf(buf, sizeof(buf), "TCP TEST cilent send:%d", ++cnt);
+
+        snprintf_s(buf, sizeof(buf), sizeof(buf), "TCP TEST cilent send:%d", ++cnt);
         count = send(fd, buf, strlen(buf), 0);                          // 发送数据给server
         // count = lwip_write(fd, buf, strlen(buf));                    // 发送数据给server
         printf("------------------------------------------------------------\n");
         printf("[tcp client] send:%s\n", buf);
         printf("[tcp client] client sendto msg to server %d,waitting server respond msg!!!\n", count);
-        memset(buf, 0, BUFF_LEN);
+        memset_s(buf, sizeof(buf), 0, BUFF_LEN);
         count = recv(fd, buf, BUFF_LEN, 0);                             // 接收来自server的信息
         if (count == -1) {
             printf("[tcp client] recieve data fail!\n");
@@ -228,15 +229,15 @@ int wifi_client(void)
         int flag = 1;
         ret = setsockopt(client_fd, SOL_SOCKET, SO_REUSEADDR, &flag, sizeof(int));
         if (ret != 0) {
-            printf("[CommInitTcpServer]setsockopt fail, ret[%d]!\n", ret);
+            printf("[CommInitTcpServer]setsockopt fail, ret[%ld]!\n", ret);
         }
 
-        memset(&serv_addr, 0, sizeof(serv_addr));
+        memset_s(&serv_addr, sizeof(serv_addr), 0, sizeof(serv_addr));
         serv_addr.sin_family = AF_INET;
         serv_addr.sin_addr.s_addr = inet_addr(OC_SERVER_IP);
         serv_addr.sin_port = htons(SERVER_PORT);
         printf("[tcp client] connect:%d<%s:%d>\n", client_fd, inet_ntoa(serv_addr.sin_addr),
-            ntohs(serv_addr.sin_port));
+               ntohs(serv_addr.sin_port));
 
         tcp_client_msg_handle(client_fd, (struct sockaddr*)&serv_addr);
 

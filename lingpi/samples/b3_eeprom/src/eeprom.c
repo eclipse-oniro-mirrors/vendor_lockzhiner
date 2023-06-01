@@ -130,7 +130,7 @@ unsigned int eeprom_readbyte(unsigned int addr, unsigned char *data)
     /* K24C02的存储地址是0~255 */
     if (addr >= EEPROM_ADDRESS_MAX) {
         printf("%s, %s, %d: addr(0x%x) >= EEPROM_ADDRESS_MAX(0x%x)\n",
-            __FILE__, __func__, __LINE__, addr, EEPROM_ADDRESS_MAX);
+               __FILE__, __func__, __LINE__, addr, EEPROM_ADDRESS_MAX);
         return 0;
     }
 
@@ -148,7 +148,7 @@ unsigned int eeprom_readbyte(unsigned int addr, unsigned char *data)
 
     ret = LzI2cTransfer(EEPROM_I2C_BUS, msgs, LZ_I2C_MSG_MAXSIZE);
     if (ret != LZ_HARDWARE_SUCCESS) {
-        printf("%s, %s, %d: LzI2cTransfer failed(%d)!\n", __FILE__, __func__, __LINE__, ret);
+        printf("%s, %s, %d: LzI2cTransfer failed(%ld)!\n", __FILE__, __func__, __LINE__, ret);
         return 0;
     }
 
@@ -174,7 +174,7 @@ unsigned int eeprom_writebyte(unsigned int addr, unsigned char data)
     /* K24C02的存储地址是0~255 */
     if (addr >= EEPROM_ADDRESS_MAX) {
         printf("%s, %s, %d: addr(0x%x) >= EEPROM_ADDRESS_MAX(0x%x)\n",
-            __FILE__, __func__, __LINE__, addr, EEPROM_ADDRESS_MAX);
+               __FILE__, __func__, __LINE__, addr, EEPROM_ADDRESS_MAX);
         return 0;
     }
 
@@ -188,7 +188,7 @@ unsigned int eeprom_writebyte(unsigned int addr, unsigned char data)
 
     ret = LzI2cTransfer(EEPROM_I2C_BUS, msgs, 1);
     if (ret != LZ_HARDWARE_SUCCESS) {
-        printf("%s, %s, %d: LzI2cTransfer failed(%d)!\n", __FILE__, __func__, __LINE__, ret);
+        printf("%s, %s, %d: LzI2cTransfer failed(%ld)!\n", __FILE__, __func__, __LINE__, ret);
         return 0;
     }
 
@@ -216,30 +216,30 @@ unsigned int eeprom_writepage(unsigned int addr, unsigned char *data, unsigned i
     /* K24C02的存储地址是0~255 */
     if (addr >= EEPROM_ADDRESS_MAX) {
         printf("%s, %s, %d: addr(0x%x) >= EEPROM_ADDRESS_MAX(0x%x)\n",
-            __FILE__, __func__, __LINE__, addr, EEPROM_ADDRESS_MAX);
+               __FILE__, __func__, __LINE__, addr, EEPROM_ADDRESS_MAX);
         return 0;
     }
 
     if ((addr % EEPROM_PAGE) != 0) {
         printf("%s, %s, %d: addr(0x%x) is not page addr(0x%x)\n",
-            __FILE__, __func__, __LINE__, addr, EEPROM_PAGE);
+               __FILE__, __func__, __LINE__, addr, EEPROM_PAGE);
         return 0;
     }
 
     if ((addr + data_len) > EEPROM_ADDRESS_MAX) {
         printf("%s, %s, %d: addr + data_len(0x%x) > EEPROM_ADDRESS_MAX(0x%x)\n",
-            __FILE__, __func__, __LINE__, addr + data_len, EEPROM_ADDRESS_MAX);
+               __FILE__, __func__, __LINE__, addr + data_len, EEPROM_ADDRESS_MAX);
         return 0;
     }
 
     if (data_len > EEPROM_PAGE) {
         printf("%s, %s, %d: data_len(%d) > EEPROM_PAGE(%d)\n",
-            __FILE__, __func__, __LINE__, data_len, EEPROM_PAGE);
+               __FILE__, __func__, __LINE__, data_len, EEPROM_PAGE);
         return 0;
     }
 
     buffer[0] = addr;
-    memcpy(&buffer[1], data, data_len);
+    memcpy_s(&buffer[1], sizeof(buffer) - 1,  data, data_len);
 
     msgs[0].addr = EEPROM_I2C_ADDRESS;
     msgs[0].flags = 0;
@@ -248,7 +248,7 @@ unsigned int eeprom_writepage(unsigned int addr, unsigned char *data, unsigned i
 
     ret = LzI2cTransfer(EEPROM_I2C_BUS, msgs, 1);
     if (ret != LZ_HARDWARE_SUCCESS) {
-        printf("%s, %s, %d: LzI2cTransfer failed(%d)!\n", __FILE__, __func__, __LINE__, ret);
+        printf("%s, %s, %d: LzI2cTransfer failed(%ld)!\n", __FILE__, __func__, __LINE__, ret);
         return 0;
     }
 
@@ -273,26 +273,26 @@ unsigned int eeprom_read(unsigned int addr, unsigned char *data, unsigned int da
 
     if (addr >= EEPROM_ADDRESS_MAX) {
         printf("%s, %s, %d: addr(0x%x) >= EEPROM_ADDRESS_MAX(0x%x)\n",
-            __FILE__, __func__, __LINE__, addr, EEPROM_ADDRESS_MAX);
+               __FILE__, __func__, __LINE__, addr, EEPROM_ADDRESS_MAX);
         return 0;
     }
 
     if ((addr + data_len) > EEPROM_ADDRESS_MAX) {
         printf("%s, %s, %d: addr + len(0x%x) > EEPROM_ADDRESS_MAX(0x%x)\n",
-            __FILE__, __func__, __LINE__, addr + data_len, EEPROM_ADDRESS_MAX);
+               __FILE__, __func__, __LINE__, addr + data_len, EEPROM_ADDRESS_MAX);
         return 0;
     }
 
     ret = eeprom_readbyte(addr, data);
     if (ret != 1) {
-        printf("%s, %s, %d: EepromReadByte failed(%d)\n", __FILE__, __func__, __LINE__, ret);
+        printf("%s, %s, %d: EepromReadByte failed(%ld)\n", __FILE__, __func__, __LINE__, ret);
         return 0;
     }
 
     if (data_len > 1) {
         ret = LzI2cRead(EEPROM_I2C_BUS, EEPROM_I2C_ADDRESS, &data[1], data_len - 1);
         if (ret < 0) {
-            printf("%s, %s, %d: LzI2cRead failed(%d)!\n", __FILE__, __func__, __LINE__, ret);
+            printf("%s, %s, %d: LzI2cRead failed(%ld)!\n", __FILE__, __func__, __LINE__, ret);
             return 0;
         }
     }
@@ -320,13 +320,13 @@ unsigned int eeprom_write(unsigned int addr, unsigned char *data, unsigned int d
 
     if (addr >= EEPROM_ADDRESS_MAX) {
         printf("%s, %s, %d: addr(0x%x) >= EEPROM_ADDRESS_MAX(0x%x)\n",
-            __FILE__, __func__, __LINE__, addr, EEPROM_ADDRESS_MAX);
+               __FILE__, __func__, __LINE__, addr, EEPROM_ADDRESS_MAX);
         return 0;
     }
 
     if ((addr + data_len) > EEPROM_ADDRESS_MAX) {
         printf("%s, %s, %d: addr + len(0x%x) > EEPROM_ADDRESS_MAX(0x%x)\n",
-            __FILE__, __func__, __LINE__, addr + data_len, EEPROM_ADDRESS_MAX);
+               __FILE__, __func__, __LINE__, addr + data_len, EEPROM_ADDRESS_MAX);
         return 0;
     }
 
@@ -350,7 +350,7 @@ unsigned int eeprom_write(unsigned int addr, unsigned char *data, unsigned int d
     for (unsigned int i = addr; i < (page_start * EEPROM_PAGE); i++) {
         ret = eeprom_writebyte(i, data[offset_current]);
         if (ret != 1) {
-            printf("%s, %s, %d: EepromWriteByte failed(%d)\n", __FILE__, __func__, __LINE__, ret);
+            printf("%s, %s, %d: EepromWriteByte failed(%ld)\n", __FILE__, __func__, __LINE__, ret);
             return offset_current;
         }
         offset_current++;
@@ -365,7 +365,7 @@ unsigned int eeprom_write(unsigned int addr, unsigned char *data, unsigned int d
 
         ret = eeprom_writepage(page * EEPROM_PAGE, &data[offset_current], len);
         if (ret != len) {
-            printf("%s, %s, %d: EepromWritePage failed(%d)\n", __FILE__, __func__, __LINE__, ret);
+            printf("%s, %s, %d: EepromWritePage failed(%ld)\n", __FILE__, __func__, __LINE__, ret);
             return offset_current;
         }
         offset_current += EEPROM_PAGE;

@@ -53,11 +53,11 @@ void e53_sc_thread(void)
             z = (int)data.accel[EACCEL_Z];
         } else {
             if ((x + DELTA) < data.accel[EACCEL_X]
-                || (x - DELTA) > data.accel[EACCEL_X]
-                || (y + DELTA) < data.accel[EACCEL_Y]
-                || (y - DELTA) > data.accel[EACCEL_Y]
-                || (z + DELTA) < data.accel[EACCEL_Z]
-                || (z - DELTA) > data.accel[EACCEL_Z]) {
+                    || (x - DELTA) > data.accel[EACCEL_X]
+                    || (y + DELTA) < data.accel[EACCEL_Y]
+                    || (y - DELTA) > data.accel[EACCEL_Y]
+                    || (z + DELTA) < data.accel[EACCEL_Z]
+                    || (z - DELTA) > data.accel[EACCEL_Z]) {
                 /* 倾斜告警 */
                 led_d1_set(OFF);
                 led_d2_set(ON);

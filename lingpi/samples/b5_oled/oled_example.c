@@ -61,7 +61,7 @@ void oled_process(void)
         oled_show_string(OLED_STRING2_X, OLED_STRING2_Y, OLED_STRING2_TEXT, OLED_STRING2_SIZE);
         oled_show_string(OLED_STRING3_X, OLED_STRING3_Y, OLED_STRING3_TEXT, OLED_STRING3_SIZE);
 
-        snprintf(buffer, sizeof(buffer), "%d Sec!", i++);
+        snprintf_s(buffer, sizeof(buffer), sizeof(buffer), "%d Sec!", i++);
         oled_show_string(OLED_STRING4_X, OLED_STRING4_Y, buffer, OLED_STRING4_SIZE);
 
         printf("\n\n");

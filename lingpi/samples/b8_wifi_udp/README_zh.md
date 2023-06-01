@@ -228,17 +228,17 @@ int wifi_udp_client(void)
         int flag = 1;
         ret = setsockopt(client_fd, SOL_SOCKET, SO_REUSEADDR, &flag, sizeof(int));
         if (ret != 0) {
-            printf("[CommInitUdpServer]setsockopt fail, ret[%d]!\n", ret);
+            printf("[CommInitUdpServer]setsockopt fail, ret[%ld]!\n", ret);
         }
 
-        memset(&local_addr, 0, sizeof(local_addr));
+        memset_s(&local_addr, sizeof(local_addr), 0, sizeof(local_addr));
         local_addr.sin_family = AF_INET;
         local_addr.sin_addr.s_addr = wifiinfo.ipAddress;
         local_addr.sin_port = htons(CLIENT_LOCAL_PORT);
         //绑定本地ip端口号
         ret = bind(client_fd, (struct sockaddr*)&local_addr, sizeof(local_addr));
             
-        memset(&serv_addr, 0, sizeof(serv_addr));
+        memset_s(&serv_addr, sizeof(serv_addr), 0, sizeof(serv_addr));
         serv_addr.sin_family = AF_INET;
         serv_addr.sin_addr.s_addr = htonl(INADDR_ANY); //IP地址，需要进行网络序转换，INADDR_ANY：本地地址
         // serv_addr.sin_addr.s_addr = inet_addr(OC_SERVER_IP);  //指定ip接收
@@ -283,7 +283,7 @@ void udp_client_msg_handle(int fd, struct sockaddr* dst)
             printf("[udp client] remote addr:%s port:%u\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
             printf("[udp client] rev:%s\n", buf);
         }
-        memset(buf, 0, BUFF_LEN);
+        memset_s(buf, sizeof(buf), 0, BUFF_LEN);
         sprintf(buf, "UDP TEST cilent send:%d", ++cnt);
         // count = send(fd, buf, strlen(buf), 0);                      //发送数据给server
         count = sendto(fd, buf, strlen(buf), 0, (struct sockaddr*)&client_addr, len);        //发送信息给client
@@ -316,7 +316,7 @@ int wifi_udp_server(void)
         int flag = 1;
         ret = setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &flag, sizeof(int));
         if (ret != 0) {
-            printf("[CommInitUdpServer]setsockopt fail, ret[%d]!\n", ret);
+            printf("[CommInitUdpServer]setsockopt fail, ret[%ld]!\n", ret);
         }
       
         struct sockaddr_in serv_addr = {0};
@@ -351,7 +351,7 @@ void udp_server_msg_handle(int fd)
     struct sockaddr_in client_addr = {0};
     while (1)
     {
-        memset(buf, 0, BUFF_LEN);
+        memset_s(buf, sizeof(buf), 0, BUFF_LEN);
         len = sizeof(client_addr);
         printf("[udp server]------------------------------------------------\n");
         printf("[udp server] waitting client msg\n");
@@ -364,7 +364,7 @@ void udp_server_msg_handle(int fd)
         }
         printf("[udp server] remote addr:%s port:%u\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
         printf("[udp server] rev client msg:%s\n", buf);
-        memset(buf, 0, BUFF_LEN);
+        memset_s(buf, sizeof(buf), 0, BUFF_LEN);
         sprintf(buf, "I have recieved %d bytes data! recieved cnt:%d", count, ++cnt);
         printf("[udp server] send msg:%s\n", buf);
         sendto(fd, buf, strlen(buf), 0, (struct sockaddr*)&client_addr, len);        //发送信息给client

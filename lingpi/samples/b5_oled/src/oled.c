@@ -226,7 +226,7 @@ static inline void write_iic_command(unsigned char iic_command)
     buffer[1] = iic_command;
     ret = LzI2cWrite(OLED_I2C_BUS, OLED_I2C_ADDRESS, buffer, BUFFER_MAXSIZE);
     if (ret != 0) {
-        printf("%s, %s, %d: LzI2cWrite failed(%d)!\n", __FILE__, __func__, __LINE__, ret);
+        printf("%s, %s, %d: LzI2cWrite failed(%ld)!\n", __FILE__, __func__, __LINE__, ret);
     }
 }
 
@@ -249,7 +249,7 @@ static inline void write_iic_data(unsigned char iic_data)
     buffer[1] = iic_data;
     ret = LzI2cWrite(OLED_I2C_BUS, OLED_I2C_ADDRESS, buffer, BUFFER_MAXSIZE);
     if (ret != 0) {
-        printf("%s, %s, %d: LzI2cWrite failed(%d)!\n", __FILE__, __func__, __LINE__, ret);
+        printf("%s, %s, %d: LzI2cWrite failed(%ld)!\n", __FILE__, __func__, __LINE__, ret);
     }
 }
 #endif

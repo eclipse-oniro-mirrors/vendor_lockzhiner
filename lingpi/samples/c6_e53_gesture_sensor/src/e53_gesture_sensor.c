@@ -329,7 +329,7 @@ static uint8_t paj7620U2_write_null(void)
 
     ret = LzI2cWrite(E53_I2C_BUS, PAJ7620U2_I2C_SLAVE_ADDRESS, NULL, 0);
     if (ret != LZ_HARDWARE_SUCCESS) {
-        printf("%s, %s, %d: LzI2cWrite failed(%d)\n", __FILE__, __func__, __LINE__, ret);
+        printf("%s, %s, %d: LzI2cWrite failed(%ld)\n", __FILE__, __func__, __LINE__, ret);
         return 0;
     }
 
@@ -355,7 +355,7 @@ static uint8_t paj7620u2_write_data(uint8_t addr, uint8_t data)
     buffer[1] = data;
     ret = LzI2cWrite(E53_I2C_BUS, PAJ7620U2_I2C_SLAVE_ADDRESS, buffer, BUFFER_MAXSIZE);
     if (ret != LZ_HARDWARE_SUCCESS) {
-        printf("%s, %s, %d: LzI2cWrite failed(%d)\n", __FILE__, __func__, __LINE__, ret);
+        printf("%s, %s, %d: LzI2cWrite failed(%ld)\n", __FILE__, __func__, __LINE__, ret);
         return 0;
     }
 
@@ -379,13 +379,13 @@ static uint8_t paj7620u2_read_data(uint8_t addr, uint8_t *data)
     buffer[0] = addr;
     ret = LzI2cWrite(E53_I2C_BUS, PAJ7620U2_I2C_SLAVE_ADDRESS, buffer, 1);
     if (ret != LZ_HARDWARE_SUCCESS) {
-        printf("%s, %s, %d: LzI2cWrite failed(%d)\n", __FILE__, __func__, __LINE__, ret);
+        printf("%s, %s, %d: LzI2cWrite failed(%ld)\n", __FILE__, __func__, __LINE__, ret);
         return 0;
     }
 
     ret = LzI2cRead(E53_I2C_BUS, PAJ7620U2_I2C_SLAVE_ADDRESS, data, 1);
     if (ret != LZ_HARDWARE_SUCCESS) {
-        printf("%s, %s, %d: LzI2cRead failed(%d)\n", __FILE__, __func__, __LINE__, ret);
+        printf("%s, %s, %d: LzI2cRead failed(%ld)\n", __FILE__, __func__, __LINE__, ret);
         return 0;
     }
 
@@ -451,7 +451,7 @@ static uint32_t paj7620u2_wake_up(void)
     paj7620u2_select_bank(BANK0);
     ret = paj7620u2_read_data(0x00, &data);
     if (ret != 1) {
-        printf("%s, %s, %d: paj7620u2_read_data failed(%d)\n", __FILE__, __func__, __LINE__, ret);
+        printf("%s, %s, %d: paj7620u2_read_data failed(%ld)\n", __FILE__, __func__, __LINE__, ret);
         return __LINE__;
     }
     if (data != 0x20) {
@@ -563,7 +563,7 @@ static void paj7620u2_poll_task_init(void)
     task.usTaskPrio     = TASK_PRIO;
     ret = LOS_TaskCreate(&m_pollTaskId, &task);
     if (ret != LOS_OK) {
-        printf("%s, %d: LOS_TaskCreate failed(%d)\n", __func__, __LINE__, ret);
+        printf("%s, %d: LOS_TaskCreate failed(%ld)\n", __func__, __LINE__, ret);
         /* 解锁任务调度 */
         LOS_TaskUnlock();
         return;
@@ -592,7 +592,7 @@ static void paj7620u2_init_config(void)
 
     ret = paj7620u2_wake_up();
     if (ret != 0) {
-        printf("%s, %s, %d: paj7620u2_wake_up failed(%d)\n", __FILE__, __func__, __LINE__, ret);
+        printf("%s, %s, %d: paj7620u2_wake_up failed(%ld)\n", __FILE__, __func__, __LINE__, ret);
     }
 
     /* 初始化PAJ7620U2 */

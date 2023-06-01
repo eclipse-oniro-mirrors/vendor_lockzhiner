@@ -257,7 +257,7 @@ void e53_ia_read_data(e53_ia_data_t *pData)
     uint16_t tmp;
     /* byte 0,1 is temperature byte 4,5 is humidity */
     uint8_t SHT30_Data_Buffer[EOFFSET_SHT30_REG_MAX];
-    memset(SHT30_Data_Buffer, 0, EOFFSET_SHT30_REG_MAX);
+    memset_s(SHT30_Data_Buffer, sizeof(SHT30_Data_Buffer), 0, EOFFSET_SHT30_REG_MAX);
     uint8_t send_data[2] = {0xE0, 0x00};
     uint32_t send_len = 2;
     LzI2cWrite(IA_I2C0, SHT30_ADDR, send_data, send_len);

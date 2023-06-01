@@ -140,7 +140,7 @@ PinctrlSet(GPIO0_PB7, MUX_FUNC2, PULL_KEEP, DRIVE_LEVEL2);
 ret = LzUartInit(UART_ID, &attr);
 if (ret != LZ_HARDWARE_SUCCESS)
 {
-    printf("%s, %d: LzUartInit(%d) failed!\n", __FILE__, __LINE__, ret);
+    printf("%s, %d: LzUartInit(%ld) failed!\n", __FILE__, __LINE__, ret);
     return;
 }
 ```
@@ -151,7 +151,7 @@ if (ret != LZ_HARDWARE_SUCCESS)
 ret = LzUartWrite(UART_ID, str, strlen(str));
 if (ret != LZ_HARDWARE_SUCCESS)
 {
-    printf("%s, %d: LzUartInit(%d) failed!\n", __FILE__, __LINE__, ret);
+    printf("%s, %d: LzUartInit(%ld) failed!\n", __FILE__, __LINE__, ret);
     return;
 }
 ```
