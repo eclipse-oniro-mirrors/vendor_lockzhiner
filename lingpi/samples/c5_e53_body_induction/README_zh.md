@@ -117,7 +117,7 @@ void e53_bi_thread()
         ret = LzGpioGetVal(GPIO0_PA5, &val);
         if (ret != LZ_HARDWARE_SUCCESS)
         {
-            printf("get gpio value failed ret:%d\n", ret);
+            printf("get gpio value failed ret:%ld\n", ret);
         }
         if (val_last != val)
         {

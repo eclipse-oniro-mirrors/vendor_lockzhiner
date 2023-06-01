@@ -43,12 +43,12 @@ void nfc_process(void)
 
     ret = nfc_store_text(NDEFFirstPos, (uint8_t *)TEXT);
     if (ret != 1) {
-        printf("NFC Write Text Failed: %d\n", ret);
+        printf("NFC Write Text Failed: %ld\n", ret);
     }
 
     ret = nfc_store_uri_http(NDEFLastPos, (uint8_t *)WEB);
     if (ret != 1) {
-        printf("NFC Write Url Failed: %d\n", ret);
+        printf("NFC Write Url Failed: %ld\n", ret);
     }
 
     while (1) {

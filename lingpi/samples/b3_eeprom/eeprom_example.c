@@ -45,18 +45,18 @@ void eeprom_proress(void)
         printf("BlockSize = 0x%x\n", eeprom_get_blocksize());
 
         /* 写EEPROM */
-        memset(buffer, 0, sizeof(buffer));
+        memset_s(buffer, sizeof(buffer), 0, sizeof(buffer));
         for (unsigned int i = 0; i < FOR_CHAR; i++) {
             buffer[i] = data_offset + i;
             printf("Write Byte: %d = %c\n", addr_offset + i, buffer[i]);
         }
         ret = eeprom_write(addr_offset, buffer, FOR_CHAR);
         if (ret != FOR_CHAR) {
-            printf("EepromWrite failed(%d)\n", ret);
+            printf("EepromWrite failed(%ld)\n", ret);
         }
 
         /* 读EEPROM */
-        memset(buffer, 0, sizeof(buffer));
+        memset_s(buffer, sizeof(buffer), 0, sizeof(buffer));
         ret = eeprom_read(addr_offset, buffer, FOR_CHAR);
         if (ret != FOR_CHAR) {
             printf("Read Bytes: failed!\n");

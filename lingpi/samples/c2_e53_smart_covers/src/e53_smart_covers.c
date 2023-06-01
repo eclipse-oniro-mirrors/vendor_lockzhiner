@@ -138,14 +138,14 @@ void mpu6050_read_data(uint8_t reg, unsigned char *buf, uint8_t length)
 ***************************************************************/
 void mpu6050_read_acc(short *acc_data)
 {
-/* 加速度数据位置定义 */
+    /* 加速度数据位置定义 */
 #define REG_ACCEL_X_H           0
 #define REG_ACCEL_X_L           1
 #define REG_ACCEL_Y_H           2
 #define REG_ACCEL_Y_L           3
 #define REG_ACCEL_Z_H           4
 #define REG_ACCEL_Z_L           5
-/* 高8位移位 */
+    /* 高8位移位 */
 #define HIGH_BYTE_SHIFT         8
     uint8_t buf[6];
 

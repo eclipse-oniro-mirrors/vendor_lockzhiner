@@ -187,7 +187,7 @@ static void paj7620u2_init_config()
     ret = paj7620u2_wake_up();
     if (ret != 0)
     {
-        printf("%s, %s, %d: paj7620u2_wake_up failed(%d)\n", __FILE__, __func__, __LINE__, ret);
+        printf("%s, %s, %d: paj7620u2_wake_up failed(%ld)\n", __FILE__, __func__, __LINE__, ret);
     }
 
     /* 初始化PAJ7620U2 */
@@ -241,7 +241,7 @@ static void paj7620u2_poll_task_init()
     ret = LOS_TaskCreate(&m_pollTaskId, &task);
     if (ret != LOS_OK)
     {
-        printf("%s, %d: LOS_TaskCreate failed(%d)\n", __func__, __LINE__, ret);
+        printf("%s, %d: LOS_TaskCreate failed(%ld)\n", __func__, __LINE__, ret);
         /* 解锁任务调度 */
         LOS_TaskUnlock();
         return;

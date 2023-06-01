@@ -222,7 +222,7 @@ unsigned int eeprom_readbyte(unsigned int addr, unsigned char *data)
 
    ret = LzI2cTransfer(EEPROM_I2C_BUS, msgs, 2);
    if (ret != LZ_HARDWARE_SUCCESS) {
-       printf("%s, %s, %d: LzI2cTransfer failed(%d)!\n", __FILE__, __func__, __LINE__, ret);
+       printf("%s, %s, %d: LzI2cTransfer failed(%ld)!\n", __FILE__, __func__, __LINE__, ret);
        return 0;
    }
 
@@ -265,7 +265,7 @@ unsigned int eeprom_writebyte(unsigned int addr, unsigned char data)
 
     ret = LzI2cTransfer(EEPROM_I2C_BUS, msgs, 1);
     if (ret != LZ_HARDWARE_SUCCESS) {
-       printf("%s, %s, %d: LzI2cTransfer failed(%d)!\n", __FILE__, __func__, __LINE__, ret);
+       printf("%s, %s, %d: LzI2cTransfer failed(%ld)!\n", __FILE__, __func__, __LINE__, ret);
        return 0;
     }
 
@@ -316,7 +316,7 @@ unsigned int eeprom_writepage(unsigned int addr, unsigned char *data, unsigned i
     }
 
     buffer[0] = addr;
-    memcpy(&buffer[1], data, data_len);
+    memcpy_s(&buffer[1], sizeof(buffer) - 1, data, data_len);
   
     msgs[0].addr = EEPROM_I2C_ADDRESS;
     msgs[0].flags = 0;
@@ -325,7 +325,7 @@ unsigned int eeprom_writepage(unsigned int addr, unsigned char *data, unsigned i
 
     ret = LzI2cTransfer(EEPROM_I2C_BUS, msgs, 1);
     if (ret != LZ_HARDWARE_SUCCESS) {
-       printf("%s, %s, %d: LzI2cTransfer failed(%d)!\n", __FILE__, __func__, __LINE__, ret);
+       printf("%s, %s, %d: LzI2cTransfer failed(%ld)!\n", __FILE__, __func__, __LINE__, ret);
        return 0;
     }
 

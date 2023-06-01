@@ -41,9 +41,9 @@ void e53_bi_thread(void)
     while (1) {
         ret = LzGpioGetVal(GPIO0_PA5, &val);
         if (ret != LZ_HARDWARE_SUCCESS) {
-            printf("get gpio value failed ret:%d\n", ret);
+            printf("get gpio value failed ret:%ld\n", ret);
         }
-        
+
         if (val_last != val) {
             if (val == LZGPIO_LEVEL_HIGH) {
                 buzzer_set_status(ON);
@@ -54,7 +54,7 @@ void e53_bi_thread(void)
             }
             val_last = val;
         }
-        
+
         LOS_Msleep(WAIT_MSEC);
     }
 }

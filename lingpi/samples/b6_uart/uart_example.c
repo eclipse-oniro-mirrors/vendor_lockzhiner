@@ -54,7 +54,7 @@ void uart_process(void)
 
     ret = LzUartInit(UART_ID, &attr);
     if (ret != LZ_HARDWARE_SUCCESS) {
-        printf("%s, %d: LzUartInit(%d) failed!\n", __FILE__, __LINE__, ret);
+        printf("%s, %d: LzUartInit(%ld) failed!\n", __FILE__, __LINE__, ret);
         return;
     }
 

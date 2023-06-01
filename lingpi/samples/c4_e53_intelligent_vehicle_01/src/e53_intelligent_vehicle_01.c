@@ -172,7 +172,7 @@ static void e53_iv01_task_create_echo(void)
     task.usTaskPrio     = ECHO_TASK_PRIO;
     ret = LOS_TaskCreate(&m_task_id, &task);
     if (ret != LOS_OK) {
-        printf("%s, %d: LOS_TaskCreate failed(%d)\n", __func__, __LINE__, ret);
+        printf("%s, %d: LOS_TaskCreate failed(%ld)\n", __func__, __LINE__, ret);
         /* 解锁任务调度 */
         LOS_TaskUnlock();
         return;
@@ -209,7 +209,7 @@ static void e53_iv01_task_delete_echo(void)
 static void e53_iv01_send_trig(void)
 {
     uint32_t delay_usec = 20;
-    
+
     /* 发送至少10usec的高电平给智慧车载，触发其工作 */
     E53_IV01_TRIG_Set();
     e53_iv01_delay_usec(delay_usec);
@@ -319,7 +319,7 @@ unsigned int e53_iv01_init(void)
 
     ret = e53_iv01_init_pwm();
     if (ret != 0) {
-        printf("%s, %s, %d: e53_iv01_init_pwm failed(%d)\n", __FILE__, __func__, __LINE__, ret);
+        printf("%s, %s, %d: e53_iv01_init_pwm failed(%ld)\n", __FILE__, __func__, __LINE__, ret);
         e53_iv01_deinit_gpio();
         return __LINE__;
     }
